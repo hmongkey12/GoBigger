@@ -16,36 +16,18 @@ public class Gym {
     }
 
     private JSONObject rooms;
+    JSONParser parser = new JSONParser();
+    Object obj = parser.parse(new FileReader("C:\\AmazonSDE\\Practical\\prac1\\GoBigGoHome\\gymRooms.json"));
 
-
-
-    public static void main(String[] args) throws Exception {
-        // parsing file "JSONExample.json"
-        JSONParser parser = new JSONParser();
-        try {
-        Object obj = parser.parse(new FileReader("C:\\AmazonSDE\\Practical\\prac1\\GoBigGoHome\\gymRooms.json"));
-            // typecasting obj to JSONObject
-            JSONObject jo = (JSONObject) obj;
-            // getting every room
-            JSONObject rooms = (JSONObject) jo.get("rooms");
-            Object frontDesk = rooms.get("front desk");
-            System.out.println(frontDesk);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-    }
 
     private void getCurrentRoom(String room){
         rooms.get("room");
-
-
-
-
-
-
+    }
+    private JSONObject getRooms(){
+        JSONObject jo = (JSONObject) obj;
+        // getting every room
+        JSONObject rooms = (JSONObject) jo.get("rooms");
+        return rooms;
     }
 }
 
