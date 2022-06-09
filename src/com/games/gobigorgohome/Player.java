@@ -10,19 +10,20 @@ public class Player {
 
 
 //    fields
-    int age;
-    String name;
-    int energy;
-    double weight;
-    double height;
-    List<String> inventory = new ArrayList<>();
+    private int age;
+    private String name;
+    private int energy;
+    private double weight;
+    private double height;
+    private List<String> inventory = new ArrayList<>();
 //    just realize that the boolean values are named the same for the getters, idk why but they did it when I did it with the intellij autgenerated ones
-    boolean isChestWorked = false;
-    boolean isTricepsWorked = false;
-    boolean isLegsWorked = false;
-    boolean isBackWorked = false;
-    boolean isCoreWorked = false;
-    boolean isShoulderWorked = false;
+    private boolean isChestWorked = false;
+    private boolean isTricepsWorked = false;
+    private boolean isLegsWorked = false;
+    private boolean isBackWorked = false;
+    private boolean isCoreWorked = false;
+    private boolean isShoulderWorked = false;
+    private boolean isSteroidsUsed = false;
 
 //    constructors
 
@@ -97,32 +98,59 @@ public class Player {
         return getEnergy();
     }
 
-    public int subtractFromPLayerEnergy(int energyToTake) {
+    public int subtractFromPlayerEnergy(int energyToTake) {
         int num = getEnergy() + energyToTake;
         setEnergy(num);
         return getEnergy();
     }
 
-    public void consumeItem(String item ) {
+    public boolean consumeItem(String item ) {
+
+        boolean couldYouConsume = false;
 //        this could be replaced with a try catch but it would have to have an exception in it.
         if(isItemInInventory(item)){
             if(item.equals("energy drink")){
                 System.out.println("Ahh yeah man more energy to work out!!");
                 addToPlayerEnergy(5); // hard coded value that we can talk about later
-            }else if (item.equals("energy drink")){
+                couldYouConsume = true;
+            }else if (item.equals("steroids")){
+                hasPlayerUsedSteroids(true);
                 System.out.println("GAME OVER");
+                couldYouConsume= true;
             }
         }else{
             System.out.println("not in inventory mate ;/");
+            couldYouConsume= false;
         }
 
-        // using steroids, drinking energy drink
-        // if using steroid -> GAME OVER
-//        if item.equals("steroid")-> gameover else; energy += 2 or whatever
+        return couldYouConsume;
+
+    }
+
+
+
+    public boolean hasPlayerUsedSteroids(boolean value){
+//        if this value is true, then we need to set the steroid to the value and then return sterod
+        boolean returnValue = false;
+        //if the value is true, which means player used steroids
+        if(value){
+//           call the setter
+            setSteroidsUsed(true);
+            returnValue = isSteroidsUsed();
+        }
+        return  returnValue;
     }
 
 
 //    accessor methods
+
+    public boolean isSteroidsUsed() {
+        return isSteroidsUsed;
+    }
+
+    public void setSteroidsUsed(boolean steroidsUsed) {
+        isSteroidsUsed = steroidsUsed;
+    }
 
     public double getHeight() {
         return height;
