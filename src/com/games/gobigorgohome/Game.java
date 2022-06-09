@@ -1,5 +1,6 @@
 package com.games.gobigorgohome;
 
+import com.apps.util.Console;
 import com.apps.util.Prompter;
 
 class Game {
@@ -42,7 +43,28 @@ class Game {
         // runs a while loop
         while (!isGameOver()) {
             // call functions
+            validateInput();
+            Console.clear();
+            checkGameStatus();
+            updateGame();
         }
+        gameResult();
+        playAgain();
+    }
+
+    private void playAgain() {
+    }
+
+    private void gameResult() {
+        Console.clear();
+
+    }
+
+    private void updateGame() {
+    }
+
+
+    private void validateInput() {
     }
 
     //    returns whether game is over or not.
