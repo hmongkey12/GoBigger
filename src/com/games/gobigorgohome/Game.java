@@ -28,7 +28,14 @@ class Game {
     }
 
     //    updates player with current game status e.g. player inventory, current room etc.
-    private void gameStatus(){}
+    private void gameStatus(){
+        System.out.println("------------------------------");
+        System.out.println("Player: " + getPlayerName());
+        System.out.println("You are in the " + getCurrentRoom());
+        System.out.println("You have " + getInventory() + " in your gym bag.");
+        System.out.println("Your current energy level is " + getCurrentEnergy() + " out of " + getEnergy());
+        System.out.println("------------------------------");
+    }
 
     //    main function running the game, here we call all other functions necessary to run the game
     private void playGame(){
