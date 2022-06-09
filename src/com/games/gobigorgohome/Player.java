@@ -14,6 +14,7 @@ public class Player {
     String name;
     int energy;
     double weight;
+    double height;
     List<String> inventory = new ArrayList<>();
 //    just realize that the boolean values are named the same for the getters, idk why but they did it when I did it with the intellij autgenerated ones
     boolean isChestWorked = false;
@@ -28,15 +29,16 @@ public class Player {
     public Player(){
     }
 
-    public Player(int age, String name, int weight) {
+    public Player( String name, int age, double weight, double height) {
         this.age = age;
         this.name = name;
         this.weight = weight;
+        this.height = height;
         this.energy = BASE_ENERGY;
     }
 
-    public Player(int age, String name, int weight, int energyInput) {
-        this(age, name, weight);
+    public Player(String name, int age,  double weight, double height, int energyInput) {
+        this( name,age, weight, height);
         this.energy = energyInput;
     }
 
@@ -121,6 +123,14 @@ public class Player {
 
 
 //    accessor methods
+
+    public double getHeight() {
+        return height;
+    }
+
+    public void setHeight(double height) {
+        this.height = height;
+    }
 
     public int getAge() {
         return age;
