@@ -7,8 +7,8 @@ class Game {
     boolean isGameOver = false;
     private Player player;
     private final int energy = player.getEnergy();
-    private final int currentEnergy = player.getCurrentEnergy();
-    private final String playerName = player.getPlayerName();
+    private final int currentEnergy = player.getEnergy();
+    private final String playerName = player.getName();
     private Prompter prompter;
 
 
@@ -31,8 +31,8 @@ class Game {
     private void gameStatus(){
         System.out.println("------------------------------");
         System.out.println("Player: " + getPlayerName());
-        System.out.println("You are in the " + getCurrentRoom());
-        System.out.println("You have " + getInventory() + " in your gym bag.");
+//        System.out.println("You are in the " + getCurrentRoom());
+//        System.out.println("You have " + getInventory() + " in your gym bag.");
         System.out.println("Your current energy level is " + getCurrentEnergy() + " out of " + getEnergy());
         System.out.println("------------------------------");
     }
