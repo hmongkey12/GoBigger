@@ -46,7 +46,7 @@ public class Player {
     //    business methods
 
 //    we need to think about what values are being played around with or manipulated that can be tested?
-    public void playerWorksOut(String machine, String bodyPart){
+    public void useMachine(String machine, String bodyPart){
 //        if(bodyPart.equals("chest")){
 //
 //        }
@@ -72,15 +72,7 @@ public class Player {
 
     public String useItem(String item) {
         String response = " a default item";
-        if(item.equals("energy drink")){
-            consumeItem(item);
-            response = item + " has been consumed";
-//            item = getItem(item); one way of doing it
-//            consumeItem(item);
-            //get the item, return it
-            //then pass it to the consum item
-//            is it possible to combine these in an or statement, that way they both get returned either way?
-        }else if(item.equals("key")){
+        if(item.equals("key")){
             response = item;
         }else if(item.equals("wrench")){
             response = item;
