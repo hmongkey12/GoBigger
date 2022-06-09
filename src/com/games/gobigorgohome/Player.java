@@ -4,27 +4,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Player {
+//    idea- creating a class that's parsing through the json? and putting certain information into lists mainly lists of the muscles and the exercises that work them out.
 //    static variables
-//    public final static int BASE_ENERGY = 50; //example not set in stone
+    public final static int BASE_ENERGY = 50; //example not set in stone
 
 
 //    fields
     int age;
     String name;
-    // in the beginning our energy is going to be set to the static variable containing the energy, but then it will be incremented or decremented overtime with the accessor methods.
     int energy;
     double weight;
     List<String> inventory = new ArrayList<>();
 //    just realize that the boolean values are named the same for the getters, idk why but they did it when I did it with the intellij autgenerated ones
-    boolean isChestWorked;
-    boolean isTricepsWorked;
-    boolean isLegsWorked;
-    boolean isBackWorked;
-    boolean isCoreWorked;
-    boolean isShoulderWorked;
+    boolean isChestWorked = false;
+    boolean isTricepsWorked = false;
+    boolean isLegsWorked = false;
+    boolean isBackWorked = false;
+    boolean isCoreWorked = false;
+    boolean isShoulderWorked = false;
 
-
-//    constructor
+//    constructors
 
     public Player(){
     }
@@ -33,45 +32,88 @@ public class Player {
         this.age = age;
         this.name = name;
         this.weight = weight;
+        this.energy = BASE_ENERGY;
     }
 
-//    business methods
+    public Player(int age, String name, int weight, int energyInput) {
+        this(age, name, weight);
+        this.energy = energyInput;
+    }
+
+    //    business methods
 
 //    we need to think about what values are being played around with or manipulated that can be tested?
-    public void playerWorksOut(String machine){
-
+    public void playerWorksOut(String machine, String bodyPart){
+//        if(bodyPart.equals("chest")){
+//
+//        }
     }
-
+//    i think this needs to be in the game class or the gym class because it relates to the item being returned in response to the rooms too
     public String moveRooms(String action){
         String newRoom = "default";
         return newRoom;
     }
 
-    public String getItem() {
-        // add item to the inventory
-
-        String itemToGet = "default";
+    public String getItem(String item) {
+        String itemToGet = "item not here";
+//        mayybe this contains method could be a method itself.
+        if(isItemInInventory(item)){
+            itemToGet = inventory.get(inventory.indexOf(item));
+        }
         return itemToGet;
     }
 
-    public void useItem() {
-        // use item from inventory e.g. wrench or key
-        //maybe throw in logic that will validate it with truthy or falsey values
+    private boolean isItemInInventory(String item){
+        return getInventory().contains(item);
+    }
+
+    public String useItem(String item) {
+        String response = " a default item";
+        if(item.equals("energy drink")){
+            consumeItem(item);
+            response = item + " has been consumed";
+//            item = getItem(item); one way of doing it
+//            consumeItem(item);
+            //get the item, return it
+            //then pass it to the consum item
+//            is it possible to combine these in an or statement, that way they both get returned either way?
+        }else if(item.equals("key")){
+            response = item;
+        }else if(item.equals("wrench")){
+            response = item;
+        }
+        return response;
     }
 
     public void talkTo() {
         // talk to npc
     }
-
+//    there's a bit of code redundancy here so there could possible be a way to morph these together
     public int addToPlayerEnergy(int energyToGive) {
-        return energy + energyToGive;
+        int num = getEnergy() + energyToGive;
+        setEnergy(num);
+        return getEnergy();
     }
 
     public int subtractFromPLayerEnergy(int energyToTake) {
-        return energy - energyToTake;
+        int num = getEnergy() + energyToTake;
+        setEnergy(num);
+        return getEnergy();
     }
 
     public void consumeItem(String item ) {
+//        this could be replaced with a try catch but it would have to have an exception in it.
+        if(isItemInInventory(item)){
+            if(item.equals("energy drink")){
+                System.out.println("Ahh yeah man more energy to work out!!");
+                addToPlayerEnergy(5); // hard coded value that we can talk about later
+            }else if (item.equals("energy drink")){
+                System.out.println("GAME OVER");
+            }
+        }else{
+            System.out.println("not in inventory mate ;/");
+        }
+
         // using steroids, drinking energy drink
         // if using steroid -> GAME OVER
 //        if item.equals("steroid")-> gameover else; energy += 2 or whatever
