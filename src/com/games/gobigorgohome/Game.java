@@ -3,21 +3,28 @@ package com.games.gobigorgohome;
 import com.apps.util.Console;
 import com.apps.util.Prompter;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-class Game {
+public class Game {
 
     boolean isGameOver = false;
+    private final Gym gym = Gym.getInstance();
     private Player player;
     private int energy = player.getEnergy();
     private int currentEnergy = player.getEnergy();
     private String playerName = player.getName();
     private JSONObject currentRoom;
-    private JSONObject rooms = Gym.getRooms();
+    private JSONObject rooms = gym.getRooms();
     private Prompter prompter;
+
+    public Game(Prompter prompter) throws IOException, ParseException {
+        this.prompter = prompter;
+    }
 
 
     //    collects current input from user to update their avatar
@@ -41,18 +48,19 @@ class Game {
     private void gameStatus(){
         System.out.println("------------------------------");
         System.out.println("Player: " + getPlayerName());
-//        System.out.println("You are in the " + getCurrentRoom());
+        System.out.println("You are in the " + getCurrentRoom());
         System.out.println(player.getName() + ", you have " + player.getInventory() + " in your gym bag.");
         System.out.println("Your current energy level is " + getCurrentEnergy() + " out of " + getEnergy());
         System.out.println("------------------------------");
     }
 
     //    main function running the game, here we call all other functions necessary to run the game
-    private void playGame(){
+    public void playGame(){
+        getNewPlayerInfo();
+        gameStatus();
         // runs a while loop
         while (!isGameOver()) {
             // call functions
-            validateInput();
             Console.clear();
             String[] command = promptForPlayerInput();
             parsingThroughStringValues(command);
@@ -98,27 +106,21 @@ class Game {
     }
 
     public String parsingThroughStringValues(String[] action){
-        // Integer[] numbers = new Integer[] { 1, 2, 3 };
-        List<String> actionList = Arrays.asList(action);
-        // i would need to forEach the array to lowercase them so that
 
-        if (actionList.get(0).equals("get")){
-            //this is where the information gets returned for the item
-            System.out.println("you got the :"+actionList.get(1));
-            player.getInventory().add(actionList.get(1));
-            return actionList.get(1);
-            //or a callback function is passed
-        }else if(actionList.get(0).equals("go")){
-            String room = actionList.get(1);
-            setCurrentRoom(rooms.get(room));
-            System.out.println("you're going here: "+actionList.get(1));
-            return actionList.get(1);
-        }else if(actionList.get(0).equals("use")){
-            System.out.println("you're using the: "+actionList.get(1));
-            Map<String, Object> bodyAndMachineEnergy = currentRoom.get(actionList.get(1));
-            String muscleGroup = bodyAndMachineEnergy.get("target muscle")[0];
-            int energy = (int)bodyAndMachineEnergy.get("energy cost");
-            String status = bodyAndMachineEnergy.get("status");
+        List<String> actionList = Arrays.asList(action);
+        String actionPrefix = actionList.get(0);
+        String playerAction = actionList.get(1);
+
+        if (actionPrefix.equals("get")){
+            grabItem(playerAction);
+
+        }else if(actionPrefix.equals("go")){
+            System.out.println("you're going here: "+ playerAction);
+            setCurrentRoom(rooms.get(playerAction));
+
+        }else if(actionPrefix.equals("use")){
+            playerUseMachine(playerAction);
+
             return actionList.get(1);
         }else if(actionList.get(0).equals("consume")){
             System.out.println("you're consuming the: "+actionList.get(1));
@@ -127,6 +129,23 @@ class Game {
         }
 
         return actionList.get(1);
+    }
+
+    private void playerUseMachine(String machine) {
+        System.out.println("you're using the: "+ machine);
+
+        Map<String, Object> bodyAndMachineEnergy = currentRoom.get(machine);
+
+        String muscleGroup = bodyAndMachineEnergy.get("target muscle")[0];
+        int energyCost = Integer.parseInt(bodyAndMachineEnergy.get("energy cost"));
+        String machineStatus = bodyAndMachineEnergy.get("status");
+
+        player.useMachine(muscleGroup, machineStatus, energyCost);
+    }
+
+    private void grabItem(String playerAction) {
+        System.out.println("you got the :"+ playerAction);
+        player.getInventory().add(playerAction);
     }
 
     //    returns whether game is over or not.
@@ -140,7 +159,7 @@ class Game {
     //    start a new game
     private void newGame(){}
 
-    public String getCurrentRoom() {
+    public JSONObject getCurrentRoom() {
         return currentRoom;
     }
 

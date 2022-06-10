@@ -1,0 +1,92 @@
+{
+  "rooms": {
+    "front desk": {
+      "exercises": null,
+      "items": "wrench",
+      "required items": null
+    },
+    "managers office": {
+      "exercises": null,
+      "items": ["key", "energy drink"],
+      "required items": null
+    },
+    "free weights": {
+      "exercises": {
+        "bench press": {
+          "target muscles": ["chest"],
+          "status": "fixed"
+        },
+        "skull crushers": {
+          "target muscles": ["triceps"],
+          "status": "fixed"
+        },
+        "overhead press": {
+          "target muscles": ["shoulders"],
+          "status": "fixed"
+        },
+        "squat": {
+          "target muscles": ["legs"],
+          "status": "fixed"
+        },
+        "deadlift": {
+          "target muscles": ["back"],
+          "status": "fixed"
+        }
+      },
+      "items": null,
+      "required items": null
+    },
+    "machines": {
+      "exercises": {
+        "leg press": {
+          "target muscles": ["legs"],
+          "status": "broken"
+        },
+        "chest fly": {
+          "target muscles": ["chest"],
+          "status": "fixed"
+        },
+        "cable curl": {
+          "target muscles": ["biceps"],
+          "status": "fixed"
+        },
+        "crunch machine": {
+          "target muscles": ["core"],
+          "status": "fixed"
+        },
+        "tricep extension": {
+          "target muscles": ["triceps"],
+          "status": "fixed"
+        }
+      },
+      "items": null,
+      "required items": null
+    },
+    "yoga studio": {
+      "exercises": {
+        "row": {
+          "target muscles": ["back"],
+          "status": "fixed"
+        },
+        "bike": {
+          "target muscles": ["leg"],
+          "status": "fixed"
+        },
+        "push ups": {
+          "target muscles": ["chest"],
+          "status": "fixed"
+        },
+        "ab wheel": {
+          "target muscles": ["core"],
+          "status": "fixed"
+        },
+        "dips": {
+          "target muscles": ["triceps"],
+          "status": "fixed"
+        }
+      },
+      "items": null,
+      "required items": "key"
+    }
+  }
+}
