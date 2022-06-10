@@ -23,6 +23,7 @@ public class Game {
     private JSONObject currentRoom = gym.getStarterRoom();
     private JSONObject rooms = gym.getRooms();
     private Prompter prompter;
+    private SplashPage page = new SplashPage();
 
     public Game(Prompter prompter) throws IOException, ParseException {
         this.prompter = prompter;
@@ -58,13 +59,11 @@ public class Game {
 
     //    main function running the game, here we call all other functions necessary to run the game
     public void playGame(){
-
+        page.instructions();
         getNewPlayerInfo();
-
         // runs a while loop
         while (!isGameOver()) {
             gameStatus();
-
             Console.clear();
             String[] command = promptForPlayerInput();
             parsingThroughStringValues(command);
@@ -123,17 +122,17 @@ public class Game {
     public String parsingThroughStringValues(String[] action){
 
         List<String> actionList = Arrays.asList(action);
-        String actionPrefix = actionList.get(0);
-        String playerAction = actionList.get(1);
-//        String actionPrefix = "";
-//        String playerAction = "";
-//        if(actionList.size() == 2){
-//            actionPrefix = actionList.get(0);
-//            playerAction = actionList.get(1);
-//        }if(actionList.size() == 3){
-//            actionPrefix = actionList.get(0);
-//            playerAction = (actionList.get(1) + " " + actionList.get(2)) ;
-//        }
+//        String actionPrefix = actionList.get(0);
+//        String playerAction = actionList.get(1);
+        String actionPrefix = "";
+        String playerAction = "";
+        if(actionList.size() == 2){
+            actionPrefix = actionList.get(0);
+            playerAction = actionList.get(1);
+        }if(actionList.size() == 3){
+            actionPrefix = actionList.get(0);
+            playerAction = (actionList.get(1) + " " + actionList.get(2)) ;
+        }
 
         System.out.println(playerAction + "DEBUG");
 
