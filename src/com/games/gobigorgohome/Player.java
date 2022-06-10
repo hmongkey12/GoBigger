@@ -46,7 +46,7 @@ public class Player {
     //    business methods
 
 //    we need to think about what values are being played around with or manipulated that can be tested?
-    public void useMachine(String machine, String bodyPart){
+    public void useMachine(String muscleGroup, String machineStatus, int energyCost){
 //        if(bodyPart.equals("chest")){
 //
 //        }
