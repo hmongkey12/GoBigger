@@ -12,7 +12,7 @@ public class Player {
 //    fields
     private int age;
     private String name;
-    private int energy;
+    private int energy =100;
     private double weight;
     private double height;
     private List<String> inventory = new ArrayList<>();

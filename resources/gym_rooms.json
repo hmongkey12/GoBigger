@@ -1,15 +1,17 @@
 {
   "rooms": {
     "front desk": {
-      "exercises": null,
-      "items": "wrench",
-      "required items": null
+      "exercises": {
+        "none" : "none"
+      },
+      "items": ["wrench"],
+      "required items": ["none"]
     },
     "managers office": {
-      "exercises": null,
+      "exercises": "none",
       "items": ["key", "energy drink"],
-      "required items": null
-    },
+      "required items": ["none"]
+  },
     "free weights": {
       "exercises": {
         "bench press": {
@@ -33,8 +35,8 @@
           "status": "fixed"
         }
       },
-      "items": null,
-      "required items": null
+      "items": ["No Items"],
+      "required items": ["none"]
     },
     "machines": {
       "exercises": {
@@ -59,8 +61,8 @@
           "status": "fixed"
         }
       },
-      "items": null,
-      "required items": null
+      "items": ["No items"],
+      "required items": ["none"]
     },
     "yoga studio": {
       "exercises": {
@@ -85,8 +87,8 @@
           "status": "fixed"
         }
       },
-      "items": null,
-      "required items": "key"
+      "items": ["No Items"],
+      "required items": ["key"]
     }
   }
 }
