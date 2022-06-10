@@ -32,10 +32,10 @@ public class Game {
     //    collects current input from user to update their avatar
     private void getNewPlayerInfo(){
 //        TODO: validate user input
-        String playerName = prompter.prompt("What is your name?");
-        double playerHeight = Double.parseDouble(prompter.prompt("What is your height?"));
-        double playerWeight = Double.parseDouble(prompter.prompt("What is your weight?"));
-        int playerAge = Integer.parseInt(prompter.prompt("What is your age?"));
+        String playerName = prompter.prompt("What is your name? ");
+        double playerHeight = Double.parseDouble(prompter.prompt("What is your height? "));
+        double playerWeight = Double.parseDouble(prompter.prompt("What is your weight? "));
+        int playerAge = Integer.parseInt(prompter.prompt("What is your age? "));
         createPlayer(playerName, playerAge, playerHeight, playerWeight);
     }
 
@@ -101,9 +101,23 @@ public class Game {
     }
 
     public String[] promptForPlayerInput(){
-        String command = prompter.prompt("What is your move?");
+        String command = prompter.prompt("What is your move? ");
         String[] commandArr = returningInputFromStringAsSplitArray(command);
+//        code to be tested
+        commandArr = validatePLayerBeginningCommand(commandArr);
         return commandArr;
+    }
+
+    private String[] validatePLayerBeginningCommand(String[] userCommand) {
+        String[] validWords = {"go", "use", "consume", "inspect", "get"};
+//        we're converiting the array to a list, a using the contains method to see if the submitted usercommand is inside of it.
+        boolean contains = Arrays.asList(validWords).contains(userCommand[0]);
+//        if contains IS false THEN we just call the validate method.
+        if(!contains){
+            System.out.println(userCommand[0] + " was sadly and invalid answer. \n please use one of the following: " + Arrays.toString(validWords));
+            promptForPlayerInput();
+        }
+        return userCommand;
     }
 
     public String parsingThroughStringValues(String[] action){
@@ -111,6 +125,16 @@ public class Game {
         List<String> actionList = Arrays.asList(action);
         String actionPrefix = actionList.get(0);
         String playerAction = actionList.get(1);
+//        String actionPrefix = "";
+//        String playerAction = "";
+//        if(actionList.size() == 2){
+//            actionPrefix = actionList.get(0);
+//            playerAction = actionList.get(1);
+//        }if(actionList.size() == 3){
+//            actionPrefix = actionList.get(0);
+//            playerAction = (actionList.get(1) + " " + actionList.get(2)) ;
+//        }
+
         System.out.println(playerAction + "DEBUG");
 
         if (actionPrefix.equals("get")){
