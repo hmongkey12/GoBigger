@@ -32,10 +32,10 @@ public class Game {
     //    collects current input from user to update their avatar
     private void getNewPlayerInfo(){
 //        TODO: validate user input
-        String playerName = prompter.prompt("What is your name?");
-        double playerHeight = Double.parseDouble(prompter.prompt("What is your height?"));
-        double playerWeight = Double.parseDouble(prompter.prompt("What is your weight?"));
-        int playerAge = Integer.parseInt(prompter.prompt("What is your age?"));
+        String playerName = prompter.prompt("What is your name? ");
+        double playerHeight = Double.parseDouble(prompter.prompt("What is your height? "));
+        double playerWeight = Double.parseDouble(prompter.prompt("What is your weight? "));
+        int playerAge = Integer.parseInt(prompter.prompt("What is your age? "));
         createPlayer(playerName, playerAge, playerHeight, playerWeight);
     }
 
@@ -101,7 +101,7 @@ public class Game {
     }
 
     public String[] promptForPlayerInput(){
-        String command = prompter.prompt("What is your move?");
+        String command = prompter.prompt("What is your move? ");
         String[] commandArr = returningInputFromStringAsSplitArray(command);
 //        code to be tested
         commandArr = validatePLayerBeginningCommand(commandArr);
