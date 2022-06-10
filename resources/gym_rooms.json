@@ -5,12 +5,14 @@
         "none" : "none"
       },
       "items": ["wrench"],
-      "required items": ["none"]
+      "required items": ["none"],
+      "directions" : ["free weights", "yoga studio"]
     },
     "managers office": {
       "exercises": "none",
       "items": ["key", "energy drink"],
-      "required items": ["none"]
+      "required items": ["none"],
+      "directions" : ["machine", "yoga studio", "free weights"]
   },
     "free weights": {
       "exercises": {
@@ -36,7 +38,8 @@
         }
       },
       "items": ["No Items"],
-      "required items": ["none"]
+      "required items": ["none"],
+      "directions" : ["machines", "yoga studio", "front desk", "managers office"]
     },
     "machines": {
       "exercises": {
@@ -61,8 +64,9 @@
           "status": "fixed"
         }
       },
-      "items": ["No items"],
-      "required items": ["none"]
+      "items": ["items"],
+      "required items": ["none"],
+      "directions" : ["yoga studio", "managers office", "free weights"]
     },
     "yoga studio": {
       "exercises": {
@@ -88,7 +92,8 @@
         }
       },
       "items": ["No Items"],
-      "required items": ["key"]
+      "required items": ["key"],
+      "directions" : ["front desk", "machines", "free weights"]
     }
   }
 }
