@@ -2,6 +2,7 @@ package com.games.gobigorgohome;
 
 import com.apps.util.Console;
 import com.apps.util.Prompter;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
@@ -14,11 +15,12 @@ public class Game {
 
     boolean isGameOver = false;
     private final Gym gym = Gym.getInstance();
-    private Player player;
+    private Player player = new Player();
     private int energy = player.getEnergy();
     private int currentEnergy = player.getEnergy();
     private String playerName = player.getName();
-    private JSONObject currentRoom;
+    private String currentRoomName = gym.getStarterRoomName();
+    private JSONObject currentRoom = gym.getStarterRoom();
     private JSONObject rooms = gym.getRooms();
     private Prompter prompter;
 
@@ -47,8 +49,8 @@ public class Game {
     //    updates player with current game status e.g. player inventory, current room etc.
     private void gameStatus(){
         System.out.println("------------------------------");
-        System.out.println("Player: " + getPlayerName());
-        System.out.println("You are in the " + getCurrentRoom());
+        System.out.println("Player: " + player.getName());
+        System.out.println("You are in the " + currentRoomName);
         System.out.println(player.getName() + ", you have " + player.getInventory() + " in your gym bag.");
         System.out.println("Your current energy level is " + getCurrentEnergy() + " out of " + getEnergy());
         System.out.println("------------------------------");
@@ -56,11 +58,13 @@ public class Game {
 
     //    main function running the game, here we call all other functions necessary to run the game
     public void playGame(){
+
         getNewPlayerInfo();
-        gameStatus();
+
         // runs a while loop
         while (!isGameOver()) {
-            // call functions
+            gameStatus();
+
             Console.clear();
             String[] command = promptForPlayerInput();
             parsingThroughStringValues(command);
@@ -81,6 +85,7 @@ public class Game {
         Console.clear();
 
     }
+
     //this method will handle the user's input for the action
 //    and the according methods called for whatever action
     private void updateGame() {
@@ -91,12 +96,8 @@ public class Game {
     }
 
     public String[] returningInputFromStringAsSplitArray(String command){
-
-        String[] sArr = command.split(" ");
         // String s2 = in.nextLine();
-
-        return sArr;
-
+        return command.split(" ");
     }
 
     public String[] promptForPlayerInput(){
@@ -110,37 +111,69 @@ public class Game {
         List<String> actionList = Arrays.asList(action);
         String actionPrefix = actionList.get(0);
         String playerAction = actionList.get(1);
+        System.out.println(playerAction + "DEBUG");
 
         if (actionPrefix.equals("get")){
             grabItem(playerAction);
 
         }else if(actionPrefix.equals("go")){
             System.out.println("you're going here: "+ playerAction);
+            currentRoomName = playerAction;
             setCurrentRoom(rooms.get(playerAction));
 
         }else if(actionPrefix.equals("use")){
             playerUseMachine(playerAction);
 
             return actionList.get(1);
-        }else if(actionList.get(0).equals("consume")){
+        }else if(actionPrefix.equals("consume")){
             System.out.println("you're consuming the: "+actionList.get(1));
             player.useItem(actionList.get(1));
+            return actionList.get(1);
+
+        }else if(actionPrefix.equals("inspect")){
+            inspectRoom();
             return actionList.get(1);
         }
 
         return actionList.get(1);
     }
 
-    private void playerUseMachine(String machine) {
-        System.out.println("you're using the: "+ machine);
+    private void inspectRoom() {
+        // room name
+        System.out.println("You are in " + currentRoomName);
+        System.out.println(currentRoom);
 
-        Map<String, Object> bodyAndMachineEnergy = currentRoom.get(machine);
+        // exercises
+        JSONObject exercises = (JSONObject) currentRoom.get("exercises");
+        System.out.println("Exercises available are: " + exercises.keySet());
 
-        String muscleGroup = bodyAndMachineEnergy.get("target muscle")[0];
-        int energyCost = Integer.parseInt(bodyAndMachineEnergy.get("energy cost"));
-        String machineStatus = bodyAndMachineEnergy.get("status");
+        // items
+        JSONArray items = (JSONArray) currentRoom.get("items");
+        System.out.println("You see: " + items);
 
-        player.useMachine(muscleGroup, machineStatus, energyCost);
+        // TODO: NPCs
+
+        // TODO: Possible Directions
+
+        // TODO: add information about idividual machines
+    }
+
+    private void setCurrentRoom(Object currentRoom) {
+
+        this.currentRoom = (JSONObject) currentRoom;
+    }
+
+    private void playerUseMachine(String exercise) {
+        System.out.println("you're using the: "+ exercise);
+        JSONObject exercises = (JSONObject) currentRoom.get("exercises");
+//        TODO: validate for broken machines -> when player tries to use machine they are prompted to use wrench from inventory
+//        Map<String, Object> bodyAndMachineEnergy = currentRoom.get("exersices");
+
+//        String muscleGroup = exercises.get("target muscle")[0];
+//        int energyCost = Integer.parseInt(exercises.get("energy cost"));
+//        String machineStatus = exercises.get("status");
+//
+//        player.useMachine(muscleGroup, machineStatus, energyCost);
     }
 
     private void grabItem(String playerAction) {
