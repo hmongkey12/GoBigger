@@ -1,5 +1,8 @@
 package com.games.gobigorgohome;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,16 +73,35 @@ public class Player {
         return getInventory().contains(item);
     }
 
-    public String useItem(String item) {
+    public String useItem(String item, JSONObject room ) {
         String response = " a default item";
-        if(item.equals("key")){
-            response = item;
-        }else if(item.equals("wrench")){
-            response = item;
+        if(isItemInInventory(item)){
+            boolean isThisItemRequired = isItemRequired( item, room );
+            if(item.equals("key") && isThisItemRequired){
+                response = item;
+                getInventory().remove(item);
+            }else if(item.equals("wrench") && isThisItemRequired){
+                response = item;
+                getInventory().remove(item);
+            }else if(item.equals("energy drink") || item.equals("steroids")){
+                response = item;
+                getInventory().remove(item);
+            }
         }
+        //the idea is to return the string for validation purposes
         return response;
     }
 
+    public boolean isItemRequired(String item, JSONObject room){
+        boolean result = false;
+        JSONArray required_items= (JSONArray) room.get("required items");
+
+        if(required_items.contains(item)){
+            result = true;
+        }
+
+        return result;
+    }
     public void talkTo() {
         // talk to npc
     }
