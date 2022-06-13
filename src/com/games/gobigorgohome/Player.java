@@ -60,13 +60,13 @@ public class Player {
         return newRoom;
     }
 
-    public String getItem(String item) {
-        String itemToGet = "item not here";
+    public String getItemAndPlaceInInventory(String item) {
+
 //        mayybe this contains method could be a method itself.
-        if(isItemInInventory(item)){
-            itemToGet = inventory.get(inventory.indexOf(item));
+        if(isItemInInventory(item) == false){
+            getInventory().add(item);
         }
-        return itemToGet;
+        return item;
     }
 
     private boolean isItemInInventory(String item){
@@ -79,14 +79,16 @@ public class Player {
             boolean isThisItemRequired = isItemRequired( item, room );
             if(item.equals("key") && isThisItemRequired){
                 response = item;
-                getInventory().remove(item);
+                removeItemFromInventory(item);
             }else if(item.equals("wrench") && isThisItemRequired){
                 response = item;
-                getInventory().remove(item);
+                removeItemFromInventory(item);
             }else if(item.equals("energy drink") || item.equals("steroids")){
                 response = item;
-                getInventory().remove(item);
+                removeItemFromInventory(item);
             }
+        }else{
+            System.out.println("oi mate! that's not in your inventory");
         }
         //the idea is to return the string for validation purposes
         return response;
@@ -99,8 +101,11 @@ public class Player {
         if(required_items.contains(item)){
             result = true;
         }
-
         return result;
+    }
+    public String removeItemFromInventory(String item){
+        getInventory().remove(item);
+        return item;
     }
     public void talkTo() {
         // talk to npc
@@ -122,7 +127,7 @@ public class Player {
 
         boolean couldYouConsume = false;
 //        this could be replaced with a try catch but it would have to have an exception in it.
-        if(isItemInInventory(item)){
+
             if(item.equals("energy drink")){
                 System.out.println("Ahh yeah man more energy to work out!!");
                 addToPlayerEnergy(5); // hard coded value that we can talk about later
@@ -132,10 +137,7 @@ public class Player {
                 System.out.println("GAME OVER");
                 couldYouConsume= true;
             }
-        }else{
-            System.out.println("not in inventory mate ;/");
-            couldYouConsume= false;
-        }
+
 
         return couldYouConsume;
 
