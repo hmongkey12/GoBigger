@@ -9,7 +9,6 @@ import org.json.simple.parser.ParseException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 public class Game {
 
@@ -24,6 +23,7 @@ public class Game {
     private JSONObject rooms = gym.getRooms();
     private Prompter prompter;
     private SplashPage page = new SplashPage();
+    private ParseJSON jsonParser = new ParseJSON();
 
     public Game(Prompter prompter) throws IOException, ParseException {
         this.prompter = prompter;
@@ -104,34 +104,37 @@ public class Game {
         String[] commandArr = returningInputFromStringAsSplitArray(command);
         quit(command);
 //        code to be tested
-        commandArr = validatePLayerBeginningCommand(commandArr);
+//        commandArr = validatePLayerBeginningCommand(commandArr);
         return commandArr;
     }
 
-    private String[] validatePLayerBeginningCommand(String[] userCommand) {
-        String[] validWords = {"go", "use", "consume", "inspect", "get"};
-//        we're converiting the array to a list, a using the contains method to see if the submitted usercommand is inside of it.
-        boolean contains = Arrays.asList(validWords).contains(userCommand[0]);
-//        if contains IS false THEN we just call the validate method.
-        if(!contains){
-            System.out.println(userCommand[0] + " was sadly and invalid answer. \n please use one of the following: " + Arrays.toString(validWords));
-            promptForPlayerInput();
-        }
-        return userCommand;
-    }
+//    private String[] validatePLayerBeginningCommand(String[] userCommand) {
+//        String[] validWords = {"go", "use", "consume", "inspect", "get"};
+////        we're converiting the array to a list, a using the contains method to see if the submitted usercommand is inside of it.
+//        boolean contains = Arrays.asList(validWords).contains(userCommand[0]);
+////        if contains IS false THEN we just call the validate method.
+//        if(!contains){
+//            System.out.println(userCommand[0] + " was sadly and invalid answer. \n please use one of the following: " + Arrays.toString(validWords));
+//            promptForPlayerInput();
+//        }
+//        return userCommand;
+//    }
 
-    public String parsingThroughStringValues(String[] action){
+    public void parsingThroughStringValues(String[] action){
 
         List<String> actionList = Arrays.asList(action);
 //        String actionPrefix = actionList.get(0);
 //        String playerAction = actionList.get(1);
         String actionPrefix = "";
         String playerAction = "";
+
+        if(actionList.size() >= 1) {
+            actionPrefix = actionList.get(0);
+        }
+
         if(actionList.size() == 2){
-            actionPrefix = actionList.get(0);
             playerAction = actionList.get(1);
-        }if(actionList.size() == 3){
-            actionPrefix = actionList.get(0);
+        } else if(actionList.size() == 3){
             playerAction = (actionList.get(1) + " " + actionList.get(2)) ;
         }
 
@@ -145,41 +148,48 @@ public class Game {
             currentRoomName = playerAction;
             setCurrentRoom(rooms.get(playerAction));
 
-        }else if(actionPrefix.equals("use")){
+        }else if(actionPrefix.equals("workout")){
             playerUseMachine(playerAction);
 
-            return actionList.get(1);
-        }else if(actionPrefix.equals("consume")){
-            System.out.println("you're consuming the: "+actionList.get(1));
-//            player.useItem(actionList.get(1));//this method will not work because it needs the players room as well
-            return actionList.get(1);
+        }else if(actionPrefix.equals("use")) {
+            if (player.useItem(playerAction, currentRoom)) {
+                player.removeItemFromInventory(playerAction);
+            }
 
-        }else if(actionPrefix.equals("inspect")){
+        } else if(actionPrefix.equals("consume")){
+            if (player.consumeItem(playerAction)) {
+                player.removeItemFromInventory(playerAction);
+            }
+
+        } else if(actionPrefix.equals("inspect")){
             inspectRoom();
-            return actionList.get(1);
+        } else {
+//            TODO: add array with possible values for commands
+            System.out.println(actionPrefix + " was sadly and invalid answer. \n please use one of the following: " );
+//            TODO: fix bug caused by pressing enter where prompt for player does not work and calls inspect
+            promptForPlayerInput();
         }
-
-        return actionList.get(1);
     }
 
     private void inspectRoom() {
         // room name
         System.out.println("You are in " + currentRoomName);
-        System.out.println(currentRoom);
 
         // exercises
-        JSONObject exercises = (JSONObject) currentRoom.get("exercises");
+        JSONObject exercises = jsonParser.getJSONObjectFromJSONObject(currentRoom, "exercises");
         System.out.println("Exercises available are: " + exercises.keySet());
 
         // items
-        JSONArray items = (JSONArray) currentRoom.get("items");
+        JSONArray items = jsonParser.getJSONArrayFromJSONObject(currentRoom, "items");
         System.out.println("You see: " + items);
 
         // TODO: NPCs
 
         // TODO: Possible Directions
+        JSONArray directions = jsonParser.getJSONArrayFromJSONObject(currentRoom, "directions");
+        System.out.println("You can go to " + directions);
 
-        // TODO: add information about idividual machines
+        // TODO: add information about individual machines
     }
 
     private void setCurrentRoom(Object currentRoom) {

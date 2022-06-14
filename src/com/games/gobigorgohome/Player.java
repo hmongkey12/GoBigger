@@ -73,25 +73,22 @@ public class Player {
         return getInventory().contains(item);
     }
 
-    public String useItem(String item, JSONObject room ) {
-        String response = " a default item";
+    public Boolean useItem(String item, JSONObject room ) {
+        Boolean isItemConsumed = false;
         if(isItemInInventory(item)){
             boolean isThisItemRequired = isItemRequired( item, room );
             if(item.equals("key") && isThisItemRequired){
-                response = item;
+                isItemConsumed = true;
                 removeItemFromInventory(item);
             }else if(item.equals("wrench") && isThisItemRequired){
-                response = item;
-                removeItemFromInventory(item);
-            }else if(item.equals("energy drink") || item.equals("steroids")){
-                response = item;
+                isItemConsumed = true;
                 removeItemFromInventory(item);
             }
         }else{
             System.out.println("oi mate! that's not in your inventory");
         }
         //the idea is to return the string for validation purposes
-        return response;
+        return isItemConsumed;
     }
 
     public boolean isItemRequired(String item, JSONObject room){
@@ -136,6 +133,8 @@ public class Player {
                 hasPlayerUsedSteroids(true);
                 System.out.println("GAME OVER");
                 couldYouConsume= true;
+            }else {
+                System.out.println("oi mate! that's not in your inventory");
             }
 
 

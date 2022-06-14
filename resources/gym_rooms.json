@@ -21,23 +21,33 @@
       "name" : "free weights",
       "exercises": {
         "bench press": {
-          "target muscles": ["chest"],
+          "target muscles": [
+            "chest"
+          ],
           "status": "fixed"
         },
         "skull crushers": {
-          "target muscles": ["triceps"],
+          "target muscles": [
+            "triceps"
+          ],
           "status": "fixed"
         },
         "overhead press": {
-          "target muscles": ["shoulders"],
+          "target muscles": [
+            "shoulders"
+          ],
           "status": "fixed"
         },
         "squat": {
-          "target muscles": ["legs"],
+          "target muscles": [
+            "legs"
+          ],
           "status": "fixed"
         },
         "deadlift": {
-          "target muscles": ["back"],
+          "target muscles": [
+            "back"
+          ],
           "status": "fixed"
         }
       },

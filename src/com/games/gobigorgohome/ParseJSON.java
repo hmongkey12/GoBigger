@@ -1,5 +1,6 @@
 package com.games.gobigorgohome;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -21,8 +22,12 @@ class ParseJSON {
 
 //    takes a Json object and a string and returns JSON object
     public JSONObject getJSONObjectFromJSONObject(JSONObject jsonObject, String objectName) {
-        System.out.println(jsonObject);
+
         return (JSONObject) jsonObject.get(objectName);
+    }
+
+    public JSONArray getJSONArrayFromJSONObject(JSONObject jsonObject, String objectName) {
+        return (JSONArray) jsonObject.get(objectName);
     }
 
 //    takes a jsonObject and returns a string with the object name
