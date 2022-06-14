@@ -15,7 +15,7 @@ import javax.crypto.spec.PSource;
 
 public class Gym {
     private JSONParser parser = new JSONParser();
-    private Object objJSON = parser.parse(new FileReader("resources/gym_rooms.json"));
+    private Object objJSON = parser.parse(new FileReader("GoBigGoHome/resources/gym_rooms.json"));
     private JSONObject rooms = (JSONObject) objJSON;
     private String starterRoomName = "front desk";
     private JSONObject starterRoom = (JSONObject) getRooms().get("front desk");

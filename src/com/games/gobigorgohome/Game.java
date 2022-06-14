@@ -100,8 +100,9 @@ public class Game {
     }
 
     public String[] promptForPlayerInput(){
-        String command = prompter.prompt("What is your move? ");
+        String command = prompter.prompt("(Hit Q to quit) What is your move? ");
         String[] commandArr = returningInputFromStringAsSplitArray(command);
+        quit(command);
 //        code to be tested
         commandArr = validatePLayerBeginningCommand(commandArr);
         return commandArr;
@@ -210,7 +211,14 @@ public class Game {
     }
 
     //    gives player ability to quit
-    private void quit(){}
+    private void quit(String command){
+        if(command.equalsIgnoreCase("q")){
+            Console.clear();
+            System.out.println("You are a quitter!...GAME OVER");
+            System.exit(0);
+
+        }
+    }
 
     //    start a new game
     private void newGame(){}
