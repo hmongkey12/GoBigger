@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="goBigGoHome:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/goBigGoHome_jar</output-path>
+    <root id="archive" name="goBigGoHome.jar">
+      <element id="module-output" name="goBigGoHome" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/out/artifacts/goBigGoHome_jar/goBigGoHome.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

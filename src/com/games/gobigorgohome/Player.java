@@ -1,5 +1,8 @@
 package com.games.gobigorgohome;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,29 +60,53 @@ public class Player {
         return newRoom;
     }
 
-    public String getItem(String item) {
-        String itemToGet = "item not here";
+    public String getItemAndPlaceInInventory(String item) {
+
 //        mayybe this contains method could be a method itself.
-        if(isItemInInventory(item)){
-            itemToGet = inventory.get(inventory.indexOf(item));
+        if(isItemInInventory(item) == false){
+            getInventory().add(item);
         }
-        return itemToGet;
+        return item;
     }
 
     private boolean isItemInInventory(String item){
         return getInventory().contains(item);
     }
 
-    public String useItem(String item) {
+    public String useItem(String item, JSONObject room ) {
         String response = " a default item";
-        if(item.equals("key")){
-            response = item;
-        }else if(item.equals("wrench")){
-            response = item;
+        if(isItemInInventory(item)){
+            boolean isThisItemRequired = isItemRequired( item, room );
+            if(item.equals("key") && isThisItemRequired){
+                response = item;
+                removeItemFromInventory(item);
+            }else if(item.equals("wrench") && isThisItemRequired){
+                response = item;
+                removeItemFromInventory(item);
+            }else if(item.equals("energy drink") || item.equals("steroids")){
+                response = item;
+                removeItemFromInventory(item);
+            }
+        }else{
+            System.out.println("oi mate! that's not in your inventory");
         }
+        //the idea is to return the string for validation purposes
         return response;
     }
 
+    public boolean isItemRequired(String item, JSONObject room){
+        boolean result = false;
+        JSONArray required_items= (JSONArray) room.get("required items");
+
+        if(required_items.contains(item)){
+            result = true;
+        }
+        return result;
+    }
+    public String removeItemFromInventory(String item){
+        getInventory().remove(item);
+        return item;
+    }
     public void talkTo() {
         // talk to npc
     }
@@ -100,7 +127,7 @@ public class Player {
 
         boolean couldYouConsume = false;
 //        this could be replaced with a try catch but it would have to have an exception in it.
-        if(isItemInInventory(item)){
+
             if(item.equals("energy drink")){
                 System.out.println("Ahh yeah man more energy to work out!!");
                 addToPlayerEnergy(5); // hard coded value that we can talk about later
@@ -110,10 +137,7 @@ public class Player {
                 System.out.println("GAME OVER");
                 couldYouConsume= true;
             }
-        }else{
-            System.out.println("not in inventory mate ;/");
-            couldYouConsume= false;
-        }
+
 
         return couldYouConsume;
 
