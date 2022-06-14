@@ -151,7 +151,7 @@ public class Game {
             return actionList.get(1);
         }else if(actionPrefix.equals("consume")){
             System.out.println("you're consuming the: "+actionList.get(1));
-            player.useItem(actionList.get(1));//this method will not work because it needs the players room as well
+//            player.useItem(actionList.get(1));//this method will not work because it needs the players room as well
             return actionList.get(1);
 
         }else if(actionPrefix.equals("inspect")){
@@ -216,17 +216,13 @@ public class Game {
             Console.clear();
             System.out.println("You are a quitter!...GAME OVER");
             System.exit(0);
-
         }
     }
 
-    //    start a new game
-    private void newGame(){}
 
     public JSONObject getCurrentRoom() {
         return currentRoom;
     }
-
 
 
     // accessor methods
