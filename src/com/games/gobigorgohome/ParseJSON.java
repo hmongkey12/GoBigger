@@ -34,4 +34,5 @@ class ParseJSON {
     public String getObjectNameFromJSONObject(JSONObject jsonObject) {
         return (String) jsonObject.get("name");
     }
+//    hard code values so that we can get certain objects from the individual.
 }
