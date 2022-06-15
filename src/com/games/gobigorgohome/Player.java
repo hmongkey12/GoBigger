@@ -1,7 +1,12 @@
 package com.games.gobigorgohome;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Player {
 //    idea- creating a class that's parsing through the json? and putting certain information into lists mainly lists of the muscles and the exercises that work them out.
@@ -23,10 +28,10 @@ public class Player {
     private boolean isBackWorked = false;
     private boolean isCoreWorked = false;
     private boolean isShoulderWorked = false;
+    private boolean isBicepsWorked = false;
     private boolean isSteroidsUsed = false;
 
 //    constructors
-
     public Player(){
     }
 
@@ -46,10 +51,32 @@ public class Player {
     //    business methods
 
 //    we need to think about what values are being played around with or manipulated that can be tested?
-    public void useMachine(String muscleGroup, String machineStatus, int energyCost){
-//        if(bodyPart.equals("chest")){
-//
-//        }
+    public void workout(JSONArray muscleGroup, int energyCost){
+        String targetMuscle = (String) muscleGroup.get(0);
+        if(Objects.equals(targetMuscle, "chest")) {
+            setChestWorked(true);
+        } else if (Objects.equals(targetMuscle, "back")) {
+            setBackWorked(true);
+        } else if (Objects.equals(targetMuscle, "core")) {
+            setCoreWorked(true);
+        } else if (Objects.equals(targetMuscle, "triceps")) {
+            setTricepsWorked(true);
+        } else if (Objects.equals(targetMuscle, "legs")) {
+            setLegsWorked(true);
+        } else if (Objects.equals(targetMuscle, "biceps")) {
+            setBicepsWorked(true);
+        } else if (Objects.equals(targetMuscle, "shoulders")) {
+            setShoulderWorked(true);
+        }
+        subtractFromPlayerEnergy(energyCost);
+    }
+
+    private void setBicepsWorked(boolean bicepsWorked) {
+        this.isBicepsWorked = bicepsWorked;
+    }
+
+    public boolean isWorkoutComplete() {
+        return isChestWorked && isCoreWorked && isLegsWorked && isTricepsWorked && isBackWorked;
     }
 //    i think this needs to be in the game class or the gym class because it relates to the item being returned in response to the rooms too
     public String moveRooms(String action){
@@ -57,29 +84,50 @@ public class Player {
         return newRoom;
     }
 
-    public String getItem(String item) {
-        String itemToGet = "item not here";
+    public String getItemAndPlaceInInventory(String item) {
+
 //        mayybe this contains method could be a method itself.
-        if(isItemInInventory(item)){
-            itemToGet = inventory.get(inventory.indexOf(item));
+        if(isItemInInventory(item) == false){
+            getInventory().add(item);
         }
-        return itemToGet;
+        return item;
     }
 
     private boolean isItemInInventory(String item){
         return getInventory().contains(item);
     }
 
-    public String useItem(String item) {
-        String response = " a default item";
-        if(item.equals("key")){
-            response = item;
-        }else if(item.equals("wrench")){
-            response = item;
+    public Boolean useItem(String item, JSONObject room ) {
+        Boolean isItemConsumed = false;
+        if(isItemInInventory(item)){
+            boolean isThisItemRequired = isItemRequired( item, room );
+            if(item.equals("key") && isThisItemRequired){
+                isItemConsumed = true;
+                removeItemFromInventory(item);
+            }else if(item.equals("wrench") && isThisItemRequired){
+                isItemConsumed = true;
+                removeItemFromInventory(item);
+            }
+        }else{
+            System.out.println("oi mate! that's not in your inventory");
         }
-        return response;
+        //the idea is to return the string for validation purposes
+        return isItemConsumed;
     }
 
+    public boolean isItemRequired(String item, JSONObject room){
+        boolean result = false;
+        JSONArray required_items= (JSONArray) room.get("required items");
+
+        if(required_items.contains(item)){
+            result = true;
+        }
+        return result;
+    }
+    public String removeItemFromInventory(String item){
+        getInventory().remove(item);
+        return item;
+    }
     public void talkTo() {
         // talk to npc
     }
@@ -100,7 +148,7 @@ public class Player {
 
         boolean couldYouConsume = false;
 //        this could be replaced with a try catch but it would have to have an exception in it.
-        if(isItemInInventory(item)){
+
             if(item.equals("energy drink")){
                 System.out.println("Ahh yeah man more energy to work out!!");
                 addToPlayerEnergy(5); // hard coded value that we can talk about later
@@ -109,11 +157,9 @@ public class Player {
                 hasPlayerUsedSteroids(true);
                 System.out.println("GAME OVER");
                 couldYouConsume= true;
+            }else {
+                System.out.println("oi mate! that's not in your inventory");
             }
-        }else{
-            System.out.println("not in inventory mate ;/");
-            couldYouConsume= false;
-        }
 
         return couldYouConsume;
 

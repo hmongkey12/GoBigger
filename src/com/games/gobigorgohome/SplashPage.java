@@ -16,13 +16,13 @@ public class SplashPage {
     }
 
     public void instructions(){
-        createAscii("resources/banner.txt");
+        createAscii("/Users/marucard/StudentWork/practical_java/project/resources/banner.txt");
         System.out.println("\033[33;1;2mWELCOME TO 'GO BIG OR GO HOME! v.1.1'\033[0m\nA game by \033[33;1;2mGAINZZZ Productions\033[0m where you maybe learn " +
                 "to use your gym time wisely and get BIG!");
         System.out.println("\033[31;4;1mINSTRUCTIONS:\033[0m");
-        createAscii("resources/instructions.txt");
+        createAscii("/Users/marucard/StudentWork/practical_java/project/resources/instructions.txt");
         System.out.println("\033[31;4;1m!!!IMPORTANT!!!:\033[0m");
-        createAscii("resources/instructions2.txt");
+        createAscii("/Users/marucard/StudentWork/practical_java/project/resources/instructions2.txt");
 
     }
 }
