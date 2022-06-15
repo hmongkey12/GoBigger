@@ -1,6 +1,5 @@
 package com.games.gobigorgohome;
 
-import java.io.FileReader;
 import java.io.IOException;
 
 import org.json.simple.JSONObject;
@@ -9,13 +8,17 @@ import org.json.simple.parser.*;
 
 public class Gym {
     private ParseJSON jsonParser = new ParseJSON();
+    private JSONObject rooms= null;
+    private String starterRoomName = "front desk";
+    private JSONObject starterRoom = null;
 
-    private JSONObject rooms = jsonParser.getJSONObjectFromFile("/Users/marucard/StudentWork/practical_java/project/resources/gym_rooms.json");
 //    private String starterRoomName = "front desk";
-    private JSONObject starterRoom = jsonParser.getJSONObjectFromJSONObject(getRooms(), "front desk");
-    private String starterRoomName = jsonParser.getObjectNameFromJSONObject(starterRoom);
+//    private JSONObject starterRoom = jsonParser.getJSONObjectFromJSONObject(getRooms(), "front desk");
+//    private String starterRoomName = jsonParser.getObjectNameFromJSONObject(starterRoom);
 
     public Gym() throws IOException, ParseException {
+        String gymRoomFilePath = "JSON/gym_rooms.json";
+        rooms = jsonParser.getJSONObjectFromFile(gymRoomFilePath);
 
     }
 
