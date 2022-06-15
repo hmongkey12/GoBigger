@@ -7,6 +7,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 
@@ -67,14 +68,17 @@ public class Game {
             Console.clear();
             String[] command = promptForPlayerInput();
             parsingThroughStringValues(command);
-            checkGameStatus();
+            if (checkGameStatus()){
+                break;
+            }
             updateGame();
         }
         gameResult();
-        playAgain();
+//        playAgain();
     }
 
-    private void checkGameStatus() {
+    private boolean checkGameStatus() {
+        return player.isWorkoutComplete();
     }
 
     private void playAgain() {
@@ -82,7 +86,7 @@ public class Game {
 
     private void gameResult() {
         Console.clear();
-
+        System.out.println("Game over");
     }
 
     //this method will handle the user's input for the action
@@ -197,10 +201,21 @@ public class Game {
         this.currentRoom = (JSONObject) currentRoom;
     }
 
-    private void playerUseMachine(String exercise) {
-        System.out.println("you're using the: "+ exercise);
-        JSONObject exercises = (JSONObject) currentRoom.get("exercises");
-//        TODO: validate for broken machines -> when player tries to use machine they are prompted to use wrench from inventory
+    private void playerUseMachine(String playerExcerciseInput) {
+        System.out.println("you're using the: "+ playerExcerciseInput);
+        JSONObject exercises = jsonParser.getJSONObjectFromJSONObject(currentRoom, "exercises");
+        JSONObject exercise = jsonParser.getJSONObjectFromJSONObject(exercises, playerExcerciseInput);
+        JSONArray targetMuscle = jsonParser.getJSONArrayFromJSONObject(exercise, "target muscles");
+        String exerciseStatus = (String) exercise.get("status");
+//        Integer energyCost = (Integer) exercise.get("energyCost");
+        int energyCost = 5;
+        if ("fixed".equals(exerciseStatus)) {
+            player.workout(targetMuscle, energyCost);
+        }
+
+        //        TODO: validate for broken machines -> when player tries to use machine they are prompted to use wrench from inventory
+        boolean isMachineBroken = true;
+
 //        Map<String, Object> bodyAndMachineEnergy = currentRoom.get("exersices");
 
 //        String muscleGroup = exercises.get("target muscle")[0];
