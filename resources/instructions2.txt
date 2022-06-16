@@ -1,8 +1,11 @@
 	6. To move type GO and the name of the room where you want to go. For example if you want to go the Machine room.
-	    type: GO MACHINE ROOM It does not matter if you use Capital or lower case.
+	type: GO MACHINE ROOM It does not matter if you use Capital or lower case.
 	
 	7. Same way if you want to USE a Machine or perform an exercise. For example type: USE BENCH PRESS It does not matter
-	    if you use Capital or lower case.
+	if you use Capital or lower case.
 
-	8. Finally is you want to GET an item follow the same pattern. For example type: GET KEYS t does not matter if you use
-	    Capital or lower case.
+	8. If you want to see what items or equipment there are into a room type: INSPECT ROOM It does not matter if you use
+    Capital or lower case.
+
+    9. Finally, is you want to GET an item follow the same pattern. For example type: GET KEYS t does not matter if you use
+    Capital or lower case.

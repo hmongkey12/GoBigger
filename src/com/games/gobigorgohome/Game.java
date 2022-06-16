@@ -59,7 +59,7 @@ public class Game {
     }
 
     //    main function running the game, here we call all other functions necessary to run the game
-    public void playGame(){
+    public void playGame() throws IOException {
         page.instructions();
         getNewPlayerInfo();
         // runs a while loop
