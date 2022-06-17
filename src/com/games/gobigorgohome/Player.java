@@ -11,7 +11,7 @@ import java.util.Objects;
 public class Player {
 //    idea- creating a class that's parsing through the json? and putting certain information into lists mainly lists of the muscles and the exercises that work them out.
 //    static variables
-    public final static int BASE_ENERGY = 50; //example not set in stone
+    public final static int BASE_ENERGY = 100; //example not set in stone
 
 
 //    fields
@@ -30,6 +30,9 @@ public class Player {
     private boolean isShoulderWorked = false;
     private boolean isBicepsWorked = false;
     private boolean isSteroidsUsed = false;
+
+
+    List<String> musclesWorked = new ArrayList<>();
 
 //    constructors
     public Player(){
@@ -51,24 +54,33 @@ public class Player {
     //    business methods
 
 //    we need to think about what values are being played around with or manipulated that can be tested?
-    public void workout(JSONArray muscleGroup, int energyCost){
+    public void workout(JSONArray muscleGroup, Long energyCost){
+        System.out.println(muscleGroup);
         String targetMuscle = (String) muscleGroup.get(0);
+
         if(Objects.equals(targetMuscle, "chest")) {
             setChestWorked(true);
+            musclesWorked.add(targetMuscle);
         } else if (Objects.equals(targetMuscle, "back")) {
             setBackWorked(true);
+            musclesWorked.add(targetMuscle);
         } else if (Objects.equals(targetMuscle, "core")) {
             setCoreWorked(true);
+            musclesWorked.add(targetMuscle);
         } else if (Objects.equals(targetMuscle, "triceps")) {
             setTricepsWorked(true);
+            musclesWorked.add(targetMuscle);
         } else if (Objects.equals(targetMuscle, "legs")) {
             setLegsWorked(true);
+            musclesWorked.add(targetMuscle);
         } else if (Objects.equals(targetMuscle, "biceps")) {
             setBicepsWorked(true);
+            musclesWorked.add(targetMuscle);
         } else if (Objects.equals(targetMuscle, "shoulders")) {
             setShoulderWorked(true);
+            musclesWorked.add(targetMuscle);
         }
-        subtractFromPlayerEnergy(energyCost);
+        subtractFromPlayerEnergy(Math.toIntExact(energyCost));
     }
 
     private void setBicepsWorked(boolean bicepsWorked) {
@@ -139,7 +151,7 @@ public class Player {
     }
 
     public int subtractFromPlayerEnergy(int energyToTake) {
-        int num = getEnergy() + energyToTake;
+        int num = getEnergy() - energyToTake;
         setEnergy(num);
         return getEnergy();
     }
@@ -286,25 +298,25 @@ public class Player {
         isShoulderWorked = shoulderWorked;
     }
 
+    public List<String> getMusclesWorked() {
+        if(musclesWorked.size() == 0) {
+            musclesWorked.add("none");
+        } else {
+            musclesWorked.remove("none");
+        }
+        return musclesWorked;
+    }
 
 //    toString
 
 
     @Override
     public String toString() {
-        return "Player{" +
-                "age=" + age +
-                ", name='" + name + '\'' +
-                ", energy=" + energy +
-                ", weight=" + weight +
-                ", inventory=" + inventory +
-                ", isChestWorked=" + isChestWorked +
-                ", isTricepsWorked=" + isTricepsWorked +
-                ", isLegsWorked=" + isLegsWorked +
-                ", isBackWorked=" + isBackWorked +
-                ", isCoreWorked=" + isCoreWorked +
-                ", isShoulderWorked=" + isShoulderWorked +
-                '}';
+        return "Player: " + name + "\n" +
+                "Age: " + age + ", Weight: " + weight +  ", Height: " + height + "\n" +
+                "Current Energy: " + energy + " out of " + BASE_ENERGY + "\n" +
+                "Gym Bag Contents: " + inventory + "\n" +
+                "Workout Status: " + getMusclesWorked().toString();
     }
 
 //    @Override

@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 public class Game {
 
@@ -51,10 +52,8 @@ public class Game {
     //    updates player with current game status e.g. player inventory, current room etc.
     private void gameStatus(){
         System.out.println("------------------------------");
-        System.out.println("Player: " + player.getName());
-        System.out.println("You are in the " + currentRoomName);
-        System.out.println(player.getName() + ", you have " + player.getInventory() + " in your gym bag.");
-        System.out.println("Your current energy level is " + getCurrentEnergy() + " out of " + getEnergy());
+        System.out.println("You are in the " + currentRoomName + " room.");
+        System.out.println(player.toString());
         System.out.println("------------------------------");
     }
 
@@ -207,22 +206,24 @@ public class Game {
         JSONObject exercise = jsonParser.getJSONObjectFromJSONObject(exercises, playerExcerciseInput);
         JSONArray targetMuscle = jsonParser.getJSONArrayFromJSONObject(exercise, "target muscles");
         String exerciseStatus = (String) exercise.get("status");
-//        Integer energyCost = (Integer) exercise.get("energyCost");
-        int energyCost = 5;
+        Long energyCost = (Long) exercise.get("energy cost");
         if ("fixed".equals(exerciseStatus)) {
             player.workout(targetMuscle, energyCost);
+            player.subtractFromPlayerEnergy(Math.toIntExact(energyCost));
+        } else {
+            if(player.getInventory().contains("wrench")){
+                String playerResponse = prompter.prompt("This machine is broken. Would you like to use your wrench to fix it? (y/n) \n >" );
+                if("y".equalsIgnoreCase(playerResponse)) {
+                    player.getInventory().remove("wrench");
+                    player.workout(targetMuscle, energyCost);
+                    player.subtractFromPlayerEnergy(Math.toIntExact(energyCost));
+                } else {
+                    System.out.println("When you are ready to workout, come back with the wrench and get to it.");
+                }
+            } else {
+                System.out.println("This machine is broken, please come back with a wrench to fix it.");
+            }
         }
-
-        //        TODO: validate for broken machines -> when player tries to use machine they are prompted to use wrench from inventory
-        boolean isMachineBroken = true;
-
-//        Map<String, Object> bodyAndMachineEnergy = currentRoom.get("exersices");
-
-//        String muscleGroup = exercises.get("target muscle")[0];
-//        int energyCost = Integer.parseInt(exercises.get("energy cost"));
-//        String machineStatus = exercises.get("status");
-//
-//        player.useMachine(muscleGroup, machineStatus, energyCost);
     }
 
     private void grabItem(String playerAction) {
