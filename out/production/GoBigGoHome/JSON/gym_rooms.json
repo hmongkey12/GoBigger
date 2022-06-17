@@ -8,12 +8,14 @@
         "items": ["wrench"],
         "required items": ["none"],
         "directions" : ["free weights", "yoga studio"],
-        "NPCS" : ["maintenance guy"]
+        "NPCS" : ["maintenance lady"]
 
     },
     "managers office": {
       "name" : "managers office",
-      "exercises": "none",
+      "exercises": {
+        "none" : "none"
+      },
       "items": ["key", "energy drink"],
       "required items": ["none"],
       "directions" : ["machine", "yoga studio", "free weights"],
@@ -92,7 +94,7 @@
           "energy cost" : 5
         }
       },
-      "items": ["items"],
+      "items": ["No items"],
       "required items": ["none"],
       "directions" : ["yoga studio", "managers office", "free weights"],
       "NPCS" : ["none"]

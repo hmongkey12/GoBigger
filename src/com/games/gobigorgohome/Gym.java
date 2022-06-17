@@ -10,16 +10,13 @@ public class Gym {
     private ParseJSON jsonParser = new ParseJSON();
     private JSONObject rooms= null;
     private String starterRoomName = "front desk";
-    private JSONObject starterRoom = null;
+    private Room starterRoom;
 
-//    private String starterRoomName = "front desk";
-//    private JSONObject starterRoom = jsonParser.getJSONObjectFromJSONObject(getRooms(), "front desk");
-//    private String starterRoomName = jsonParser.getObjectNameFromJSONObject(starterRoom);
 
     public Gym() throws IOException, ParseException {
         String gymRoomFilePath = "JSON/gym_rooms.json";
         rooms = jsonParser.getJSONObjectFromFile(gymRoomFilePath);
-
+        starterRoom = new Room((JSONObject) getRooms().get(starterRoomName));
     }
 
     public static Gym getInstance() throws IOException, ParseException {
@@ -31,7 +28,7 @@ public class Gym {
         return (JSONObject) this.rooms.get("rooms");
     }
 
-    public JSONObject getStarterRoom() {
+    public Room getStarterRoom() {
         return starterRoom;
     }
 

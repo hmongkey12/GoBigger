@@ -4,25 +4,58 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class Room {
-
-    String name;
-    JSONObject room;
-    JSONArray items;
-    JSONObject exercises;
-    JSONObject npcsJSON;
-    String npc_type = (String) npcsJSON.get(0);
-    NPC npc = new NPC(npc_type);
     ParseJSON aParser = new ParseJSON();
 
+    String roomName;
+    JSONArray items;
+    JSONObject exercises;
+
+    JSONArray directions;
+    String npc_type;
+    JSONArray requiredItems;
+    NPC npc;
+
     public Room(JSONObject room) throws IOException, ParseException {
-        this.name = aParser.getObjectNameFromJSONObject(room);
+        this.roomName = aParser.getObjectNameFromJSONObject(room);
         this.items = aParser.getJSONArrayFromJSONObject(room,"items");
         this.exercises = (JSONObject) room.get("exercises");
-        this.npcsJSON = aParser.getJSONObjectFromJSONObject( room, "NPCS");
+        this.directions = aParser.getJSONArrayFromJSONObject(room,"directions");
+        this.npc_type = (String) aParser.getJSONArrayFromJSONObject( room, "NPCS").get(0);
+        if(!"none".equals(npc_type)) {
+            this.npc = new NPC(npc_type);
+        }
     }
 
+
+
+    public JSONArray getItems() {
+        return items;
+    }
+
+    public String getRoomName() {
+        return roomName;
+    }
+
+    public JSONObject getExercises() {
+        return exercises;
+    }
+
+    public JSONArray getRequiredItems() {
+        return requiredItems;
+    }
+
+    public JSONArray getDirections() {
+        return directions;
+    }
+
+    public String getNpc_type() {
+        return npc_type;
+    }
+
+    public NPC getNpc() {
+        return npc;
+    }
 }

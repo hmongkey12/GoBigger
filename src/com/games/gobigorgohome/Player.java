@@ -109,7 +109,7 @@ public class Player {
         return getInventory().contains(item);
     }
 
-    public Boolean useItem(String item, JSONObject room ) {
+    public Boolean useItem(String item, Room room ) {
         Boolean isItemConsumed = false;
         if(isItemInInventory(item)){
             boolean isThisItemRequired = isItemRequired( item, room );
@@ -127,9 +127,10 @@ public class Player {
         return isItemConsumed;
     }
 
-    public boolean isItemRequired(String item, JSONObject room){
+//    TODO: move this to game class
+    public boolean isItemRequired(String item, Room room){
         boolean result = false;
-        JSONArray required_items= (JSONArray) room.get("required items");
+        JSONArray required_items= room.getRequiredItems();
 
         if(required_items.contains(item)){
             result = true;

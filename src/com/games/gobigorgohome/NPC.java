@@ -15,15 +15,20 @@ public class NPC {
     private String npc_type;
 
     private JSONObject npc;
-    private String npcName = (String) npc.get("name");
-    private String npcLocation = (String) npc.get("location");
-    private JSONArray inventory = (JSONArray) npc.get("inventory"); //convert this to an Array
-    private JSONArray phrases = (JSONArray) npc.get("dialog");
+    private String npcName ;
+    private String npcLocation ;
+    private JSONArray inventory ; //convert this to an Array
+    private JSONArray phrases;
 
 
     public NPC(String npc_type) throws IOException, ParseException {
-        this.npc_type = npc_type;
+
         this.npc = (JSONObject) npcs.get(npc_type);
+
+        this.npcName = (String) npc.get("name");
+        this.npcLocation = (String) npc.get("location");
+        this.inventory = (JSONArray) npc.get("inventory");
+        this.phrases = (JSONArray) npc.get("dialog");
     }
 
 //    private String returnName(JSONObject character){
@@ -48,6 +53,11 @@ public class NPC {
 //        return phrases;
 //    }
 
+    public String generateDialog() {
+        int  index = (int) (Math.random() * getPhrases().size());
+        return (String) getPhrases().get(index);
+    }
+
     public JSONObject getNpc() {
         return npc;
     }
@@ -67,4 +77,5 @@ public class NPC {
     public JSONArray getPhrases() {
         return phrases;
     }
+
 }

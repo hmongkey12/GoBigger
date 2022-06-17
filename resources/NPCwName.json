@@ -9,7 +9,7 @@
       ],
       "inventory": ["key"]
     },
-    "maintenance guy": {
+    "maintenance lady": {
       "location": "front desk",
       "name": "Kate the maintenance lady",
       "dialog": [

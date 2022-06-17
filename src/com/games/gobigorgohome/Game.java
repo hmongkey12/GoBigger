@@ -7,10 +7,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
 public class Game {
 
@@ -21,7 +19,7 @@ public class Game {
     private int currentEnergy = player.getEnergy();
     private String playerName = player.getName();
     private String currentRoomName = gym.getStarterRoomName();
-    private JSONObject currentRoom = gym.getStarterRoom();
+    private Room currentRoom = gym.getStarterRoom();
     private JSONObject rooms = gym.getRooms();
     private Prompter prompter;
     private SplashPage page = new SplashPage();
@@ -30,7 +28,6 @@ public class Game {
     public Game(Prompter prompter) throws IOException, ParseException {
         this.prompter = prompter;
     }
-
 
     //    collects current input from user to update their avatar
     private void getNewPlayerInfo(){
@@ -58,7 +55,7 @@ public class Game {
     }
 
     //    main function running the game, here we call all other functions necessary to run the game
-    public void playGame() throws IOException {
+    public void playGame() throws IOException, ParseException {
         page.instructions();
         getNewPlayerInfo();
         // runs a while loop
@@ -73,7 +70,6 @@ public class Game {
             updateGame();
         }
         gameResult();
-//        playAgain();
     }
 
     private boolean checkGameStatus() {
@@ -123,7 +119,7 @@ public class Game {
 //        return userCommand;
 //    }
 
-    public void parsingThroughStringValues(String[] action){
+    public void parsingThroughStringValues(String[] action) throws IOException, ParseException {
 
         List<String> actionList = Arrays.asList(action);
 //        String actionPrefix = actionList.get(0);
@@ -166,7 +162,10 @@ public class Game {
 
         } else if(actionPrefix.equals("inspect")){
             inspectRoom();
-        } else {
+        } else if(actionPrefix.equals("talk")){
+            talkToNPC();
+        }
+        else {
 //            TODO: add array with possible values for commands
             System.out.println(actionPrefix + " was sadly and invalid answer. \n please use one of the following: " );
 //            TODO: fix bug caused by pressing enter where prompt for player does not work and calls inspect
@@ -174,35 +173,47 @@ public class Game {
         }
     }
 
+    private void talkToNPC() {
+        String dialog = currentRoom.getNpc().generateDialog();
+        System.out.println(dialog);
+
+        String npcItem = (String) currentRoom.npc.getInventory().get(0);
+
+        player.getInventory().add(npcItem);
+        System.out.println("You addded " + npcItem + " to your gym bag.");
+    }
+
     private void inspectRoom() {
         // room name
         System.out.println("You are in " + currentRoomName);
 
         // exercises
-        JSONObject exercises = jsonParser.getJSONObjectFromJSONObject(currentRoom, "exercises");
+        JSONObject exercises = currentRoom.getExercises();
         System.out.println("Exercises available are: " + exercises.keySet());
 
         // items
-        JSONArray items = jsonParser.getJSONArrayFromJSONObject(currentRoom, "items");
+        JSONArray items = currentRoom.getItems();
         System.out.println("You see: " + items);
 
-        // TODO: NPCs
+        // NPCs
+        String npc = currentRoom.getNpc() == null ? "No one" : currentRoom.getNpc().getNpcName();
 
-        // TODO: Possible Directions
-        JSONArray directions = jsonParser.getJSONArrayFromJSONObject(currentRoom, "directions");
+        System.out.println(npc + " is standing in there with you.");
+
+        // Possible Directions
+        JSONArray directions = currentRoom.getDirections();
         System.out.println("You can go to " + directions);
 
-        // TODO: add information about individual machines
     }
 
-    private void setCurrentRoom(Object currentRoom) {
+    private void setCurrentRoom(Object currentRoom) throws IOException, ParseException {
 
-        this.currentRoom = (JSONObject) currentRoom;
+        this.currentRoom = new Room((JSONObject) currentRoom) ;
     }
 
     private void playerUseMachine(String playerExcerciseInput) {
         System.out.println("you're using the: "+ playerExcerciseInput);
-        JSONObject exercises = jsonParser.getJSONObjectFromJSONObject(currentRoom, "exercises");
+        JSONObject exercises = currentRoom.getExercises();
         JSONObject exercise = jsonParser.getJSONObjectFromJSONObject(exercises, playerExcerciseInput);
         JSONArray targetMuscle = jsonParser.getJSONArrayFromJSONObject(exercise, "target muscles");
         String exerciseStatus = (String) exercise.get("status");
@@ -246,7 +257,7 @@ public class Game {
     }
 
 
-    public JSONObject getCurrentRoom() {
+    public Room getCurrentRoom() {
         return currentRoom;
     }
 
