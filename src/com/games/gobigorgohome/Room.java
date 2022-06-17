@@ -17,6 +17,7 @@ public class Room {
     String npc_type;
     JSONArray requiredItems;
     NPC npc;
+    Map roomMap = new Map();
 
     public Room(JSONObject room) throws IOException, ParseException {
         this.roomName = aParser.getObjectNameFromJSONObject(room);
@@ -29,7 +30,9 @@ public class Room {
         }
     }
 
-
+    public void getRoomMap(String roomName) throws IOException {
+        roomMap.stringEditor(roomName);
+    }
 
     public JSONArray getItems() {
         return items;

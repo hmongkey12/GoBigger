@@ -9,6 +9,7 @@ import org.json.simple.parser.ParseException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.StringJoiner;
 
 public class Game {
 
@@ -72,26 +73,18 @@ public class Game {
         gameResult();
     }
 
+    private void updateGame() {
+    }
+
     private boolean checkGameStatus() {
         return player.isWorkoutComplete();
     }
-
-    private void playAgain() {
-    }
-
+    
     private void gameResult() {
         Console.clear();
         System.out.println("Game over");
     }
-
-    //this method will handle the user's input for the action
-//    and the according methods called for whatever action
-    private void updateGame() {
-    }
-
-
-    private void validateInput() {
-    }
+    
 
     public String[] returningInputFromStringAsSplitArray(String command){
         // String s2 = in.nextLine();
@@ -107,23 +100,11 @@ public class Game {
         return commandArr;
     }
 
-//    private String[] validatePLayerBeginningCommand(String[] userCommand) {
-//        String[] validWords = {"go", "use", "consume", "inspect", "get"};
-////        we're converiting the array to a list, a using the contains method to see if the submitted usercommand is inside of it.
-//        boolean contains = Arrays.asList(validWords).contains(userCommand[0]);
-////        if contains IS false THEN we just call the validate method.
-//        if(!contains){
-//            System.out.println(userCommand[0] + " was sadly and invalid answer. \n please use one of the following: " + Arrays.toString(validWords));
-//            promptForPlayerInput();
-//        }
-//        return userCommand;
-//    }
 
     public void parsingThroughStringValues(String[] action) throws IOException, ParseException {
 
         List<String> actionList = Arrays.asList(action);
-//        String actionPrefix = actionList.get(0);
-//        String playerAction = actionList.get(1);
+
         String actionPrefix = "";
         String playerAction = "";
 
@@ -164,6 +145,8 @@ public class Game {
             inspectRoom();
         } else if(actionPrefix.equals("talk")){
             talkToNPC();
+        } else if(actionPrefix.equals("see")){
+            getRoomMap();
         }
         else {
 //            TODO: add array with possible values for commands
@@ -171,6 +154,10 @@ public class Game {
 //            TODO: fix bug caused by pressing enter where prompt for player does not work and calls inspect
             promptForPlayerInput();
         }
+    }
+    
+    private void getRoomMap() throws IOException {
+        currentRoom.getRoomMap(currentRoomName);
     }
 
     private void talkToNPC() {
