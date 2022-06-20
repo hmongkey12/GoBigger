@@ -5,7 +5,7 @@
         "exercises": {
           "none" : "none"
         },
-        "items": ["wrench"],
+        "items": ["No Items"],
         "required items": ["none"],
         "directions" : ["free weights", "yoga studio"],
         "NPCS" : ["maintenance lady"]
@@ -16,7 +16,7 @@
       "exercises": {
         "none" : "none"
       },
-      "items": ["key", "energy drink"],
+      "items": ["energy drink"],
       "required items": ["none"],
       "directions" : ["machine", "yoga studio", "free weights"],
       "NPCS" : ["manager"]

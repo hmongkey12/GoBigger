@@ -1,5 +1,7 @@
 package com.games.gobigorgohome;
 
+import com.games.gobigorgohome.characters.NPC;
+import com.games.gobigorgohome.parsers.ParseJSON;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
@@ -7,24 +9,24 @@ import org.json.simple.parser.ParseException;
 import java.io.IOException;
 
 public class Room {
-    ParseJSON aParser = new ParseJSON();
+    private ParseJSON jsonParser = new ParseJSON();
 
-    String roomName;
-    JSONArray items;
-    JSONObject exercises;
+    private String roomName;
+    private JSONArray items;
+    private JSONObject exercises;
 
-    JSONArray directions;
-    String npc_type;
-    JSONArray requiredItems;
+    private JSONArray directions;
+    private String npc_type;
+    private JSONArray requiredItems;
     public NPC npc;
-    Map roomMap = new Map();
+    private Map roomMap = new Map();
 
     public Room(JSONObject room) throws IOException, ParseException {
-        this.roomName = aParser.getObjectNameFromJSONObject(room);
-        this.items = aParser.getJSONArrayFromJSONObject(room,"items");
+        this.roomName = jsonParser.getObjectNameFromJSONObject(room);
+        this.items = jsonParser.getJSONArrayFromJSONObject(room,"items");
         this.exercises = (JSONObject) room.get("exercises");
-        this.directions = aParser.getJSONArrayFromJSONObject(room,"directions");
-        this.npc_type = (String) aParser.getJSONArrayFromJSONObject( room, "NPCS").get(0);
+        this.directions = jsonParser.getJSONArrayFromJSONObject(room,"directions");
+        this.npc_type = (String) jsonParser.getJSONArrayFromJSONObject( room, "NPCS").get(0);
         if(!"none".equals(npc_type)) {
             this.npc = new NPC(npc_type);
         }
@@ -60,5 +62,18 @@ public class Room {
 
     public NPC getNpc() {
         return npc;
+    }
+
+    private String getValidNpc(){
+        return getNpc() == null ? "No one" : getNpc().getNpcName();
+    }
+
+    @Override
+    public String toString() {
+        return "You are in " + getRoomName() + "\n" +
+                "Exercises available are: " + getExercises().keySet() + "\n" +
+                "You see: " + getItems() + "\n" +
+                 getValidNpc() + " is standing there with you.\n";
+//        TODO: if adding direction limitations, call getDirections
     }
 }

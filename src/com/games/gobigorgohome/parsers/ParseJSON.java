@@ -1,4 +1,4 @@
-package com.games.gobigorgohome;
+package com.games.gobigorgohome.parsers;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;

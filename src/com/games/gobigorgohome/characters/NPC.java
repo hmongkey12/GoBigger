@@ -1,5 +1,6 @@
-package com.games.gobigorgohome;
+package com.games.gobigorgohome.characters;
 
+import com.games.gobigorgohome.parsers.ParseJSON;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
@@ -9,7 +10,7 @@ import java.io.IOException;
 public class NPC {
     private final ParseJSON jsonParser = new ParseJSON();
 
-    private final JSONObject theObject = jsonParser.getJSONObjectFromFile("NPCwName.json");
+    private final JSONObject theObject = jsonParser.getJSONObjectFromFile("JSON/NPCwName.json");
 
     private String npc_type;
 

@@ -1,4 +1,4 @@
-package com.games.gobigorgohome;
+package com.games.gobigorgohome.characters;
 
 import org.json.simple.JSONArray;
 
@@ -92,14 +92,13 @@ public class Player {
         return getInventory().contains(item);
     }
 
-    public Boolean useItem(String item, Room room) {
+    public Boolean useItem(String item, boolean isItemRequired) {
         boolean isItemConsumed = false;
         if (isItemInInventory(item)) {
-            boolean isThisItemRequired = isItemRequired(item, room);
-            if (item.equals("key") && isThisItemRequired) {
+            if (item.equals("key") && isItemRequired) {
                 isItemConsumed = true;
                 removeItemFromInventory(item);
-            } else if (item.equals("wrench") && isThisItemRequired) {
+            } else if (item.equals("wrench") && isItemRequired) {
                 isItemConsumed = true;
                 removeItemFromInventory(item);
             }
@@ -110,22 +109,11 @@ public class Player {
         return isItemConsumed;
     }
 
-    //    TODO: move this to game class
-    public boolean isItemRequired(String item, Room room) {
-        boolean result = false;
-        JSONArray required_items = room.getRequiredItems();
-
-        if (required_items.contains(item)) {
-            result = true;
-        }
-        return result;
-    }
-
     public void removeItemFromInventory(String item) {
         getInventory().remove(item);
     }
 
-    //    there's a bit of code redundancy here so there could possible be a way to morph these together
+    //    there's a bit of code redundancy here so there could possibly be a way to morph these together
     public void addToPlayerEnergy(int energyToGive) {
         int num = getEnergy() + energyToGive;
         setEnergy(num);

@@ -3,10 +3,14 @@ package com.games.gobigorgohome.app;
 import com.apps.util.Console;
 import com.apps.util.Prompter;
 import com.games.gobigorgohome.*;
+import com.games.gobigorgohome.characters.Player;
+import com.games.gobigorgohome.parsers.ParseJSON;
+import com.games.gobigorgohome.parsers.ParseTxt;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -63,8 +67,7 @@ public class Game {
         while (!isGameOver()) {
             gameStatus();
             Console.clear();
-            String[] command = promptForPlayerInput();
-            parsingThroughStringValues(command);
+            promptForPlayerInput();
             if (checkGameStatus()){
                 break;
             }
@@ -84,24 +87,14 @@ public class Game {
         Console.clear();
         System.out.println("Game over");
     }
-    
 
-    public String[] returningInputFromStringAsSplitArray(String command){
-        // String s2 = in.nextLine();
-        return command.split(" ");
-    }
-
-    public String[] promptForPlayerInput(){
+    public void promptForPlayerInput() throws IOException, ParseException {
         String command = prompter.prompt("(Hit Q to quit) What is your move? ");
-        String[] commandArr = returningInputFromStringAsSplitArray(command);
-        quit(command);
-//        code to be tested
-//        commandArr = validatePLayerBeginningCommand(commandArr);
-        return commandArr;
+        String[] commandArr = command.split(" ");
+        parseThroughPlayerInput(commandArr);
     }
 
-
-    public void parsingThroughStringValues(String[] action) throws IOException, ParseException {
+    public void parseThroughPlayerInput(String[] action) throws IOException, ParseException {
 
         List<String> actionList = Arrays.asList(action);
 
@@ -111,49 +104,64 @@ public class Game {
         if(actionList.size() >= 1) {
             actionPrefix = actionList.get(0);
         }
-
         if(actionList.size() == 2){
             playerAction = actionList.get(1);
         } else if(actionList.size() == 3){
             playerAction = (actionList.get(1) + " " + actionList.get(2)) ;
         }
 
-        System.out.println(playerAction + "DEBUG");
+        validatePlayerCommands(actionPrefix.toLowerCase(), playerAction.toLowerCase());
+    }
 
-        if (actionPrefix.equals("get")){
-            grabItem(playerAction);
+    private void validatePlayerCommands(String actionPrefix, String playerAction) throws IOException, ParseException {
+        try {
+            if (actionPrefix.equals("get")){
+                grabItem(playerAction);
 
-        }else if(actionPrefix.equals("go")){
-            System.out.println("you're going here: "+ playerAction);
-            currentRoomName = playerAction;
-            setCurrentRoom(rooms.get(playerAction));
+            }else if(actionPrefix.equals("go")){
+                System.out.println("you're going here: "+ playerAction);
+                currentRoomName = playerAction;
+                setCurrentRoom(rooms.get(playerAction));
 
-        }else if(actionPrefix.equals("workout")){
-            playerUseMachine(playerAction);
+            }else if(actionPrefix.equals("workout")){
+                playerUseMachine(playerAction);
 
-        }else if(actionPrefix.equals("use")) {
-            if (player.useItem(playerAction, currentRoom)) {
-                player.removeItemFromInventory(playerAction);
+            }else if(actionPrefix.equals("use")) {
+                boolean isItemRequired = isItemRequired(playerAction, currentRoom);
+                if (player.useItem(playerAction, isItemRequired)) {
+                    player.removeItemFromInventory(playerAction);
+                }
+
+            } else if(actionPrefix.equals("consume")){
+                if (player.consumeItem(playerAction)) {
+                    player.removeItemFromInventory(playerAction);
+                }
+
+            } else if(actionPrefix.equals("inspect")){
+                inspectRoom();
+            } else if(actionPrefix.equals("talk")){
+                talkToNPC();
+            } else if(actionPrefix.equals("see")){
+                getRoomMap();
+            } else if(actionPrefix.equals("q")) {
+                quit();
             }
-
-        } else if(actionPrefix.equals("consume")){
-            if (player.consumeItem(playerAction)) {
-                player.removeItemFromInventory(playerAction);
-            }
-
-        } else if(actionPrefix.equals("inspect")){
-            inspectRoom();
-        } else if(actionPrefix.equals("talk")){
-            talkToNPC();
-        } else if(actionPrefix.equals("see")){
-            getRoomMap();
-        }
-        else {
+        } catch (Exception exception) {
 //            TODO: add array with possible values for commands
-            System.out.println(actionPrefix + " was sadly and invalid answer. \n please use one of the following: " );
+            System.out.println(actionPrefix + " was sadly and invalid answer. \n please ensure you are using a valid and complete command. " );
 //            TODO: fix bug caused by pressing enter where prompt for player does not work and calls inspect
             promptForPlayerInput();
         }
+    }
+
+    public boolean isItemRequired(String item, Room room) {
+        boolean result = false;
+        JSONArray required_items = room.getRequiredItems();
+
+        if (required_items.contains(item)) {
+            result = true;
+        }
+        return result;
     }
     
     private void getRoomMap() throws IOException {
@@ -171,40 +179,18 @@ public class Game {
     }
 
     private void inspectRoom() {
-        // room name
-        System.out.println("You are in " + currentRoomName);
-
-        // exercises
-        JSONObject exercises = currentRoom.getExercises();
-        System.out.println("Exercises available are: " + exercises.keySet());
-
-        // items
-        JSONArray items = currentRoom.getItems();
-        System.out.println("You see: " + items);
-
-        // NPCs
-        String npc = currentRoom.getNpc() == null ? "No one" : currentRoom.getNpc().getNpcName();
-
-        System.out.println(npc + " is standing in there with you.");
-
-        // Possible Directions
-        JSONArray directions = currentRoom.getDirections();
-        System.out.println("You can go to " + directions);
-
+        System.out.println(currentRoom.toString());
     }
 
-    private void setCurrentRoom(Object currentRoom) throws IOException, ParseException {
-
-        this.currentRoom = new Room((JSONObject) currentRoom) ;
-    }
-
-    private void playerUseMachine(String playerExcerciseInput) {
+    private void playerUseMachine(String playerExcerciseInput) throws FileNotFoundException {
         System.out.println("you're using the: "+ playerExcerciseInput);
-        JSONObject exercises = currentRoom.getExercises();
-        JSONObject exercise = jsonParser.getJSONObjectFromJSONObject(exercises, playerExcerciseInput);
-        JSONArray targetMuscle = jsonParser.getJSONArrayFromJSONObject(exercise, "target muscles");
-        String exerciseStatus = (String) exercise.get("status");
-        Long energyCost = (Long) exercise.get("energy cost");
+        JSONObject exercises = getCurrentRoom().getExercises();
+
+        Exercise exercise = new Exercise(exercises, playerExcerciseInput);
+        JSONArray targetMuscle = exercise.getTargetMuscles();
+        String exerciseStatus = exercise.getExerciseStatus();
+        Long energyCost = exercise.getEnergyCost();
+
         if ("fixed".equals(exerciseStatus)) {
             player.workout(targetMuscle, energyCost);
             player.subtractFromPlayerEnergy(Math.toIntExact(energyCost));
@@ -235,19 +221,21 @@ public class Game {
     }
 
     //    gives player ability to quit
-    private void quit(String command){
-        if(command.equalsIgnoreCase("q")){
-            Console.clear();
-            System.out.println("You are a quitter!...GAME OVER");
-            System.exit(0);
-        }
+    private void quit(){
+        System.out.println("--------------------------------------\n"
+                + " YOU ARE A QUITTER!! GAME OVER" + "" +
+                "------------------------------------");
+        System.exit(0);
     }
 
+    private void setCurrentRoom(Object currentRoom) throws IOException, ParseException {
+
+        this.currentRoom = new Room((JSONObject) currentRoom) ;
+    }
 
     public Room getCurrentRoom() {
         return currentRoom;
     }
-
 
     // accessor methods
     public void setGameOver(boolean gameOver) {
@@ -271,9 +259,6 @@ public class Game {
         return playerName;
     }
 
-    public Prompter getPrompter() {
-        return prompter;
-    }
 }
 
 

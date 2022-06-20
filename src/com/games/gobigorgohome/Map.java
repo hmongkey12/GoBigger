@@ -1,5 +1,7 @@
 package com.games.gobigorgohome;
 
+import com.games.gobigorgohome.parsers.ParseTxt;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
