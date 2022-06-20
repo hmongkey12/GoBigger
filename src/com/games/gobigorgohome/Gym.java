@@ -7,10 +7,10 @@ import org.json.simple.parser.*;
 
 
 public class Gym {
-    private ParseJSON jsonParser = new ParseJSON();
+    private final ParseJSON jsonParser = new ParseJSON();
     private JSONObject rooms= null;
-    private String starterRoomName = "front desk";
-    private Room starterRoom;
+    private final String starterRoomName = "front desk";
+    private final Room starterRoom;
 
 
     public Gym() throws IOException, ParseException {

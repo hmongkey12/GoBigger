@@ -1,7 +1,7 @@
 package com.games.gobigorgohome.client;
 
 import com.apps.util.Prompter;
-import com.games.gobigorgohome.Game;
+import com.games.gobigorgohome.app.Game;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;

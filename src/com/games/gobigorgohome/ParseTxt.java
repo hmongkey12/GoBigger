@@ -3,17 +3,15 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class SplashPage {
+public class ParseTxt {
 
     public void dataFromFile(String filePath) throws IOException {
 
-        InputStream stream = SplashPage.class.getClassLoader().getResourceAsStream(filePath);
+        InputStream stream = ParseTxt.class.getClassLoader().getResourceAsStream(filePath);
         if (stream == null) {
             throw new IllegalArgumentException("File Not Found");
         }

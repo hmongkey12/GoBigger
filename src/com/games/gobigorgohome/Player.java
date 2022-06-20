@@ -1,27 +1,25 @@
 package com.games.gobigorgohome;
 
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class Player {
-//    idea- creating a class that's parsing through the json? and putting certain information into lists mainly lists of the muscles and the exercises that work them out.
+    //    idea- creating a class that's parsing through the json? and putting certain information into lists mainly lists of the muscles and the exercises that work them out.
 //    static variables
     public final static int BASE_ENERGY = 100; //example not set in stone
 
 
-//    fields
+    //    fields
     private int age;
     private String name;
-    private int energy =100;
+    private int energy = 100;
     private double weight;
     private double height;
     private List<String> inventory = new ArrayList<>();
-//    just realize that the boolean values are named the same for the getters, idk why but they did it when I did it with the intellij autgenerated ones
+    //    just realize that the boolean values are named the same for the getters, idk why but they did it when I did it with the intellij autgenerated ones
     private boolean isChestWorked = false;
     private boolean isTricepsWorked = false;
     private boolean isLegsWorked = false;
@@ -31,14 +29,13 @@ public class Player {
     private boolean isBicepsWorked = false;
     private boolean isSteroidsUsed = false;
 
+    private List<String> musclesWorked = new ArrayList<>();
 
-    List<String> musclesWorked = new ArrayList<>();
-
-//    constructors
-    public Player(){
+    //    constructors
+    public Player() {
     }
 
-    public Player( String name, int age, double weight, double height) {
+    public Player(String name, int age, double weight, double height) {
         this.age = age;
         this.name = name;
         this.weight = weight;
@@ -46,19 +43,19 @@ public class Player {
         this.energy = BASE_ENERGY;
     }
 
-    public Player(String name, int age,  double weight, double height, int energyInput) {
-        this( name,age, weight, height);
+    public Player(String name, int age, double weight, double height, int energyInput) {
+        this(name, age, weight, height);
         this.energy = energyInput;
     }
 
     //    business methods
 
-//    we need to think about what values are being played around with or manipulated that can be tested?
-    public void workout(JSONArray muscleGroup, Long energyCost){
+    //    we need to think about what values are being played around with or manipulated that can be tested?
+    public void workout(JSONArray muscleGroup, Long energyCost) {
         System.out.println(muscleGroup);
         String targetMuscle = (String) muscleGroup.get(0);
 
-        if(Objects.equals(targetMuscle, "chest")) {
+        if (Objects.equals(targetMuscle, "chest")) {
             setChestWorked(true);
             musclesWorked.add(targetMuscle);
         } else if (Objects.equals(targetMuscle, "back")) {
@@ -74,7 +71,7 @@ public class Player {
             setLegsWorked(true);
             musclesWorked.add(targetMuscle);
         } else if (Objects.equals(targetMuscle, "biceps")) {
-            setBicepsWorked(true);
+            setBicepsWorked();
             musclesWorked.add(targetMuscle);
         } else if (Objects.equals(targetMuscle, "shoulders")) {
             setShoulderWorked(true);
@@ -83,113 +80,93 @@ public class Player {
         subtractFromPlayerEnergy(Math.toIntExact(energyCost));
     }
 
-    private void setBicepsWorked(boolean bicepsWorked) {
-        this.isBicepsWorked = bicepsWorked;
+    private void setBicepsWorked() {
+        this.isBicepsWorked = true;
     }
 
     public boolean isWorkoutComplete() {
         return isChestWorked && isCoreWorked && isLegsWorked && isTricepsWorked && isBackWorked;
     }
-//    i think this needs to be in the game class or the gym class because it relates to the item being returned in response to the rooms too
-    public String moveRooms(String action){
-        String newRoom = "default";
-        return newRoom;
-    }
 
-    public String getItemAndPlaceInInventory(String item) {
-
-//        mayybe this contains method could be a method itself.
-        if(isItemInInventory(item) == false){
-            getInventory().add(item);
-        }
-        return item;
-    }
-
-    private boolean isItemInInventory(String item){
+    private boolean isItemInInventory(String item) {
         return getInventory().contains(item);
     }
 
-    public Boolean useItem(String item, Room room ) {
-        Boolean isItemConsumed = false;
-        if(isItemInInventory(item)){
-            boolean isThisItemRequired = isItemRequired( item, room );
-            if(item.equals("key") && isThisItemRequired){
+    public Boolean useItem(String item, Room room) {
+        boolean isItemConsumed = false;
+        if (isItemInInventory(item)) {
+            boolean isThisItemRequired = isItemRequired(item, room);
+            if (item.equals("key") && isThisItemRequired) {
                 isItemConsumed = true;
                 removeItemFromInventory(item);
-            }else if(item.equals("wrench") && isThisItemRequired){
+            } else if (item.equals("wrench") && isThisItemRequired) {
                 isItemConsumed = true;
                 removeItemFromInventory(item);
             }
-        }else{
+        } else {
             System.out.println("oi mate! that's not in your inventory");
         }
         //the idea is to return the string for validation purposes
         return isItemConsumed;
     }
 
-//    TODO: move this to game class
-    public boolean isItemRequired(String item, Room room){
+    //    TODO: move this to game class
+    public boolean isItemRequired(String item, Room room) {
         boolean result = false;
-        JSONArray required_items= room.getRequiredItems();
+        JSONArray required_items = room.getRequiredItems();
 
-        if(required_items.contains(item)){
+        if (required_items.contains(item)) {
             result = true;
         }
         return result;
     }
-    public String removeItemFromInventory(String item){
+
+    public void removeItemFromInventory(String item) {
         getInventory().remove(item);
-        return item;
     }
-    public void talkTo() {
-        // talk to npc
-    }
-//    there's a bit of code redundancy here so there could possible be a way to morph these together
-    public int addToPlayerEnergy(int energyToGive) {
+
+    //    there's a bit of code redundancy here so there could possible be a way to morph these together
+    public void addToPlayerEnergy(int energyToGive) {
         int num = getEnergy() + energyToGive;
         setEnergy(num);
-        return getEnergy();
     }
 
-    public int subtractFromPlayerEnergy(int energyToTake) {
+    public void subtractFromPlayerEnergy(int energyToTake) {
         int num = getEnergy() - energyToTake;
         setEnergy(num);
-        return getEnergy();
     }
 
-    public boolean consumeItem(String item ) {
+    public boolean consumeItem(String item) {
 
         boolean couldYouConsume = false;
 //        this could be replaced with a try catch but it would have to have an exception in it.
 
-            if(item.equals("energy drink")){
-                System.out.println("Ahh yeah man more energy to work out!!");
-                addToPlayerEnergy(5); // hard coded value that we can talk about later
-                couldYouConsume = true;
-            }else if (item.equals("steroids")){
-                hasPlayerUsedSteroids(true);
-                System.out.println("GAME OVER");
-                couldYouConsume= true;
-            }else {
-                System.out.println("oi mate! that's not in your inventory");
-            }
+        if (item.equals("energy drink")) {
+            System.out.println("Ahh yeah man more energy to work out!!");
+            addToPlayerEnergy(5); // hard coded value that we can talk about later
+            couldYouConsume = true;
+        } else if (item.equals("steroids")) {
+            hasPlayerUsedSteroids(true);
+            System.out.println("GAME OVER");
+            couldYouConsume = true;
+        } else {
+            System.out.println("oi mate! that's not in your inventory");
+        }
 
         return couldYouConsume;
 
     }
 
-
-
-    public boolean hasPlayerUsedSteroids(boolean value){
+    public boolean hasPlayerUsedSteroids(boolean value) {
 //        if this value is true, then we need to set the steroid to the value and then return sterod
         boolean returnValue = false;
         //if the value is true, which means player used steroids
-        if(value){
+        if (value) {
 //           call the setter
             setSteroidsUsed(true);
             returnValue = isSteroidsUsed();
         }
-        return  returnValue;
+        return returnValue;
     }
 
 
@@ -247,9 +224,6 @@ public class Player {
         return inventory;
     }
 
-    public void setInventory(List<String> inventory) {
-        this.inventory = inventory;
-    }
 
     public boolean isChestWorked() {
         return isChestWorked;
@@ -300,7 +274,7 @@ public class Player {
     }
 
     public List<String> getMusclesWorked() {
-        if(musclesWorked.size() == 0) {
+        if (musclesWorked.size() == 0) {
             musclesWorked.add("none");
         } else {
             musclesWorked.remove("none");
@@ -310,11 +284,10 @@ public class Player {
 
 //    toString
 
-
     @Override
     public String toString() {
         return "Player: " + name + "\n" +
-                "Age: " + age + ", Weight: " + weight +  ", Height: " + height + "\n" +
+                "Age: " + age + ", Weight: " + weight + ", Height: " + height + "\n" +
                 "Current Energy: " + energy + " out of " + BASE_ENERGY + "\n" +
                 "Gym Bag Contents: " + inventory + "\n" +
                 "Workout Status: " + getMusclesWorked().toString();

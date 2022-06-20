@@ -16,7 +16,7 @@ public class Room {
     JSONArray directions;
     String npc_type;
     JSONArray requiredItems;
-    NPC npc;
+    public NPC npc;
     Map roomMap = new Map();
 
     public Room(JSONObject room) throws IOException, ParseException {

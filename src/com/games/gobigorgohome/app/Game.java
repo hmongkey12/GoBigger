@@ -1,7 +1,8 @@
-package com.games.gobigorgohome;
+package com.games.gobigorgohome.app;
 
 import com.apps.util.Console;
 import com.apps.util.Prompter;
+import com.games.gobigorgohome.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
@@ -9,22 +10,21 @@ import org.json.simple.parser.ParseException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.StringJoiner;
 
 public class Game {
 
     boolean isGameOver = false;
     private final Gym gym = Gym.getInstance();
-    private Player player = new Player();
-    private int energy = player.getEnergy();
-    private int currentEnergy = player.getEnergy();
-    private String playerName = player.getName();
+    private final Player player = new Player();
+    private final int energy = player.getEnergy();
+    private final int currentEnergy = player.getEnergy();
+    private final String playerName = player.getName();
     private String currentRoomName = gym.getStarterRoomName();
     private Room currentRoom = gym.getStarterRoom();
-    private JSONObject rooms = gym.getRooms();
-    private Prompter prompter;
-    private SplashPage page = new SplashPage();
-    private ParseJSON jsonParser = new ParseJSON();
+    private final JSONObject rooms = gym.getRooms();
+    private final Prompter prompter;
+    private final ParseTxt page = new ParseTxt();
+    private final ParseJSON jsonParser = new ParseJSON();
 
     public Game(Prompter prompter) throws IOException, ParseException {
         this.prompter = prompter;

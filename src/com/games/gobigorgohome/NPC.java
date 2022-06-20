@@ -7,67 +7,36 @@ import org.json.simple.parser.ParseException;
 import java.io.IOException;
 
 public class NPC {
-    private ParseJSON jsonParser = new ParseJSON();
+    private final ParseJSON jsonParser = new ParseJSON();
 
-    private JSONObject theObject = jsonParser.getJSONObjectFromFile("NPCwName.json");
-    private JSONObject npcs = jsonParser.getJSONObjectFromJSONObject(theObject,"characters");
+    private final JSONObject theObject = jsonParser.getJSONObjectFromFile("NPCwName.json");
 
     private String npc_type;
 
-    private JSONObject npc;
-    private String npcName ;
-    private String npcLocation ;
-    private JSONArray inventory ; //convert this to an Array
-    private JSONArray phrases;
+    private final String npcName ;
+    private final String npcLocation ;
+    private final JSONArray inventory ; //convert this to an Array
+    private final JSONArray phrases;
 
 
     public NPC(String npc_type) throws IOException, ParseException {
 
-        this.npc = (JSONObject) npcs.get(npc_type);
-
+        JSONObject npcs = jsonParser.getJSONObjectFromJSONObject(theObject, "characters");
+        JSONObject npc = (JSONObject) npcs.get(npc_type);
+        this.npc_type = npc_type;
         this.npcName = (String) npc.get("name");
         this.npcLocation = (String) npc.get("location");
         this.inventory = (JSONArray) npc.get("inventory");
         this.phrases = (JSONArray) npc.get("dialog");
     }
 
-//    private String returnName(JSONObject character){
-//        String person = (String)character.get("name");
-//        return person;
-//    }
-//
-//    private String returnLocation (JSONObject character){
-//        String locale = (String)character.get("location");
-//        return locale;
-//    }
-//
-//    private JSONArray returnInventory( JSONObject character){
-//        JSONArray inventory = (JSONArray)character.get("inventory");
-//
-//        System.out.println(inventory.get(0));
-//        return inventory;
-//    }
-//
-//    private JSONArray returnPhrases( JSONObject character){
-//        JSONArray phrases = (JSONArray)character.get("dialog");
-//        return phrases;
-//    }
-
     public String generateDialog() {
         int  index = (int) (Math.random() * getPhrases().size());
         return (String) getPhrases().get(index);
     }
 
-    public JSONObject getNpc() {
-        return npc;
-    }
-
     public String getNpcName() {
         return npcName;
-    }
-
-    public String getNpcLocation() {
-        return npcLocation;
     }
 
     public JSONArray getInventory() {

@@ -6,11 +6,12 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 
-class ParseJSON {
-    private JSONParser parser = new JSONParser();
+public class ParseJSON {
+    private final JSONParser parser = new JSONParser();
 
-    ParseJSON() throws FileNotFoundException {
+    public ParseJSON() throws FileNotFoundException {
     }
 
 //    takes a file path string and returns a JSONObject
@@ -21,7 +22,7 @@ class ParseJSON {
         //JSONObject jsonObject = null;
         JSONObject result = null;
         try {
-            Reader jsonReader = new InputStreamReader(inputTestJSON, "UTF-8");
+            Reader jsonReader = new InputStreamReader(inputTestJSON, StandardCharsets.UTF_8);
             Object obj = jsonParser.parse(jsonReader);
             JSONObject jsonObject = (JSONObject) obj;
             result = jsonObject;

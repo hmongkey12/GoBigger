@@ -12,7 +12,7 @@ class Map {
     // read .txt files in resource folder
     public void dataFromFile(String filePath) throws IOException {
 
-        InputStream stream = SplashPage.class.getClassLoader().getResourceAsStream(filePath);
+        InputStream stream = ParseTxt.class.getClassLoader().getResourceAsStream(filePath);
         if (stream == null) {
             throw new IllegalArgumentException("File Not Found");
         }
