@@ -200,7 +200,7 @@ public class Game {
         }
     }
 
-    public boolean isItemRequired(List items) {
+    public static boolean isItemRequired(List items) {
         return !"none".equals(items.get(0));
     }
 
