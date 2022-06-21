@@ -96,7 +96,7 @@ public class Game {
     //    updates player with current game status e.g. player inventory, current room etc.
     private void gameStatus() {
         System.out.println("------------------------------");
-        System.out.println("Available commands: GO, GET, CONSUME, SEE, WORKOUT, INSPECT");
+        System.out.println("Available commands: GO <room name>, GET <item>, CONSUME <item>, SEE MAP, WORKOUT <workout name>, INSPECT ROOM");
         System.out.println("You are in the " + currentRoomName + " room.");
         System.out.println(player.toString());
         System.out.println("------------------------------");
