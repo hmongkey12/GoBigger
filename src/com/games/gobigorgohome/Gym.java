@@ -1,37 +1,31 @@
 package com.games.gobigorgohome;
 
-import java.io.IOException;
-
-import org.json.simple.JSONObject;
-import org.json.simple.parser.*;
+import com.games.gobigorgohome.parsers.ParseJSON;
 
 
 public class Gym {
-    private ParseJSON jsonParser = new ParseJSON();
-    private JSONObject rooms= null;
-    private String starterRoomName = "front desk";
-    private JSONObject starterRoom = null;
+    private final Object rooms;
+    private final String starterRoomName = "front desk";
+    private final Room starterRoom;
+    ParseJSON jsonParser = new ParseJSON();
 
-//    private String starterRoomName = "front desk";
-//    private JSONObject starterRoom = jsonParser.getJSONObjectFromJSONObject(getRooms(), "front desk");
-//    private String starterRoomName = jsonParser.getObjectNameFromJSONObject(starterRoom);
-
-    public Gym() throws IOException, ParseException {
+    public Gym() {
         String gymRoomFilePath = "JSON/gym_rooms.json";
+        ParseJSON jsonParser = new ParseJSON();
         rooms = jsonParser.getJSONObjectFromFile(gymRoomFilePath);
+        starterRoom = new Room(jsonParser.getObjectFromJSONObject(getRooms(), getStarterRoomName()));
 
     }
 
-    public static Gym getInstance() throws IOException, ParseException {
+    public static Gym getInstance() {
         return new Gym();
     }
 
-
-    public JSONObject getRooms(){
-        return (JSONObject) this.rooms.get("rooms");
+    public Object getRooms() {
+        return jsonParser.getObjectFromJSONObject(this.rooms, "rooms");
     }
 
-    public JSONObject getStarterRoom() {
+    public Room getStarterRoom() {
         return starterRoom;
     }
 
