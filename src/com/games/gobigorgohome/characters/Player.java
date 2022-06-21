@@ -2,9 +2,7 @@ package com.games.gobigorgohome.characters;
 
 import com.games.gobigorgohome.parsers.ParseJSON;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class Player {
     //    idea- creating a class that's parsing through the json? and putting certain information into lists mainly lists of the muscles and the exercises that work them out.
@@ -33,7 +31,7 @@ public class Player {
 
     private boolean isExhausted = false;
 
-    private final List<String> musclesWorked = new ArrayList<>();
+    private final Set<String> musclesWorked = new HashSet<>();
 
     //    constructors
     public Player() {
@@ -259,7 +257,7 @@ public class Player {
         isShoulderWorked = shoulderWorked;
     }
 
-    public List<String> getMusclesWorked() {
+    public Set<String> getMusclesWorked() {
         if (musclesWorked.size() == 0) {
             musclesWorked.add("none");
         } else {

@@ -10,7 +10,6 @@ import com.games.gobigorgohome.parsers.ParseJSON;
 import com.games.gobigorgohome.parsers.ParseTxt;
 import org.json.simple.parser.ParseException;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -97,6 +96,7 @@ public class Game {
     //    updates player with current game status e.g. player inventory, current room etc.
     private void gameStatus() {
         System.out.println("------------------------------");
+        System.out.println("Available commands: GO, GET, CONSUME, SEE, WORKOUT, INSPECT");
         System.out.println("You are in the " + currentRoomName + " room.");
         System.out.println(player.toString());
         System.out.println("------------------------------");
@@ -109,7 +109,6 @@ public class Game {
         // runs a while loop
         while (!isGameOver()) {
             gameStatus();
-            Console.clear();
             promptForPlayerInput();
             if (checkGameStatus()) {
                 break;
@@ -167,6 +166,7 @@ public class Game {
                     grabItem(playerAction);
                     break;
                 case "go":
+                    Console.clear();
                     System.out.println("you're going here: " + playerAction);
                     currentRoomName = playerAction;
                     setCurrentRoom(jsonParser.getObjectFromJSONObject(rooms, playerAction));
@@ -222,7 +222,7 @@ public class Game {
         System.out.println(currentRoom.toString());
     }
 
-    private void playerUseMachine(String playerExcerciseInput) throws FileNotFoundException {
+    private void playerUseMachine(String playerExcerciseInput) {
         System.out.println("you're using the: " + playerExcerciseInput);
         Object exercises = getCurrentRoom().getExercises();
 
