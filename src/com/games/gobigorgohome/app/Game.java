@@ -8,7 +8,6 @@ import com.games.gobigorgohome.Room;
 import com.games.gobigorgohome.characters.Player;
 import com.games.gobigorgohome.parsers.ParseJSON;
 import com.games.gobigorgohome.parsers.ParseTxt;
-import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
 import java.io.FileNotFoundException;
@@ -174,15 +173,6 @@ public class Game {
                     break;
                 case "workout":
                     playerUseMachine(playerAction);
-                    break;
-                case "use":
-                    Object room = jsonParser.getObjectFromJSONObject(rooms, playerAction);
-                    Room nextRoom = new Room(room);
-                    boolean isItemRequired = isItemRequired(nextRoom.getRequiredItems());
-
-                    if (player.useItem(playerAction, isItemRequired)) {
-                        player.removeItemFromInventory(playerAction);
-                    }
                     break;
                 case "consume":
                     if (player.consumeItem(playerAction)) {

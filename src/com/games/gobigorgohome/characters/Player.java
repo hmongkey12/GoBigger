@@ -2,7 +2,6 @@ package com.games.gobigorgohome.characters;
 
 import com.games.gobigorgohome.parsers.ParseJSON;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -32,8 +31,6 @@ public class Player {
     private boolean isSteroidsUsed = false;
 
 
-
-
     private boolean isExhausted = false;
 
     private final List<String> musclesWorked = new ArrayList<>();
@@ -42,7 +39,7 @@ public class Player {
     public Player() {
     }
 
-    public Player(String name, int age, double weight, double height) throws FileNotFoundException {
+    public Player(String name, int age, double weight, double height) {
         this.age = age;
         this.name = name;
         this.weight = weight;
@@ -93,22 +90,22 @@ public class Player {
         return getInventory().contains(item);
     }
 
-    public Boolean useItem(String item, boolean isItemRequired) {
-        boolean isItemConsumed = false;
-        if (isItemInInventory(item)) {
-            if (item.equals("key") && isItemRequired) {
-                isItemConsumed = true;
-                removeItemFromInventory(item);
-            } else if (item.equals("wrench") && isItemRequired) {
-                isItemConsumed = true;
-                removeItemFromInventory(item);
-            }
-        } else {
-            System.out.println("oi mate! that's not in your inventory");
-        }
-        //the idea is to return the string for validation purposes
-        return isItemConsumed;
-    }
+//    public Boolean useItem(String item, boolean isItemRequired) {
+//        boolean isItemConsumed = false;
+//        if (isItemInInventory(item)) {
+//            if (item.equals("key") && isItemRequired) {
+//                isItemConsumed = true;
+//                removeItemFromInventory(item);
+//            } else if (item.equals("wrench") && isItemRequired) {
+//                isItemConsumed = true;
+//                removeItemFromInventory(item);
+//            }
+//        } else {
+//            System.out.println("oi mate! that's not in your inventory");
+//        }
+//        //the idea is to return the string for validation purposes
+//        return isItemConsumed;
+//    }
 
     public void removeItemFromInventory(String item) {
         getInventory().remove(item);

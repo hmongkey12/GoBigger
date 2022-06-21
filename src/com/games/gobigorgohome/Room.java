@@ -2,8 +2,6 @@ package com.games.gobigorgohome;
 
 import com.games.gobigorgohome.characters.NPC;
 import com.games.gobigorgohome.parsers.ParseJSON;
-import org.json.simple.JSONArray;
-import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
 import java.util.List;

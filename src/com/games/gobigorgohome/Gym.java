@@ -1,10 +1,6 @@
 package com.games.gobigorgohome;
 
-import java.io.IOException;
-
 import com.games.gobigorgohome.parsers.ParseJSON;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.*;
 
 
 public class Gym {
@@ -21,12 +17,11 @@ public class Gym {
 
     }
 
-    public static Gym getInstance() throws IOException, ParseException {
+    public static Gym getInstance() {
         return new Gym();
     }
 
-
-    public Object getRooms(){
+    public Object getRooms() {
         return jsonParser.getObjectFromJSONObject(this.rooms, "rooms");
     }
 
