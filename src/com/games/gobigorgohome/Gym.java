@@ -8,16 +8,17 @@ import org.json.simple.parser.*;
 
 
 public class Gym {
-    private final ParseJSON jsonParser = new ParseJSON();
-    private JSONObject rooms= null;
+    private final Object rooms;
     private final String starterRoomName = "front desk";
     private final Room starterRoom;
+    ParseJSON jsonParser = new ParseJSON();
 
-
-    public Gym() throws IOException, ParseException {
+    public Gym() {
         String gymRoomFilePath = "JSON/gym_rooms.json";
+        ParseJSON jsonParser = new ParseJSON();
         rooms = jsonParser.getJSONObjectFromFile(gymRoomFilePath);
-        starterRoom = new Room((JSONObject) getRooms().get(starterRoomName));
+        starterRoom = new Room(jsonParser.getObjectFromJSONObject(getRooms(), getStarterRoomName()));
+
     }
 
     public static Gym getInstance() throws IOException, ParseException {
@@ -25,8 +26,8 @@ public class Gym {
     }
 
 
-    public JSONObject getRooms(){
-        return (JSONObject) this.rooms.get("rooms");
+    public Object getRooms(){
+        return jsonParser.getObjectFromJSONObject(this.rooms, "rooms");
     }
 
     public Room getStarterRoom() {

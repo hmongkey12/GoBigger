@@ -94,7 +94,7 @@
           "energy cost" : 5
         }
       },
-      "items": ["No items"],
+      "items": ["steroids"],
       "required items": ["none"],
       "directions" : ["yoga studio", "managers office", "free weights"],
       "NPCS" : ["none"]

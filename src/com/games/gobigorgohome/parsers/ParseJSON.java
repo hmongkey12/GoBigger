@@ -7,31 +7,23 @@ import org.json.simple.parser.ParseException;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Set;
 
 public class ParseJSON {
-    private final JSONParser parser = new JSONParser();
 
-    public ParseJSON() throws FileNotFoundException {
-    }
-
-//    takes a file path string and returns a JSONObject
-    public JSONObject getJSONObjectFromFile (String filePath) throws IOException, ParseException {
+    //    takes a file path string and returns a JSONObject
+    public Object getJSONObjectFromFile(String filePath) {
 //        return (JSONObject) parser.parse(new FileReader(filePath));
         InputStream inputTestJSON = getFileFromResourceAsStream(filePath);
         JSONParser jsonParser = new JSONParser();
         //JSONObject jsonObject = null;
-        JSONObject result = null;
+        Object result = null;
         try {
             Reader jsonReader = new InputStreamReader(inputTestJSON, StandardCharsets.UTF_8);
-            Object obj = jsonParser.parse(jsonReader);
-            JSONObject jsonObject = (JSONObject) obj;
-            result = jsonObject;
+            result = jsonParser.parse(jsonReader);
 
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
+        } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
         return result;
@@ -47,19 +39,38 @@ public class ParseJSON {
         }
     }
 
-    //    takes a Json object and a string and returns JSON object
-    public JSONObject getJSONObjectFromJSONObject(JSONObject jsonObject, String objectName) {
-
-        return (JSONObject) jsonObject.get(objectName);
+    public Object getObjectFromJSONObject(Object object, String objectName) {
+        JSONObject jsonObject = (JSONObject) object;
+        return jsonObject.get(objectName);
     }
 
-    public JSONArray getJSONArrayFromJSONObject(JSONObject jsonObject, String objectName) {
-        return (JSONArray) jsonObject.get(objectName);
+    //    takes a jsonObject and returns a string with the object name
+    public String getObjectStringFromJSONObject(Object objectName, String string) {
+        JSONObject jsonObjectName = (JSONObject) objectName;
+        return (String) jsonObjectName.get(string);
     }
 
-//    takes a jsonObject and returns a string with the object name
-    public String getObjectNameFromJSONObject(JSONObject jsonObject) {
-        return (String) jsonObject.get("name");
+    public Long getLongFromJSONObject(Object objectName, String string) {
+        JSONObject jsonObjectName = (JSONObject) objectName;
+        return (Long) jsonObjectName.get(string);
     }
-//    hard code values so that we can get certain objects from the individual.
+
+    public Object getObjectFromJSON(Object object, String objectString) {
+        JSONObject jsonObject = (JSONObject) object;
+        return jsonObject.get(objectString);
+    }
+
+    public Set getKeySetFromJSONObject(Object object) {
+        JSONObject jsonObject = (JSONObject) object;
+        return jsonObject.keySet();
+    }
+
+    public List getKeySetFromJSONArray(Object object) {
+        return (JSONArray) object;
+    }
+
+    public String getStringValueFromIndexInJSONArray(Object object, int index) {
+        JSONArray jsonArray = (JSONArray) object;
+        return (String) jsonArray.get(index);
+    }
 }

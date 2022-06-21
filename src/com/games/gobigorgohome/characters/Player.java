@@ -1,7 +1,8 @@
 package com.games.gobigorgohome.characters;
 
-import org.json.simple.JSONArray;
+import com.games.gobigorgohome.parsers.ParseJSON;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -11,6 +12,7 @@ public class Player {
 //    static variables
     public final static int BASE_ENERGY = 100; //example not set in stone
 
+    private final ParseJSON jsonParser = new ParseJSON();
 
     //    fields
     private int age;
@@ -18,7 +20,7 @@ public class Player {
     private int energy = 100;
     private double weight;
     private double height;
-    private List<String> inventory = new ArrayList<>();
+    private final List<String> inventory = new ArrayList<>();
     //    just realize that the boolean values are named the same for the getters, idk why but they did it when I did it with the intellij autgenerated ones
     private boolean isChestWorked = false;
     private boolean isTricepsWorked = false;
@@ -29,31 +31,30 @@ public class Player {
     private boolean isBicepsWorked = false;
     private boolean isSteroidsUsed = false;
 
-    private List<String> musclesWorked = new ArrayList<>();
+
+
+
+    private boolean isExhausted = false;
+
+    private final List<String> musclesWorked = new ArrayList<>();
 
     //    constructors
     public Player() {
     }
 
-    public Player(String name, int age, double weight, double height) {
+    public Player(String name, int age, double weight, double height) throws FileNotFoundException {
         this.age = age;
         this.name = name;
         this.weight = weight;
         this.height = height;
-        this.energy = BASE_ENERGY;
-    }
-
-    public Player(String name, int age, double weight, double height, int energyInput) {
-        this(name, age, weight, height);
-        this.energy = energyInput;
     }
 
     //    business methods
 
     //    we need to think about what values are being played around with or manipulated that can be tested?
-    public void workout(JSONArray muscleGroup, Long energyCost) {
-        System.out.println(muscleGroup);
-        String targetMuscle = (String) muscleGroup.get(0);
+    public void workout(Object muscleGroup, Long energyCost) {
+
+        String targetMuscle = jsonParser.getStringValueFromIndexInJSONArray(muscleGroup, 0);
 
         if (Objects.equals(targetMuscle, "chest")) {
             setChestWorked(true);
@@ -135,7 +136,6 @@ public class Player {
             couldYouConsume = true;
         } else if (item.equals("steroids")) {
             hasPlayerUsedSteroids(true);
-            System.out.println("GAME OVER");
             couldYouConsume = true;
         } else {
             System.out.println("oi mate! that's not in your inventory");
@@ -145,16 +145,17 @@ public class Player {
 
     }
 
-    public boolean hasPlayerUsedSteroids(boolean value) {
+    public void hasPlayerUsedSteroids(boolean value) {
 //        if this value is true, then we need to set the steroid to the value and then return sterod
-        boolean returnValue = false;
         //if the value is true, which means player used steroids
         if (value) {
 //           call the setter
             setSteroidsUsed(true);
-            returnValue = isSteroidsUsed();
         }
-        return returnValue;
+    }
+
+    public boolean isExhausted() {
+        return getEnergy() == 0;
     }
 
 

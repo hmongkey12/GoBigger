@@ -1,38 +1,29 @@
 package com.games.gobigorgohome.characters;
 
 import com.games.gobigorgohome.parsers.ParseJSON;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.ParseException;
 
-import java.io.IOException;
+import java.util.List;
 
 public class NPC {
-    private final ParseJSON jsonParser = new ParseJSON();
 
-    private final JSONObject theObject = jsonParser.getJSONObjectFromFile("JSON/NPCwName.json");
-
-    private String npc_type;
-
-    private final String npcName ;
-    private final String npcLocation ;
-    private final JSONArray inventory ; //convert this to an Array
-    private final JSONArray phrases;
+    private final String npcName;
+    private final List inventory; //convert this to an Array
+    private final List phrases;
 
 
-    public NPC(String npc_type) throws IOException, ParseException {
+    public NPC(String npc_type) {
 
-        JSONObject npcs = jsonParser.getJSONObjectFromJSONObject(theObject, "characters");
-        JSONObject npc = (JSONObject) npcs.get(npc_type);
-        this.npc_type = npc_type;
-        this.npcName = (String) npc.get("name");
-        this.npcLocation = (String) npc.get("location");
-        this.inventory = (JSONArray) npc.get("inventory");
-        this.phrases = (JSONArray) npc.get("dialog");
+        ParseJSON jsonParser = new ParseJSON();
+        Object theObject = jsonParser.getJSONObjectFromFile("JSON/NPCwName.json");
+        Object npcs = jsonParser.getObjectFromJSONObject(theObject, "characters");
+        Object npc = jsonParser.getObjectFromJSONObject(npcs, npc_type);
+        this.npcName = jsonParser.getObjectStringFromJSONObject(npc, "name");
+        this.inventory = (List) jsonParser.getObjectFromJSONObject(npc, "inventory");
+        this.phrases = (List) jsonParser.getObjectFromJSONObject(npc, "dialog");;
     }
 
     public String generateDialog() {
-        int  index = (int) (Math.random() * getPhrases().size());
+        int index = (int) (Math.random() * getPhrases().size());
         return (String) getPhrases().get(index);
     }
 
@@ -40,11 +31,11 @@ public class NPC {
         return npcName;
     }
 
-    public JSONArray getInventory() {
+    public List getInventory() {
         return inventory;
     }
 
-    public JSONArray getPhrases() {
+    public List getPhrases() {
         return phrases;
     }
 

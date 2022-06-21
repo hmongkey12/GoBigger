@@ -1,26 +1,22 @@
 package com.games.gobigorgohome;
 
 import com.games.gobigorgohome.parsers.ParseJSON;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
-import java.io.FileNotFoundException;
 
 public class Exercise {
     ParseJSON jsonParser = new ParseJSON();
 
-    private JSONArray targetMuscles;
-    private String exerciseStatus;
-    private Long energyCost;
+    private final Object targetMuscles;
+    private final String exerciseStatus;
+    private final Long energyCost;
 
-    public Exercise(JSONObject exercises, String exerciseName) throws FileNotFoundException {
-        JSONObject exercise = jsonParser.getJSONObjectFromJSONObject(exercises, exerciseName);
-        this.targetMuscles = jsonParser.getJSONArrayFromJSONObject(exercise, "target muscles");
-        this.exerciseStatus = (String) exercise.get("status");
-        this.energyCost = (Long) exercise.get("energy cost");
+    public Exercise(Object exercises, String exerciseName) {
+        Object exercise = jsonParser.getObjectFromJSON(exercises, exerciseName);
+        this.targetMuscles = jsonParser.getObjectFromJSONObject(exercise, "target muscles");
+        this.exerciseStatus = jsonParser.getObjectStringFromJSONObject(exercise, "status");
+        this.energyCost = jsonParser.getLongFromJSONObject(exercise, "energy cost");
     }
 
-    public JSONArray getTargetMuscles() {
+    public Object getTargetMuscles() {
         return targetMuscles;
     }
 

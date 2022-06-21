@@ -2,11 +2,12 @@ package com.games.gobigorgohome.app;
 
 import com.apps.util.Console;
 import com.apps.util.Prompter;
-import com.games.gobigorgohome.*;
+import com.games.gobigorgohome.Exercise;
+import com.games.gobigorgohome.Gym;
+import com.games.gobigorgohome.Room;
 import com.games.gobigorgohome.characters.Player;
 import com.games.gobigorgohome.parsers.ParseJSON;
 import com.games.gobigorgohome.parsers.ParseTxt;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
@@ -25,7 +26,7 @@ public class Game {
     private final String playerName = player.getName();
     private String currentRoomName = gym.getStarterRoomName();
     private Room currentRoom = gym.getStarterRoom();
-    private final JSONObject rooms = gym.getRooms();
+    private final Object rooms = gym.getRooms();
     private final Prompter prompter;
     private final ParseTxt page = new ParseTxt();
     private final ParseJSON jsonParser = new ParseJSON();
@@ -35,13 +36,56 @@ public class Game {
     }
 
     //    collects current input from user to update their avatar
-    private void getNewPlayerInfo(){
+    private void getNewPlayerInfo() {
 //        TODO: validate user input
-        String playerName = prompter.prompt("What is your name? ");
-        double playerHeight = Double.parseDouble(prompter.prompt("What is your height? "));
-        double playerWeight = Double.parseDouble(prompter.prompt("What is your weight? "));
-        int playerAge = Integer.parseInt(prompter.prompt("What is your age? "));
+        String playerName = validName();
+        double playerHeight = validDouble("What is your height? ", "height", "inches");
+        double playerWeight = validDouble("What is your weight? ", "weight", "lbs");
+        int playerAge = validInt("What is your age", "age", "years");
         createPlayer(playerName, playerAge, playerHeight, playerWeight);
+    }
+
+    // validates name requesting one and rejecting empty space(s).
+    private String validName() {
+        String playerName = prompter.prompt("What is your name? ");
+        if (playerName.isBlank() || playerName.isEmpty() || playerName.length() > 16) {
+            try {
+                System.out.println("You need to type your name or it exceeds 16 characters: ");
+                validName();
+            } catch (NullPointerException e) {
+                System.out.println("You need to type your name: ");
+                validName();
+            }
+        } else {
+            System.out.println("Hello " + playerName + " let's get more about you...");
+        }
+        return playerName;
+    }
+
+    // validates height and weight taking integers or doubles only
+    private double validDouble(String msg, String measureName, String unit) {
+        String measurementString = prompter.prompt(msg);
+        double measurement = 0;
+        try {
+            measurement = Double.parseDouble(measurementString);
+            //validDouble(measure, "you need to type your " + measureName + " in " + unit + ": ", measureName, unit);
+        } catch (NumberFormatException | NullPointerException e) {
+            validDouble("You need to type your " + measureName + " using numbers (" + unit + "): ", measureName, unit);
+        }
+        return measurement;
+    }
+
+    // validates age taking only an integer
+    private int validInt(String msg, String measureName, String unit) {
+        String measurement = prompter.prompt(msg);
+        int measureNum = 0;
+        try {
+            measureNum = Integer.parseInt(measurement);
+            //validInt(measure, "you need to type your "+ measureName+" in " + unit + " or you aren't an adult: ", measureName, unit);
+        } catch (NumberFormatException e) {
+            validInt("You need to type your " + measureName + " using numbers integers (" + unit + "): ", measureName, unit);
+        }
+        return measureNum;
     }
 
     private void createPlayer(String playerName, int playerAge, double playerHeight, double playerWeight) {
@@ -52,7 +96,7 @@ public class Game {
     }
 
     //    updates player with current game status e.g. player inventory, current room etc.
-    private void gameStatus(){
+    private void gameStatus() {
         System.out.println("------------------------------");
         System.out.println("You are in the " + currentRoomName + " room.");
         System.out.println(player.toString());
@@ -68,24 +112,28 @@ public class Game {
             gameStatus();
             Console.clear();
             promptForPlayerInput();
-            if (checkGameStatus()){
+            if (checkGameStatus()) {
                 break;
             }
-            updateGame();
         }
         gameResult();
     }
 
-    private void updateGame() {
+    private boolean checkGameStatus() {
+        return player.isWorkoutComplete() || player.isSteroidsUsed() || player.isExhausted();
     }
 
-    private boolean checkGameStatus() {
-        return player.isWorkoutComplete();
-    }
-    
     private void gameResult() {
         Console.clear();
-        System.out.println("Game over");
+        String result = "";
+        if (player.isSteroidsUsed()) {
+            result = "YOU ARE A LOSER AND A CHEATER!";
+        } else if (player.isExhausted()) {
+            result = "You're too tired, go home dude";
+        } else if (player.isWorkoutComplete()) {
+            result = "CONGRATULATIONS! YOU WORKED OUT!";
+        }
+        System.out.println(result);
     }
 
     public void promptForPlayerInput() throws IOException, ParseException {
@@ -101,13 +149,13 @@ public class Game {
         String actionPrefix = "";
         String playerAction = "";
 
-        if(actionList.size() >= 1) {
+        if (actionList.size() >= 1) {
             actionPrefix = actionList.get(0);
         }
-        if(actionList.size() == 2){
+        if (actionList.size() == 2) {
             playerAction = actionList.get(1);
-        } else if(actionList.size() == 3){
-            playerAction = (actionList.get(1) + " " + actionList.get(2)) ;
+        } else if (actionList.size() == 3) {
+            playerAction = (actionList.get(1) + " " + actionList.get(2));
         }
 
         validatePlayerCommands(actionPrefix.toLowerCase(), playerAction.toLowerCase());
@@ -115,55 +163,57 @@ public class Game {
 
     private void validatePlayerCommands(String actionPrefix, String playerAction) throws IOException, ParseException {
         try {
-            if (actionPrefix.equals("get")){
-                grabItem(playerAction);
+            switch (actionPrefix) {
+                case "get":
+                    grabItem(playerAction);
+                    break;
+                case "go":
+                    System.out.println("you're going here: " + playerAction);
+                    currentRoomName = playerAction;
+                    setCurrentRoom(jsonParser.getObjectFromJSONObject(rooms, playerAction));
+                    break;
+                case "workout":
+                    playerUseMachine(playerAction);
+                    break;
+                case "use":
+                    Object room = jsonParser.getObjectFromJSONObject(rooms, playerAction);
+                    Room nextRoom = new Room(room);
+                    boolean isItemRequired = isItemRequired(nextRoom.getRequiredItems());
 
-            }else if(actionPrefix.equals("go")){
-                System.out.println("you're going here: "+ playerAction);
-                currentRoomName = playerAction;
-                setCurrentRoom(rooms.get(playerAction));
-
-            }else if(actionPrefix.equals("workout")){
-                playerUseMachine(playerAction);
-
-            }else if(actionPrefix.equals("use")) {
-                boolean isItemRequired = isItemRequired(playerAction, currentRoom);
-                if (player.useItem(playerAction, isItemRequired)) {
-                    player.removeItemFromInventory(playerAction);
-                }
-
-            } else if(actionPrefix.equals("consume")){
-                if (player.consumeItem(playerAction)) {
-                    player.removeItemFromInventory(playerAction);
-                }
-
-            } else if(actionPrefix.equals("inspect")){
-                inspectRoom();
-            } else if(actionPrefix.equals("talk")){
-                talkToNPC();
-            } else if(actionPrefix.equals("see")){
-                getRoomMap();
-            } else if(actionPrefix.equals("q")) {
-                quit();
+                    if (player.useItem(playerAction, isItemRequired)) {
+                        player.removeItemFromInventory(playerAction);
+                    }
+                    break;
+                case "consume":
+                    if (player.consumeItem(playerAction)) {
+                        player.removeItemFromInventory(playerAction);
+                    }
+                    break;
+                case "inspect":
+                    inspectRoom();
+                    break;
+                case "talk":
+                    talkToNPC();
+                    break;
+                case "see":
+                    getRoomMap();
+                    break;
+                case "q":
+                    quit();
+                    break;
             }
         } catch (Exception exception) {
 //            TODO: add array with possible values for commands
-            System.out.println(actionPrefix + " was sadly and invalid answer. \n please ensure you are using a valid and complete command. " );
+            System.out.println(actionPrefix + " was sadly and invalid answer. \n please ensure you are using a valid and complete command. ");
 //            TODO: fix bug caused by pressing enter where prompt for player does not work and calls inspect
             promptForPlayerInput();
         }
     }
 
-    public boolean isItemRequired(String item, Room room) {
-        boolean result = false;
-        JSONArray required_items = room.getRequiredItems();
-
-        if (required_items.contains(item)) {
-            result = true;
-        }
-        return result;
+    public boolean isItemRequired(List items) {
+        return !"none".equals(items.get(0));
     }
-    
+
     private void getRoomMap() throws IOException {
         currentRoom.getRoomMap(currentRoomName);
     }
@@ -183,11 +233,11 @@ public class Game {
     }
 
     private void playerUseMachine(String playerExcerciseInput) throws FileNotFoundException {
-        System.out.println("you're using the: "+ playerExcerciseInput);
-        JSONObject exercises = getCurrentRoom().getExercises();
+        System.out.println("you're using the: " + playerExcerciseInput);
+        Object exercises = getCurrentRoom().getExercises();
 
         Exercise exercise = new Exercise(exercises, playerExcerciseInput);
-        JSONArray targetMuscle = exercise.getTargetMuscles();
+        Object targetMuscle = exercise.getTargetMuscles();
         String exerciseStatus = exercise.getExerciseStatus();
         Long energyCost = exercise.getEnergyCost();
 
@@ -195,42 +245,42 @@ public class Game {
             player.workout(targetMuscle, energyCost);
             player.subtractFromPlayerEnergy(Math.toIntExact(energyCost));
         } else {
-            if(player.getInventory().contains("wrench")){
-                String playerResponse = prompter.prompt("This machine is broken. Would you like to use your wrench to fix it? (y/n) \n >" );
-                if("y".equalsIgnoreCase(playerResponse)) {
-                    player.getInventory().remove("wrench");
-                    player.workout(targetMuscle, energyCost);
-                    player.subtractFromPlayerEnergy(Math.toIntExact(energyCost));
-                } else {
-                    System.out.println("When you are ready to workout, come back with the wrench and get to it.");
-                }
+            fixBrokenMachine(targetMuscle, energyCost);
+
+        }
+    }
+
+    private void fixBrokenMachine(Object targetMuscle, Long energyCost) {
+        if (player.getInventory().contains("wrench")) {
+            String playerResponse = prompter.prompt("This machine is broken. Would you like to use your wrench to fix it? (y/n) \n >");
+            if ("y".equalsIgnoreCase(playerResponse)) {
+                player.getInventory().remove("wrench");
+                player.workout(targetMuscle, energyCost);
+                player.subtractFromPlayerEnergy(Math.toIntExact(energyCost));
             } else {
-                System.out.println("This machine is broken, please come back with a wrench to fix it.");
+                System.out.println("When you are ready to workout, come back with the wrench and get to it.");
             }
+        } else {
+            System.out.println("This machine is broken, please come back with a wrench to fix it.");
         }
     }
 
     private void grabItem(String playerAction) {
-        System.out.println("you got the :"+ playerAction);
+        System.out.println("you got the :" + playerAction);
         player.getInventory().add(playerAction);
     }
 
-    //    returns whether game is over or not.
-    private void isGameOver(boolean currentGameStatus){
-            setGameOver(currentGameStatus);
-    }
-
     //    gives player ability to quit
-    private void quit(){
+    private void quit() {
         System.out.println("--------------------------------------\n"
                 + " YOU ARE A QUITTER!! GAME OVER" + "" +
                 "------------------------------------");
         System.exit(0);
     }
 
-    private void setCurrentRoom(Object currentRoom) throws IOException, ParseException {
+    private void setCurrentRoom(Object currentRoom) {
 
-        this.currentRoom = new Room((JSONObject) currentRoom) ;
+        this.currentRoom = new Room(currentRoom);
     }
 
     public Room getCurrentRoom() {
@@ -238,10 +288,6 @@ public class Game {
     }
 
     // accessor methods
-    public void setGameOver(boolean gameOver) {
-        isGameOver = gameOver;
-    }
-
 
     public boolean isGameOver() {
         return isGameOver;

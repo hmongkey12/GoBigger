@@ -3,31 +3,41 @@ package com.games.gobigorgohome;
 import com.games.gobigorgohome.characters.NPC;
 import com.games.gobigorgohome.parsers.ParseJSON;
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Set;
 
 public class Room {
-    private ParseJSON jsonParser = new ParseJSON();
+    private final ParseJSON jsonParser = new ParseJSON();
 
-    private String roomName;
-    private JSONArray items;
-    private JSONObject exercises;
+    private final String roomName;
+    private final Object items;
+    private final Object exercises;
 
-    private JSONArray directions;
-    private String npc_type;
-    private JSONArray requiredItems;
+    private final String npc_type;
+    private final List requiredItems;
     public NPC npc;
-    private Map roomMap = new Map();
+    private final Map roomMap = new Map();
 
-    public Room(JSONObject room) throws IOException, ParseException {
-        this.roomName = jsonParser.getObjectNameFromJSONObject(room);
-        this.items = jsonParser.getJSONArrayFromJSONObject(room,"items");
-        this.exercises = (JSONObject) room.get("exercises");
-        this.directions = jsonParser.getJSONArrayFromJSONObject(room,"directions");
-        this.npc_type = (String) jsonParser.getJSONArrayFromJSONObject( room, "NPCS").get(0);
-        if(!"none".equals(npc_type)) {
+    public Room(Object room) {
+        this.roomName = jsonParser.getObjectStringFromJSONObject(room, "name");
+
+
+        this.items = jsonParser.getObjectFromJSONObject(room, "items");
+        this.exercises = jsonParser.getObjectFromJSON(room, "exercises");
+
+//        this.directions = jsonParser.getJSONArrayFromJSONObject(room,"directions");
+
+        Object npcTypeObject = jsonParser.getObjectFromJSONObject(room, "NPCS");
+        this.npc_type = jsonParser.getStringValueFromIndexInJSONArray(npcTypeObject, 0);
+
+        Object requiredItemsObject = jsonParser.getObjectFromJSONObject(room, "required items");
+        this.requiredItems = jsonParser.getKeySetFromJSONArray(requiredItemsObject);
+        System.out.println(this.requiredItems);
+
+        if (!"none".equals(npc_type)) {
             this.npc = new NPC(npc_type);
         }
     }
@@ -36,7 +46,7 @@ public class Room {
         roomMap.stringEditor(roomName);
     }
 
-    public JSONArray getItems() {
+    public Object getItems() {
         return items;
     }
 
@@ -44,16 +54,17 @@ public class Room {
         return roomName;
     }
 
-    public JSONObject getExercises() {
+    public Object getExercises() {
         return exercises;
     }
 
-    public JSONArray getRequiredItems() {
-        return requiredItems;
+    //    TODO: determine the Set value types
+    public Set getExerciseList() {
+        return jsonParser.getKeySetFromJSONObject(getExercises());
     }
 
-    public JSONArray getDirections() {
-        return directions;
+    public List getRequiredItems() {
+        return requiredItems;
     }
 
     public String getNpc_type() {
@@ -64,16 +75,16 @@ public class Room {
         return npc;
     }
 
-    private String getValidNpc(){
+    private String getValidNpc() {
         return getNpc() == null ? "No one" : getNpc().getNpcName();
     }
 
     @Override
     public String toString() {
         return "You are in " + getRoomName() + "\n" +
-                "Exercises available are: " + getExercises().keySet() + "\n" +
+                "Exercises available are: " + getExerciseList() + "\n" +
                 "You see: " + getItems() + "\n" +
-                 getValidNpc() + " is standing there with you.\n";
+                getValidNpc() + " is standing there with you.\n";
 //        TODO: if adding direction limitations, call getDirections
     }
 }
