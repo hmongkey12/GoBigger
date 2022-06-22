@@ -1,14 +1,14 @@
 
-	1. You are a user that wants to work out in our gym and the first thing that you will do is land in our front desk and give some optional information like name, age, height and weight.
+	1. Welcome to the Gainz Gym, you are at the front desk, please enter some basic optional information.
 
-	2. You will have the option  to go to any of our three workout rooms:   WEIGHT ROOM,   YOGA STUDIO  OR MACHINE ROOM.
-	    There is a MANAGER Office where you can go and grab an energy drink or solved any problem that you may have.
+	2. You have three Rooms to preform workouts in Weight Room, Yoga Studio, and Machine Room.
+        Additionally, you may enter the Mangers office or the front desk area.
+        Be Sure to inspect rooms for people to talk to or things to find!
 
-	3. You have 100 energy points to spend wisely which our professionals believe are more than enough to complete your
-	    full body workout.
+	3. You have 100 energy points to spend wisely in the gym.
 
-	4. You win ( GO BIG ) as soon as you work out every muscle  (LEGS, BICEPS, TRICEPS, SHOULDERS, BACK AND CHEST) 
-	    with the energy point provided.
+	4.The Goal is to work out these body segments (LEGS, BICEPS, TRICEPS, SHOULDERS, BACK AND CHEST)
+	    with the energy point provided. Beware not all exercises fall into those categories!
 
-	5.You lose (GO HOME) if you do not finish your workout before spend all your energy points.
+	5.You lose if you do not finish your workout before spend all your energy points.
 
