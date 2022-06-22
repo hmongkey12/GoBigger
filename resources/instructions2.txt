@@ -1,21 +1,19 @@
 
-	6. To move type GO and the name of the room where you want to go. For example if you want to go the Machine room.
-	    type: GO MACHINES It does not matter if you use Capital or lower case.
-	
-	7. Same way if you want to USE a Machine or perform an exercise. For example type: WORKOUT BENCH PRESS It does not matter
-	    if you use Capital or lower case.
+	6. Movement is preformed by typing Go followed by where you want to go --> Go Yoga Studio
+	    Capitalization doesn't matter but spelling does!
 
-	8. If you want to see what items or equipment there are into a room type: INSPECT ROOM It does not matter if you use
-    	    Capital or lower case.
+	7. To see available NPC's, items, and equipment use inspect room command --> Inspect room
+        Again, capitalization doesn't matter but spelling does!
 
-	9. Finally, is you want to GET an item follow the same pattern. For example type: GET KEYS it does not matter if you use
-	    Capital or lower case.
+	8. To preform workouts in rooms be sure to inspect to see your choices the preform workout on the --> workout push ups
+           Again, capitalization doesn't matter but spelling does!
 
-	10. To CONSUME an item, simply type CONSUME <item name>. For example: CONSUME ENERGY DRINK.
+	9. If you see items you want us the Get item pattern to put the item in you inventory --> Get Keys
+	    Again, capitalization doesn't matter but spelling does!
+
+	10. To CONSUME an item, simply type CONSUME <item name> --> CONSUME ENERGY DRINK.
 
 	11. To see a map, simply type SEE MAP.
-
-    NOTE: Please provide some information like you NAME, HEIGHT (in inches), WEIGHT (in pounds) and AGE (integer number)
 
 	LET'S PLAY!!!...
 
