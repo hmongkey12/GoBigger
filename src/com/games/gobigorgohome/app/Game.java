@@ -216,7 +216,7 @@ public class Game {
         String npcItem = (String) currentRoom.npc.getInventory().get(0);
 
         player.getInventory().add(npcItem);
-        System.out.println("You addded " + npcItem + " to your gym bag.");
+        System.out.println("You added " + npcItem + " to your gym bag.");
     }
 
     private void inspectRoom() {
