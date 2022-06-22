@@ -8,6 +8,7 @@ import com.games.gobigorgohome.Room;
 import com.games.gobigorgohome.characters.Player;
 import com.games.gobigorgohome.parsers.ParseJSON;
 import com.games.gobigorgohome.parsers.ParseTxt;
+import org.json.simple.JSONArray;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
@@ -39,7 +40,7 @@ public class Game {
         String playerName = validName();
         double playerHeight = validDouble("What is your height? ", "height", "inches");
         double playerWeight = validDouble("What is your weight? ", "weight", "lbs");
-        int playerAge = validInt("What is your age", "age", "years");
+        int playerAge = validInt("What is your age ", "age", "years");
         createPlayer(playerName, playerAge, playerHeight, playerWeight);
     }
 
@@ -256,8 +257,24 @@ public class Game {
     }
 
     private void grabItem(String playerAction) {
-        System.out.println("you got the :" + playerAction);
-        player.getInventory().add(playerAction);
+        final String[] currentItem = new String[1];
+        JSONArray roomItemsObjectArray = (JSONArray) currentRoom.getItems();
+        roomItemsObjectArray.forEach(item -> {
+            if ( item.equals(playerAction)) {
+                System.out.println("Item equals playerAction");
+                currentItem[0] = (String) item;
+            }
+        });
+
+        try {
+            if (currentItem[0].equals(playerAction)) {
+                System.out.println("\nYou got the :" + playerAction);
+                player.getInventory().add(playerAction);
+            }
+        }
+        catch (Exception e) {
+            System.out.println("\nSorry, you cant can't GET " + playerAction.toUpperCase() + ". Try again!");
+        }
     }
 
     //    gives player ability to quit
