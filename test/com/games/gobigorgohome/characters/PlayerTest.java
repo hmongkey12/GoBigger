@@ -64,7 +64,7 @@ public class PlayerTest {
 
     @Test
     public void getHeight_shouldFailWhen_ageIsWrong() {
-//        assertNotEquals(roni.getAge(), 32 );
+       // assertNotEquals(roni.getAge(), 32 );
     }
     @Test
     public void getAge_shouldReturnAgeValue_whenCalled() {
@@ -73,7 +73,7 @@ public class PlayerTest {
 
     @Test
     public void getAge_shouldFailWhen_ageIsWrong() {
-//        assertNotEquals(roni.getAge(), 32 );
+        //assertNotEquals(roni.getAge(), 32 );
     }
     @Test
     public void getEnergy_shouldReturnEnergyValue_whenCalled() {
@@ -82,7 +82,7 @@ public class PlayerTest {
 
     @Test
     public void getEnergy_shouldFail_ifTheEnergyIsNotCorrect() {
-//        assertNotEquals(roni.getEnergy(), 40 );
+       // assertNotEquals(roni.getEnergy(), 40 );
     }
 
 }
