@@ -1,16 +1,19 @@
 package com.games.gobigorgohome.app;
 
-import com.apps.util.Console;
 import com.apps.util.Prompter;
 import com.games.gobigorgohome.Exercise;
+import com.games.gobigorgohome.GameMap;
 import com.games.gobigorgohome.Gym;
 import com.games.gobigorgohome.Room;
 import com.games.gobigorgohome.characters.Player;
 import com.games.gobigorgohome.parsers.ParseJSON;
 import com.games.gobigorgohome.parsers.ParseTxt;
 import org.json.simple.JSONArray;
+import com.apps.util.Console;
 import org.json.simple.parser.ParseException;
 
+import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -29,6 +32,8 @@ public class Game {
     private final Prompter prompter;
     private final ParseTxt page = new ParseTxt();
     private final ParseJSON jsonParser = new ParseJSON();
+    private final JFrame frame = new JFrame("Go Big Or Go Home");
+    private final GameMap gamemap = new GameMap();
 
     public Game(Prompter prompter) throws IOException, ParseException {
         this.prompter = prompter;
@@ -105,6 +110,7 @@ public class Game {
 
     //    main function running the game, here we call all other functions necessary to run the game
     public void playGame() throws IOException, ParseException {
+        addMap();
         page.instructions();
         getNewPlayerInfo();
         // runs a while loop
@@ -275,6 +281,13 @@ public class Game {
         catch (Exception e) {
             System.out.println("\nSorry, you cant can't GET " + playerAction.toUpperCase() + ". Try again!");
         }
+    }
+
+    public void addMap(){
+        frame.getContentPane().add(gamemap, BorderLayout.CENTER);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(600, 600);
+        frame.setVisible(true);
     }
 
     //    gives player ability to quit
