@@ -68,7 +68,7 @@ public class Game {
             measurement = Double.parseDouble(measurementString);
             //validDouble(measure, "you need to type your " + measureName + " in " + unit + ": ", measureName, unit);
         } catch (NumberFormatException | NullPointerException e) {
-            validDouble("You need to type your " + measureName + " using numbers (" + unit + "): ", measureName, unit);
+            return validDouble("You need to type your " + measureName + " using numbers (" + unit + "): ", measureName, unit);
         }
         return measurement;
     }
@@ -81,7 +81,7 @@ public class Game {
             measureNum = Integer.parseInt(measurement);
             //validInt(measure, "you need to type your "+ measureName+" in " + unit + " or you aren't an adult: ", measureName, unit);
         } catch (NumberFormatException e) {
-            validInt("You need to type your " + measureName + " using numbers integers (" + unit + "): ", measureName, unit);
+            return validInt("You need to type your " + measureName + " using numbers integers (" + unit + "): ", measureName, unit);
         }
         return measureNum;
     }
@@ -215,7 +215,7 @@ public class Game {
         String npcItem = (String) currentRoom.npc.getInventory().get(0);
 
         player.getInventory().add(npcItem);
-        System.out.println("You addded " + npcItem + " to your gym bag.");
+        System.out.println("You added " + npcItem + " to your gym bag.");
     }
 
     private void inspectRoom() {
