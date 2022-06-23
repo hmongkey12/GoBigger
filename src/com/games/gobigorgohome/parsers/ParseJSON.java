@@ -19,9 +19,8 @@ public class ParseJSON {
         JSONParser jsonParser = new JSONParser();
         //JSONObject jsonObject = null;
         Object result = null;
-        try {
-            Reader jsonReader = new InputStreamReader(inputTestJSON, StandardCharsets.UTF_8);
-            result = jsonParser.parse(jsonReader);
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputTestJSON, "UTF-8"))){
+            result = jsonParser.parse(reader);
 
         } catch (IOException | ParseException e) {
             e.printStackTrace();
@@ -29,7 +28,7 @@ public class ParseJSON {
         return result;
     }
 
-    private InputStream getFileFromResourceAsStream(String filePath) {
+    private static InputStream getFileFromResourceAsStream(String filePath) {
         ClassLoader classLoader = ParseJSON.class.getClassLoader();
         InputStream inputStream = classLoader.getResourceAsStream(filePath);
         if (inputStream == null) {
@@ -60,12 +59,12 @@ public class ParseJSON {
         return jsonObject.get(objectString);
     }
 
-    public Set getKeySetFromJSONObject(Object object) {
+    public Set<Object> getKeySetFromJSONObject(Object object) {
         JSONObject jsonObject = (JSONObject) object;
         return jsonObject.keySet();
     }
 
-    public List getKeySetFromJSONArray(Object object) {
+    public List<Object> getKeySetFromJSONArray(Object object) {
         return (JSONArray) object;
     }
 
