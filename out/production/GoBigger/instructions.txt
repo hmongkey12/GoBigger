@@ -1,14 +1,19 @@
-
-	1. Welcome to the Gainz Gym, you are at the front desk, please enter some basic optional information.
-
-	2. You have three Rooms to preform workouts in Weight Room, Yoga Studio, and Machine Room.
-        Additionally, you may enter the Mangers office or the front desk area.
-        Be Sure to inspect rooms for people to talk to or things to find!
-
-	3. You have 100 energy points to spend wisely in the gym.
-
-	4.The Goal is to work out these body segments (LEGS, BICEPS, TRICEPS, SHOULDERS, BACK AND CHEST)
-	    with the energy point provided. Beware not all exercises fall into those categories!
-
-	5.You lose if you do not finish your workout before spend all your energy points.
+WELCOME TO GO BIG OR GO HOME A game by GAINZZZ Productions Refactored by Pizza Pals"
+INSTRUCTIONS:
+1. Welcome to the Gainz Gym, you are at the front desk, please enter some basic optional information.
+2. You have three Rooms to preform workouts in Weight Room, Yoga Studio, and Machine Room.
+Additionally, you may enter the Mangers office or the front desk area.
+Be Sure to inspect rooms for people to talk to or things to find!
+3. You have 100 energy points to spend wisely in the gym.
+4.The Goal is to work out these body segments (LEGS, BICEPS, TRICEPS, SHOULDERS, BACK AND CHEST)
+with the energy point provided. Beware not all exercises fall into those categories!
+5.You lose if you do not finish your workout before spend all your energy points.
+6. Movement is preformed by typing Go followed by where you want to go --> Go Yoga Studio
+7. To see available NPC's, items, and equipment use inspect room command --> Inspect room
+8. To preform workouts in rooms be sure to inspect to see your choices the preform workout on the --> workout push ups
+9. If you see items you want us the Get item pattern to put the item in you inventory --> Get Keys
+10. To CONSUME an item, simply type CONSUME <item name> --> CONSUME ENERGY DRINK.
+11. To see a map, simply type SEE MAP.
+12. Capitalization doesn't matter but spelling does!
+Go GET THOSE GAINZZZ
 
