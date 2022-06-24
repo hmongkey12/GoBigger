@@ -34,6 +34,13 @@ public class Game {
     private final ParseJSON jsonParser = new ParseJSON();
     private final JFrame frame = new JFrame("Go Big Or Go Home");
     private final GameMap gamemap = new GameMap();
+    Container container;
+    JPanel gameTextArea;
+    JPanel mapPanel;
+    JPanel imagePanel;
+    JPanel userInput;
+    JLabel instructionText;
+
 
     public Game(Prompter prompter) throws IOException, ParseException {
         this.prompter = prompter;
@@ -110,8 +117,10 @@ public class Game {
 
     //    main function running the game, here we call all other functions necessary to run the game
     public void playGame() throws IOException, ParseException {
-        addMap();
-        page.instructions();
+
+
+        MainFrame();
+        System.out.println(page.instructions());
         getNewPlayerInfo();
         // runs a while loop
         while (!isGameOver()) {
@@ -283,11 +292,60 @@ public class Game {
         }
     }
 
-    public void addMap(){
-        frame.getContentPane().add(gamemap, BorderLayout.CENTER);
+    public void MainFrame(){
+        //frame Setting
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(600, 600);
+        frame.setSize(1000, 750);
+        frame.setLayout(new GridLayout(2,2));
         frame.setVisible(true);
+        frame.getContentPane().setBackground(Color.BLACK);
+        container = frame.getContentPane();
+
+        //three panels
+        gameTextArea = new JPanel();
+        mapPanel=new JPanel();
+        imagePanel=new JPanel();
+        userInput = new JPanel();
+
+        //set map
+        mapPanel.setBackground(Color.RED);
+        mapPanel.setBounds(500,0,200,200);
+        mapPanel.add(gamemap);
+
+        //set image
+        imagePanel.setBackground(Color.YELLOW);
+
+        //setTextArea
+        gameTextArea.setBackground(Color.WHITE);
+
+        //set userInut
+        userInput.setBackground(Color.GREEN);
+
+        //Set text within text area
+        JTextArea wrapperText =new JTextArea(page.instructions(),16,50);
+        wrapperText.setWrapStyleWord(true);
+        wrapperText.setLineWrap(true);
+        wrapperText.setOpaque(false);
+        wrapperText.setEditable(false);
+        wrapperText.setFocusable(false);
+        wrapperText.setBackground(UIManager.getColor("Label.background"));
+        wrapperText.setFont(UIManager.getFont("Label.font"));
+        wrapperText.setBorder(UIManager.getBorder("Label.border"));
+        wrapperText.setFont(new Font("Monospaced", Font.PLAIN, 16));
+        JScrollPane scroll = new JScrollPane(wrapperText);
+
+
+        //add text to
+        gameTextArea.add(scroll);
+
+        //add components to container
+        container.add(gameTextArea);
+        container.add(gamemap);
+        container.add(imagePanel);
+        container.add(userInput);
+
+        frame.setResizable(false);
+
     }
 
     //    gives player ability to quit
@@ -323,6 +381,13 @@ public class Game {
 
     public String getPlayerName() {
         return playerName;
+    }
+
+    public void addMap(){
+        frame.getContentPane().add(gamemap, BorderLayout.CENTER);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(600, 600);
+        frame.setVisible(true);
     }
 
 }
