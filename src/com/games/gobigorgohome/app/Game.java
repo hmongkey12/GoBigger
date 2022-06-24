@@ -1,15 +1,16 @@
 package com.games.gobigorgohome.app;
 
-import com.apps.util.Console;
 import com.apps.util.Prompter;
-import com.games.gobigorgohome.Exercise;
-import com.games.gobigorgohome.Gym;
-import com.games.gobigorgohome.Room;
+import com.games.gobigorgohome.*;
 import com.games.gobigorgohome.characters.Player;
 import com.games.gobigorgohome.parsers.ParseJSON;
 import com.games.gobigorgohome.parsers.ParseTxt;
+import org.json.simple.JSONArray;
+import com.apps.util.Console;
 import org.json.simple.parser.ParseException;
 
+import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -28,6 +29,16 @@ public class Game {
     private final Prompter prompter;
     private final ParseTxt page = new ParseTxt();
     private final ParseJSON jsonParser = new ParseJSON();
+    private final JFrame frame = new JFrame("Go Big Or Go Home");
+    private final GameMap gamemap = new GameMap();
+    PlayerBody playerBody;
+    Container container;
+    JPanel gameTextArea;
+    JPanel mapPanel;
+    JPanel imagePanel;
+    JPanel userInput;
+    JLabel instructionText;
+
 
     public Game(Prompter prompter) throws IOException, ParseException {
         this.prompter = prompter;
@@ -39,7 +50,7 @@ public class Game {
         String playerName = validName();
         double playerHeight = validDouble("What is your height? ", "height", "inches");
         double playerWeight = validDouble("What is your weight? ", "weight", "lbs");
-        int playerAge = validInt("What is your age", "age", "years");
+        int playerAge = validInt("What is your age ", "age", "years");
         createPlayer(playerName, playerAge, playerHeight, playerWeight);
     }
 
@@ -68,7 +79,7 @@ public class Game {
             measurement = Double.parseDouble(measurementString);
             //validDouble(measure, "you need to type your " + measureName + " in " + unit + ": ", measureName, unit);
         } catch (NumberFormatException | NullPointerException e) {
-            validDouble("You need to type your " + measureName + " using numbers (" + unit + "): ", measureName, unit);
+            return validDouble("You need to type your " + measureName + " using numbers (" + unit + "): ", measureName, unit);
         }
         return measurement;
     }
@@ -81,7 +92,7 @@ public class Game {
             measureNum = Integer.parseInt(measurement);
             //validInt(measure, "you need to type your "+ measureName+" in " + unit + " or you aren't an adult: ", measureName, unit);
         } catch (NumberFormatException e) {
-            validInt("You need to type your " + measureName + " using numbers integers (" + unit + "): ", measureName, unit);
+            return validInt("You need to type your " + measureName + " using numbers integers (" + unit + "): ", measureName, unit);
         }
         return measureNum;
     }
@@ -104,12 +115,18 @@ public class Game {
 
     //    main function running the game, here we call all other functions necessary to run the game
     public void playGame() throws IOException, ParseException {
-        page.instructions();
+
+
+        MainFrame();
+        System.out.println(page.instructions());
         getNewPlayerInfo();
         // runs a while loop
         while (!isGameOver()) {
             gameStatus();
             promptForPlayerInput();
+//            frame.invalidate();
+//            frame.validate();
+//            frame.repaint();
             if (checkGameStatus()) {
                 break;
             }
@@ -215,7 +232,7 @@ public class Game {
         String npcItem = (String) currentRoom.npc.getInventory().get(0);
 
         player.getInventory().add(npcItem);
-        System.out.println("You addded " + npcItem + " to your gym bag.");
+        System.out.println("You added " + npcItem + " to your gym bag.");
     }
 
     private void inspectRoom() {
@@ -234,6 +251,7 @@ public class Game {
         if ("fixed".equals(exerciseStatus)) {
             player.workout(targetMuscle, energyCost);
             player.subtractFromPlayerEnergy(Math.toIntExact(energyCost));
+            repaintPlayerBody();
         } else {
             fixBrokenMachine(targetMuscle, energyCost);
 
@@ -256,8 +274,98 @@ public class Game {
     }
 
     private void grabItem(String playerAction) {
-        System.out.println("you got the :" + playerAction);
-        player.getInventory().add(playerAction);
+        final String[] currentItem = new String[1];
+        JSONArray roomItemsObjectArray = (JSONArray) currentRoom.getItems();
+        roomItemsObjectArray.forEach(item -> {
+            if ( item.equals(playerAction)) {
+                System.out.println("Item equals playerAction");
+                currentItem[0] = (String) item;
+            }
+        });
+
+        try {
+            if (currentItem[0].equals(playerAction)) {
+                System.out.println("\nYou got the :" + playerAction);
+                player.getInventory().add(playerAction);
+            }
+        }
+        catch (Exception e) {
+            System.out.println("\nSorry, you cant can't GET " + playerAction.toUpperCase() + ". Try again!");
+        }
+    }
+
+    public void repaintPlayerBody(){
+        frame.remove(playerBody);
+        playerBody = new PlayerBody(getMuscleGroups(player));
+        frame.add(playerBody, 2);
+//        frame.repaint();
+        SwingUtilities.updateComponentTreeUI(frame);
+
+    }
+
+    public void MainFrame(){
+        //frame Setting
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(1000, 750);
+        frame.setLayout(new GridLayout(2,2));
+        frame.setVisible(true);
+        frame.getContentPane().setBackground(Color.BLACK);
+        container = frame.getContentPane();
+
+        //three panels
+        gameTextArea = new JPanel();
+        mapPanel=new JPanel();
+        imagePanel=new JPanel();
+        playerBody = new PlayerBody(getMuscleGroups(player));
+        playerBody.setPanelSize(frame.getWidth()/2, frame.getHeight()/2);
+
+        userInput = new JPanel();
+
+        //set map
+        mapPanel.setBackground(Color.RED);
+        mapPanel.setBounds(500,0,200,200);
+        mapPanel.add(gamemap);
+
+
+        //set image
+        imagePanel.setBackground(Color.YELLOW);
+
+        //setTextArea
+        gameTextArea.setBackground(Color.WHITE);
+
+        //set userInut
+        userInput.setBackground(Color.GREEN);
+
+        //Set text within text area
+        JTextArea wrapperText =new JTextArea(page.instructions(),16,50);
+        wrapperText.setWrapStyleWord(true);
+        wrapperText.setLineWrap(true);
+        wrapperText.setOpaque(false);
+        wrapperText.setEditable(false);
+        wrapperText.setFocusable(false);
+        wrapperText.setBackground(UIManager.getColor("Label.background"));
+        wrapperText.setFont(UIManager.getFont("Label.font"));
+        wrapperText.setBorder(UIManager.getBorder("Label.border"));
+        wrapperText.setFont(new Font("Monospaced", Font.PLAIN, 16));
+        JScrollPane scroll = new JScrollPane(wrapperText);
+
+
+        //add text to
+        gameTextArea.add(scroll);
+
+        //add components to container
+        container.add(gameTextArea);
+        container.add(gamemap);
+
+        container.add(playerBody);
+//        container.add(imagePanel);
+        container.add(userInput);
+
+        frame.setResizable(false);
+        frame.invalidate();
+        frame.validate();
+        frame.repaint();
+
     }
 
     //    gives player ability to quit
@@ -293,6 +401,29 @@ public class Game {
 
     public String getPlayerName() {
         return playerName;
+    }
+
+    public boolean[] getMuscleGroups(Player player){
+        boolean[] muscleGroup = new boolean[6];
+        if(player.isLegsWorked()) {
+            muscleGroup[0]  = true;
+        }
+        if(player.isBackWorked()){
+            muscleGroup[1] = true;
+        }
+        if(player.isChestWorked()){
+            muscleGroup[2] = true;
+        }
+        if(player.isCoreWorked()){
+            muscleGroup[3] = true;
+        }
+        if(player.isShoulderWorked()){
+            muscleGroup[4] = true;
+        }
+        if(player.isTricepsWorked()){
+            muscleGroup[5] = true;
+        }
+        return muscleGroup;
     }
 
 }

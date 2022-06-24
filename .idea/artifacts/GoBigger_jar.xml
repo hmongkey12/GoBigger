@@ -1,0 +1,16 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="GoBigger:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/GoBigger_jar</output-path>
+    <root id="archive" name="GoBigger.jar">
+      <element id="module-output" name="GoBigger" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/junit/junit/4.0/junit-4.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/github/jsurfer/jsurfer-jsonsimple/1.6.3/jsurfer-jsonsimple-1.6.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/github/jsurfer/jsurfer-core/1.6.3/jsurfer-core-1.6.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/antlr/antlr4-runtime/4.7.2/antlr4-runtime-4.7.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/googlecode/json-simple/json-simple/1.1.1/json-simple-1.1.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/junit/junit/4.10/junit-4.10.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/hamcrest/hamcrest-core/1.1/hamcrest-core-1.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../app-utils-1.1/app-utils-1.1/lib/app-utils-1.1.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
