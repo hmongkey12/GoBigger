@@ -1,10 +1,7 @@
 package com.games.gobigorgohome.app;
 
 import com.apps.util.Prompter;
-import com.games.gobigorgohome.Exercise;
-import com.games.gobigorgohome.GameMap;
-import com.games.gobigorgohome.Gym;
-import com.games.gobigorgohome.Room;
+import com.games.gobigorgohome.*;
 import com.games.gobigorgohome.characters.Player;
 import com.games.gobigorgohome.parsers.ParseJSON;
 import com.games.gobigorgohome.parsers.ParseTxt;
@@ -34,6 +31,7 @@ public class Game {
     private final ParseJSON jsonParser = new ParseJSON();
     private final JFrame frame = new JFrame("Go Big Or Go Home");
     private final GameMap gamemap = new GameMap();
+    PlayerBody playerBody;
     Container container;
     JPanel gameTextArea;
     JPanel mapPanel;
@@ -250,6 +248,7 @@ public class Game {
         if ("fixed".equals(exerciseStatus)) {
             player.workout(targetMuscle, energyCost);
             player.subtractFromPlayerEnergy(Math.toIntExact(energyCost));
+            repaintPlayerBody();
         } else {
             fixBrokenMachine(targetMuscle, energyCost);
 
@@ -292,6 +291,13 @@ public class Game {
         }
     }
 
+    public void repaintPlayerBody(){
+        frame.remove(playerBody);
+        playerBody = new PlayerBody(getMuscleGroups(player));
+        frame.add(playerBody, 2);
+        frame.repaint();
+    }
+
     public void MainFrame(){
         //frame Setting
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -305,12 +311,16 @@ public class Game {
         gameTextArea = new JPanel();
         mapPanel=new JPanel();
         imagePanel=new JPanel();
+        playerBody = new PlayerBody(getMuscleGroups(player));
+        playerBody.setPanelSize(frame.getWidth()/2, frame.getHeight()/2);
+
         userInput = new JPanel();
 
         //set map
         mapPanel.setBackground(Color.RED);
         mapPanel.setBounds(500,0,200,200);
         mapPanel.add(gamemap);
+
 
         //set image
         imagePanel.setBackground(Color.YELLOW);
@@ -341,7 +351,9 @@ public class Game {
         //add components to container
         container.add(gameTextArea);
         container.add(gamemap);
-        container.add(imagePanel);
+
+        container.add(playerBody);
+//        container.add(imagePanel);
         container.add(userInput);
 
         frame.setResizable(false);
@@ -383,12 +395,27 @@ public class Game {
         return playerName;
     }
 
-    public void addMap(){
-        frame.getContentPane().add(gamemap, BorderLayout.CENTER);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(600, 600);
-        frame.setVisible(true);
-        //comment
+    public boolean[] getMuscleGroups(Player player){
+        boolean[] muscleGroup = new boolean[6];
+        if(player.isLegsWorked()) {
+            muscleGroup[0]  = true;
+        }
+        if(player.isBackWorked()){
+            muscleGroup[1] = true;
+        }
+        if(player.isChestWorked()){
+            muscleGroup[2] = true;
+        }
+        if(player.isCoreWorked()){
+            muscleGroup[3] = true;
+        }
+        if(player.isShoulderWorked()){
+            muscleGroup[4] = true;
+        }
+        if(player.isTricepsWorked()){
+            muscleGroup[5] = true;
+        }
+        return muscleGroup;
     }
 
 }
