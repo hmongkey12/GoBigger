@@ -124,6 +124,9 @@ public class Game {
         while (!isGameOver()) {
             gameStatus();
             promptForPlayerInput();
+//            frame.invalidate();
+//            frame.validate();
+//            frame.repaint();
             if (checkGameStatus()) {
                 break;
             }
@@ -295,7 +298,9 @@ public class Game {
         frame.remove(playerBody);
         playerBody = new PlayerBody(getMuscleGroups(player));
         frame.add(playerBody, 2);
-        frame.repaint();
+//        frame.repaint();
+        SwingUtilities.updateComponentTreeUI(frame);
+
     }
 
     public void MainFrame(){
@@ -357,6 +362,9 @@ public class Game {
         container.add(userInput);
 
         frame.setResizable(false);
+        frame.invalidate();
+        frame.validate();
+        frame.repaint();
 
     }
 

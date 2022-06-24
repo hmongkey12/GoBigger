@@ -45,7 +45,8 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="app-utils-1.1" level="project" />
     <orderEntry type="library" name="github.jsurfer.jsonsimple" level="project" />
+    <orderEntry type="library" name="bluecatcode.junit.4.11.extended" level="project" />
+    <orderEntry type="library" name="app-utils-1.1" level="project" />
   </component>
 </module>
