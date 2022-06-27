@@ -30,7 +30,7 @@ public class Game {
     private final ParseTxt page = new ParseTxt();
     private final ParseJSON jsonParser = new ParseJSON();
     private final JFrame frame = new JFrame("Go Big Or Go Home");
-    private final GameMap gamemap = new GameMap();
+    private GameMap gamemap = new GameMap(gym.getStarterRoomName());
     PlayerBody playerBody;
     Container container;
     JPanel gameTextArea;
@@ -124,9 +124,6 @@ public class Game {
         while (!isGameOver()) {
             gameStatus();
             promptForPlayerInput();
-//            frame.invalidate();
-//            frame.validate();
-//            frame.repaint();
             if (checkGameStatus()) {
                 break;
             }
@@ -187,6 +184,7 @@ public class Game {
                     System.out.println("you're going here: " + playerAction);
                     currentRoomName = playerAction;
                     setCurrentRoom(jsonParser.getObjectFromJSONObject(rooms, playerAction));
+                    repaintMap();
                     break;
                 case "workout":
                     playerUseMachine(playerAction);
@@ -294,13 +292,18 @@ public class Game {
         }
     }
 
-    public void repaintPlayerBody(){
+    private void repaintPlayerBody(){
         frame.remove(playerBody);
         playerBody = new PlayerBody(getMuscleGroups(player));
         frame.add(playerBody, 2);
-//        frame.repaint();
         SwingUtilities.updateComponentTreeUI(frame);
+    }
 
+    private void repaintMap(){
+        frame.remove(gamemap);
+        gamemap = new GameMap(currentRoomName);
+        frame.add(gamemap, 1);
+        SwingUtilities.updateComponentTreeUI(frame);
     }
 
     public void MainFrame(){

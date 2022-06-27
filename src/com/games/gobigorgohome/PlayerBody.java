@@ -17,7 +17,7 @@ public class PlayerBody extends JPanel {
    @Override
    public void paintComponent(Graphics graphics){
       super.paintComponent(graphics);
-      setBackground(Color.black);
+      setBackground(Color.BLACK);
       drawPlayer(graphics);
    }
 
