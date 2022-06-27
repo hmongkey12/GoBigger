@@ -3,7 +3,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class GameMap extends JPanel{
-    private String currentRoom;
+    private final String currentRoom;
 
 
     public GameMap(String currentRoom){
