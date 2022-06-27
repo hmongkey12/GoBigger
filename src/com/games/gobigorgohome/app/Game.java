@@ -209,7 +209,6 @@ public class Game {
                     quit();
                     break;
                 case "new":
-                    System.out.println("hitting");
                     newGame();
                     break;
             }
@@ -223,7 +222,9 @@ public class Game {
 
     private void newGame() throws IOException, ParseException {
         frame.setVisible(false);
+        //reset the map
         currentRoomName = "front desk";
+        //used to reset the body
         player=null;
         repaintPlayerBody();
         repaintMap();
