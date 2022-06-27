@@ -11,6 +11,9 @@ import org.json.simple.parser.ParseException;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -37,6 +40,8 @@ public class Game {
     JPanel mapPanel;
     JPanel imagePanel;
     JPanel userInput;
+    JTextField textInput = new JTextField(20);
+    JLabel instructionText;
 
 
     public Game(Prompter prompter) throws IOException, ParseException {
@@ -122,8 +127,8 @@ public class Game {
         getNewPlayerInfo();
         // runs a while loop
         while (!isGameOver()) {
-            gameStatus();
-            promptForPlayerInput();
+//            gameStatus();
+//            promptForPlayerInput();
             if (checkGameStatus()) {
                 break;
             }
@@ -131,6 +136,7 @@ public class Game {
         gameResult();
         frame.dispose();
     }
+
 
     private boolean checkGameStatus() {
         return player.isWorkoutComplete() || player.isSteroidsUsed() || player.isExhausted();
@@ -155,6 +161,7 @@ public class Game {
         String[] commandArr = command.split(" ");
         parseThroughPlayerInput(commandArr);
     }
+
 
     public void parseThroughPlayerInput(String[] action) throws IOException, ParseException {
 
@@ -241,6 +248,13 @@ public class Game {
         currentRoom.getRoomMap(currentRoomName);
     }
 
+    private void handleInput(String input) throws IOException, ParseException {
+            gameStatus();
+            String[] commandArr = input.split(" ");
+            parseThroughPlayerInput(commandArr);
+
+    }
+
     private void talkToNPC() {
         String dialog = currentRoom.getNpc().generateDialog();
         System.out.println(dialog);
@@ -317,7 +331,6 @@ public class Game {
         frame.invalidate();
         frame.validate();
         frame.repaint();
-        //SwingUtilities.updateComponentTreeUI(frame);
     }
 
     private void repaintMap(){
@@ -327,7 +340,6 @@ public class Game {
         frame.invalidate();
         frame.validate();
         frame.repaint();
-        //SwingUtilities.updateComponentTreeUI(frame);
     }
 
     public void MainFrame(){
@@ -348,8 +360,18 @@ public class Game {
         playerBody.setPanelSize(frame.getWidth()/2, frame.getHeight()/2);
 
         userInput = new JPanel();
-
+        userInput.add(textInput);
         //set map
+        JButton submitBtn = new JButton("Submit");
+        submitBtn.addActionListener(e -> {
+            try {
+                handleInput(textInput.getText());
+            } catch (IOException | ParseException ex) {
+                ex.printStackTrace();
+            }
+        });
+        userInput.add(submitBtn);
+
         mapPanel.setBackground(Color.RED);
         mapPanel.setBounds(500,0,200,200);
         mapPanel.add(gamemap);
@@ -361,7 +383,7 @@ public class Game {
         //setTextArea
         gameTextArea.setBackground(Color.WHITE);
 
-        //set userInut
+        //set userInput
         userInput.setBackground(Color.GREEN);
 
         //Set text within text area
@@ -386,7 +408,6 @@ public class Game {
         container.add(gamemap);
 
         container.add(playerBody);
-//        container.add(imagePanel);
         container.add(userInput);
 
         frame.setResizable(false);
