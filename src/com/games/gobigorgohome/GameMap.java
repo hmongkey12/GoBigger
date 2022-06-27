@@ -16,34 +16,34 @@ public class GameMap extends JPanel{
         super.paintComponent(graphics);
         setBackground(Color.BLACK);
         if(currentRoom.equals("machines")){
-            drawRoom(graphics, "machines", 50, 10, 200, 100, Color.RED);
+            drawRoom(graphics, "machines", 100, 20, 150, 60, Color.RED);
         }
         else{
-            drawRoom(graphics, "machines", 50, 10, 200, 100, Color.GREEN);
+            drawRoom(graphics, "machines", 100, 20, 150, 60, Color.GREEN);
         }
         if(currentRoom.equals("managers office")){
-            drawRoom(graphics, "managers office", 290, 110, 200, 100, Color.RED);
+            drawRoom(graphics, "managers office", 300, 20, 150, 60, Color.RED);
         }
         else{
-            drawRoom(graphics, "managers office", 290, 110, 200, 100, Color.GREEN);
+            drawRoom(graphics, "managers office", 300, 20, 150, 60, Color.GREEN);
         }
         if(currentRoom.equals("free weights")){
-            drawRoom(graphics, "free weights", 10, 220, 180, 120, Color.RED);
+            drawRoom(graphics, "free weights", 100, 120, 150, 60, Color.RED);
         }
         else{
-            drawRoom(graphics, "free weights", 10, 220, 180, 120, Color.GREEN);
+            drawRoom(graphics, "free weights", 100, 120, 150, 60, Color.GREEN);
         }
         if(currentRoom.equals("yoga studio")){
-            drawRoom(graphics, "yoga studio", 230, 260, 200, 80, Color.RED);
+            drawRoom(graphics, "yoga studio", 300, 120, 150, 60, Color.RED);
         }
         else{
-            drawRoom(graphics, "yoga studio", 230, 260, 200, 80, Color.GREEN);
+            drawRoom(graphics, "yoga studio", 300, 120, 150, 60, Color.GREEN);
         }
         if(currentRoom.equals("front desk")){
-            drawRoom(graphics, "front desk", 50, 400, 300, 80, Color.RED);
+            drawRoom(graphics, "front desk", 100, 200, 350, 60, Color.RED);
         }
         else{
-            drawRoom(graphics, "front desk", 50, 400, 300, 80, Color.GREEN);
+            drawRoom(graphics, "front desk", 100, 200, 350, 60, Color.GREEN);
         }
     }
 
@@ -55,6 +55,6 @@ public class GameMap extends JPanel{
         graphics.drawLine(x, y + height, x + width, y + height);
         graphics.drawLine(x + width, y, x + width, y + height);
         graphics.setColor(Color.ORANGE);
-        graphics.drawString(roomName, x + width/3, y + height/2);
+        graphics.drawString(roomName, x + width/4, y + height/2);
     }
 }
