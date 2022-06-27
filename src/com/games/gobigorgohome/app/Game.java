@@ -11,6 +11,7 @@ import org.json.simple.parser.ParseException;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -34,6 +35,7 @@ public class Game {
     PlayerBody playerBody;
     Container container;
     JPanel gameTextArea;
+    JPanel gameTextArea1;
     JPanel mapPanel;
     JPanel imagePanel;
     JPanel userInput;
@@ -308,12 +310,16 @@ public class Game {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(1000, 750);
         frame.setLayout(new GridLayout(2,2));
+        frame.setTitle("Go Big or Go Home");
         frame.setVisible(true);
         frame.getContentPane().setBackground(Color.BLACK);
         container = frame.getContentPane();
+        ImageIcon image = new ImageIcon("gym.png");
+        frame.setIconImage(image.getImage());
 
         //three panels
         gameTextArea = new JPanel();
+        gameTextArea1 = new JPanel();
         mapPanel=new JPanel();
         imagePanel=new JPanel();
         playerBody = new PlayerBody(getMuscleGroups(player));
@@ -332,8 +338,9 @@ public class Game {
 
         //setTextArea
         gameTextArea.setBackground(Color.WHITE);
+        gameTextArea1.setBackground(Color.WHITE);
 
-        //set userInut
+        //set userInput
         userInput.setBackground(Color.GREEN);
 
         //Set text within text area
@@ -349,23 +356,49 @@ public class Game {
         wrapperText.setFont(new Font("Monospaced", Font.PLAIN, 16));
         JScrollPane scroll = new JScrollPane(wrapperText);
 
+        JTextArea wrapperText1 =new JTextArea(page.instructions(),16,50);
+        wrapperText1.setWrapStyleWord(true);
+        wrapperText1.setLineWrap(true);
+        wrapperText1.setOpaque(false);
+        wrapperText1.setEditable(true);
+        wrapperText1.setFocusable(false);
+        wrapperText1.setBackground(UIManager.getColor("Label.background"));
+        wrapperText1.setFont(UIManager.getFont("Label.font"));
+        wrapperText1.setBorder(UIManager.getBorder("Label.border"));
+        wrapperText1.setFont(new Font("Monospaced", Font.PLAIN, 16));
+        JScrollPane scroll1 = new JScrollPane(wrapperText1);
 
         //add text to
         gameTextArea.add(scroll);
 
+        gameTextArea1.add(scroll1);
+
         //add components to container
         container.add(gameTextArea);
+        //container.add(gameTextArea1);
         container.add(gamemap);
 
         container.add(playerBody);
 //        container.add(imagePanel);
-        container.add(userInput);
+        container.add(gameTextArea1);
 
         frame.setResizable(false);
         frame.invalidate();
         frame.validate();
         frame.repaint();
 
+    }
+
+//    public JPanel generateInputPanel() {
+//        JPanel input = new JPanel();
+//        JTextArea textArea = new JTextArea(10, 20);
+//        textArea.addKeyListener();
+//    }
+
+    private void jTextField1KeyPressed(java.awt.event.KeyEvent evt) {
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            // Enter was pressed. Your code goes here.
+        }
     }
 
     //    gives player ability to quit
