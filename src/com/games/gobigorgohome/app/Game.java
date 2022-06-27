@@ -22,7 +22,7 @@ public class Game {
 
     boolean isGameOver = false;
     private final Gym gym = Gym.getInstance();
-    private final Player player = new Player();
+    private Player player = new Player();
     private final int energy = player.getEnergy();
     private final int currentEnergy = player.getEnergy();
     private final String playerName = player.getName();
@@ -32,7 +32,7 @@ public class Game {
     private final Prompter prompter;
     private final ParseTxt page = new ParseTxt();
     private final ParseJSON jsonParser = new ParseJSON();
-    private final JFrame frame = new JFrame("Go Big Or Go Home");
+    private  JFrame frame;
     private GameMap gamemap = new GameMap(gym.getStarterRoomName());
     PlayerBody playerBody;
     Container container;
@@ -119,9 +119,10 @@ public class Game {
 
     //    main function running the game, here we call all other functions necessary to run the game
     public void playGame() throws IOException, ParseException {
-
+        isGameOver=false;
 
         MainFrame();
+
         System.out.println(page.instructions());
         getNewPlayerInfo();
         // runs a while loop
@@ -133,6 +134,7 @@ public class Game {
             }
         }
         gameResult();
+        frame.dispose();
     }
 
 
@@ -151,6 +153,7 @@ public class Game {
             result = "CONGRATULATIONS! YOU WORKED OUT!";
         }
         System.out.println(result);
+
     }
 
     public void promptForPlayerInput() throws IOException, ParseException {
@@ -212,6 +215,9 @@ public class Game {
                 case "q":
                     quit();
                     break;
+                case "new":
+                    newGame();
+                    break;
             }
         } catch (Exception exception) {
 //            TODO: add array with possible values for commands
@@ -219,6 +225,19 @@ public class Game {
 //            TODO: fix bug caused by pressing enter where prompt for player does not work and calls inspect
             promptForPlayerInput();
         }
+    }
+
+    private void newGame() throws IOException, ParseException {
+        frame.setVisible(false);
+        //reset the map
+        currentRoomName = "front desk";
+        //used to reset the body
+        player=null;
+        repaintPlayerBody();
+        repaintMap();
+        isGameOver=true;
+        playGame();
+
     }
 
     public static boolean isItemRequired(List items) {
@@ -325,6 +344,7 @@ public class Game {
 
     public void MainFrame(){
         //frame Setting
+        frame = new JFrame("Go Big Or Go Home");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(1000, 750);
         frame.setLayout(new GridLayout(2,2));
@@ -434,6 +454,9 @@ public class Game {
 
     public boolean[] getMuscleGroups(Player player){
         boolean[] muscleGroup = new boolean[6];
+        if(player == null){
+            return muscleGroup;
+        }
         if(player.isLegsWorked()) {
             muscleGroup[0]  = true;
         }
