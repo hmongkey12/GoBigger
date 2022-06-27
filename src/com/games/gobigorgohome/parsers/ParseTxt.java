@@ -1,10 +1,8 @@
 package com.games.gobigorgohome.parsers;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.charset.StandardCharsets;
 
 
 public class ParseTxt {
@@ -14,7 +12,7 @@ public class ParseTxt {
         InputStream stream = ParseTxt.class.getClassLoader().getResourceAsStream(filePath);
         StringBuilder temp = new StringBuilder();
 
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream, "UTF-8"))){
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))){
             String line = null;
             while((line=reader.readLine())!=null) {
                    temp.append(line);

@@ -296,14 +296,20 @@ public class Game {
         frame.remove(playerBody);
         playerBody = new PlayerBody(getMuscleGroups(player));
         frame.add(playerBody, 2);
-        SwingUtilities.updateComponentTreeUI(frame);
+        frame.invalidate();
+        frame.validate();
+        frame.repaint();
+        //SwingUtilities.updateComponentTreeUI(frame);
     }
 
     private void repaintMap(){
         frame.remove(gamemap);
         gamemap = new GameMap(currentRoomName);
         frame.add(gamemap, 1);
-        SwingUtilities.updateComponentTreeUI(frame);
+        frame.invalidate();
+        frame.validate();
+        frame.repaint();
+        //SwingUtilities.updateComponentTreeUI(frame);
     }
 
     public void MainFrame(){
