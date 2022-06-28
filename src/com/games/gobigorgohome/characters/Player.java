@@ -266,6 +266,20 @@ public class Player {
         return musclesWorked;
     }
 
+    public void resetBody(){
+        setChestWorked(false);
+        setBackWorked(false);
+        setLegsWorked(false);
+        setShoulderWorked(false);
+        setTricepsWorked(false);
+        setCoreWorked(false);
+
+
+
+
+    }
+
+
 //    toString
 
     @Override
