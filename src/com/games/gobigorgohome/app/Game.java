@@ -21,6 +21,7 @@ import java.util.List;
 public class Game {
 
     boolean isGameOver = false;
+
     private final Gym gym = Gym.getInstance();
     private Player player = new Player();
     private final int energy = player.getEnergy();
@@ -43,12 +44,12 @@ public class Game {
     JTextField textInput = new JTextField(20);
     JLabel instructionText;
 
-
     public Game(Prompter prompter) throws IOException, ParseException {
         this.prompter = prompter;
     }
 
     //    collects current input from user to update their avatar
+
     private void getNewPlayerInfo() {
 //        TODO: validate user input
         String playerName = validName();
@@ -57,8 +58,8 @@ public class Game {
         int playerAge = validInt("What is your age ", "age", "years");
         createPlayer(playerName, playerAge, playerHeight, playerWeight);
     }
-
     // validates name requesting one and rejecting empty space(s).
+
     private String validName() {
         String playerName = prompter.prompt("What is your name? ");
         if (playerName.isBlank() || playerName.isEmpty() || playerName.length() > 16) {
@@ -74,8 +75,8 @@ public class Game {
         }
         return playerName;
     }
-
     // validates height and weight taking integers or doubles only
+
     private double validDouble(String msg, String measureName, String unit) {
         String measurementString = prompter.prompt(msg);
         double measurement = 0;
@@ -87,8 +88,8 @@ public class Game {
         }
         return measurement;
     }
-
     // validates age taking only an integer
+
     private int validInt(String msg, String measureName, String unit) {
         String measurement = prompter.prompt(msg);
         int measureNum = 0;
@@ -100,7 +101,6 @@ public class Game {
         }
         return measureNum;
     }
-
     private void createPlayer(String playerName, int playerAge, double playerHeight, double playerWeight) {
         player.setName(playerName);
         player.setAge(playerAge);
@@ -109,6 +109,7 @@ public class Game {
     }
 
     //    updates player with current game status e.g. player inventory, current room etc.
+
     private void gameStatus() {
         System.out.println("------------------------------");
         System.out.println("Available commands: GO <room name>, GET <item>, CONSUME <item>, SEE MAP, WORKOUT <workout name>, INSPECT ROOM");
@@ -119,22 +120,28 @@ public class Game {
 
     //    main function running the game, here we call all other functions necessary to run the game
     public void playGame() throws IOException, ParseException {
-        isGameOver=false;
-
         MainFrame();
-
-        System.out.println(page.instructions());
         getNewPlayerInfo();
+        //System.out.println(page.instructions());
         // runs a while loop
         while (!isGameOver()) {
-//            gameStatus();
-//            promptForPlayerInput();
             if (checkGameStatus()) {
                 break;
             }
         }
         gameResult();
-        frame.dispose();
+
+
+
+    }
+    private void newGame() throws IOException, ParseException, InterruptedException {
+        //reset the map
+        player.resetBody();
+        currentRoomName = "front desk";
+        repaintPlayerBody();
+        repaintMap();
+        getNewPlayerInfo();
+
     }
 
 
@@ -220,24 +227,18 @@ public class Game {
                     break;
             }
         } catch (Exception exception) {
+            exception.printStackTrace();
 //            TODO: add array with possible values for commands
             System.out.println(actionPrefix + " was sadly and invalid answer. \n please ensure you are using a valid and complete command. ");
 //            TODO: fix bug caused by pressing enter where prompt for player does not work and calls inspect
-            promptForPlayerInput();
+            //promptForPlayerInput();
         }
     }
 
-    private void newGame() throws IOException, ParseException {
-        frame.setVisible(false);
-        //reset the map
-        currentRoomName = "front desk";
-        //used to reset the body
-        player=null;
-        repaintPlayerBody();
-        repaintMap();
-        isGameOver=true;
-        playGame();
 
+
+    public void setGameOver(boolean gameOver) {
+        isGameOver = gameOver;
     }
 
     public static boolean isItemRequired(List items) {
@@ -454,9 +455,7 @@ public class Game {
 
     public boolean[] getMuscleGroups(Player player){
         boolean[] muscleGroup = new boolean[6];
-        if(player == null){
-            return muscleGroup;
-        }
+
         if(player.isLegsWorked()) {
             muscleGroup[0]  = true;
         }
