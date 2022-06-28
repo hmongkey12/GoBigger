@@ -5,6 +5,7 @@ import com.games.gobigorgohome.*;
 import com.games.gobigorgohome.characters.Player;
 import com.games.gobigorgohome.parsers.ParseJSON;
 import com.games.gobigorgohome.parsers.ParseTxt;
+import com.games.gobigorgohome.parsers.SoundHandler;
 import org.json.simple.JSONArray;
 import com.apps.util.Console;
 import org.json.simple.parser.ParseException;
@@ -122,6 +123,8 @@ public class Game {
         isGameOver=false;
 
         MainFrame();
+
+        SoundHandler.RunMusic("resources/gainz.wav");
 
         System.out.println(page.instructions());
         getNewPlayerInfo();
