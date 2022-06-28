@@ -28,6 +28,7 @@ public class Game {
     private final int currentEnergy = player.getEnergy();
     private final String playerName = player.getName();
     private String currentRoomName = gym.getStarterRoomName();
+    private final String musicPath = "resources/gainz.wav";
     private Room currentRoom = gym.getStarterRoom();
     private final Object rooms = gym.getRooms();
     private final Prompter prompter;
@@ -123,8 +124,8 @@ public class Game {
         isGameOver=false;
 
         MainFrame();
-
-        SoundHandler.RunMusic("resources/gainz.wav");
+//        TODO: UNCOMMENT LINE BELOW BEFORE RELEASE!
+//        SoundHandler.RunMusic(musicPath);
 
         System.out.println(page.instructions());
         getNewPlayerInfo();
