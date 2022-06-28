@@ -5,6 +5,7 @@ import com.games.gobigorgohome.*;
 import com.games.gobigorgohome.characters.Player;
 import com.games.gobigorgohome.parsers.ParseJSON;
 import com.games.gobigorgohome.parsers.ParseTxt;
+import com.games.gobigorgohome.parsers.SoundHandler;
 import org.json.simple.JSONArray;
 import com.apps.util.Console;
 import org.json.simple.parser.ParseException;
@@ -28,6 +29,7 @@ public class Game {
     private final int currentEnergy = player.getEnergy();
     private final String playerName = player.getName();
     private String currentRoomName = gym.getStarterRoomName();
+    private final String musicPath = "resources/gainz.wav";
     private Room currentRoom = gym.getStarterRoom();
     private final Object rooms = gym.getRooms();
     private final Prompter prompter;
@@ -121,6 +123,12 @@ public class Game {
     //    main function running the game, here we call all other functions necessary to run the game
     public void playGame() throws IOException, ParseException {
         MainFrame();
+
+//        TODO: UNCOMMENT LINE BELOW BEFORE RELEASE!
+//        SoundHandler.RunMusic(musicPath);
+
+        System.out.println(page.instructions());
+
         getNewPlayerInfo();
         //System.out.println(page.instructions());
         // runs a while loop
