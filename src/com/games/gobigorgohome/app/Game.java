@@ -37,6 +37,7 @@ public class Game {
     private final ParseJSON jsonParser = new ParseJSON();
     private  JFrame frame;
     private GameMap gamemap = new GameMap(gym.getStarterRoomName());
+    private SoundHandler soundHandler = new SoundHandler();
     PlayerBody playerBody;
     Container container;
     JPanel gameTextArea;
@@ -125,7 +126,7 @@ public class Game {
         MainFrame();
 
 //        TODO: UNCOMMENT LINE BELOW BEFORE RELEASE!
-//        SoundHandler.RunMusic(musicPath);
+        soundHandler.RunMusic(musicPath);
 
         System.out.println(page.instructions());
 
@@ -232,6 +233,15 @@ public class Game {
                     break;
                 case "new":
                     newGame();
+                    break;
+                case "up":
+                    soundHandler.volumeUp();
+                    break;
+                case "down":
+                    soundHandler.volumeDown();
+                    break;
+                case "mute":
+                    soundHandler.muteVolume();
                     break;
             }
         } catch (Exception exception) {
@@ -431,6 +441,7 @@ public class Game {
         System.out.println("--------------------------------------\n"
                 + " YOU ARE A QUITTER!! GAME OVER" + "" +
                 "------------------------------------");
+        soundHandler.stopMusic();
         System.exit(0);
     }
 
