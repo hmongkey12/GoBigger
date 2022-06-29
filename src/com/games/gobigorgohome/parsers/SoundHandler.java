@@ -60,6 +60,8 @@ public class SoundHandler {
                 currentVolume = previousVolume;
                 fc.setValue(currentVolume);
             }
+            System.out.println("MUTE: previousVolume = " + previousVolume);
+            System.out.println("MUTE: currentVolume = " + currentVolume);
         }
 
         public void stopMusic() {
