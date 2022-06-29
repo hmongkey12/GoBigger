@@ -65,7 +65,7 @@ public class Game {
 
     // validates name requesting one and rejecting empty space(s).
     private String validName() {
-        String text = textInput1.getText();
+//        String text = textInput1.getText();
         String playerName = gamePrompter2.prompt("What is your name? ");
         if (playerName.isBlank() || playerName.isEmpty() || playerName.length() > 16) {
             try {
@@ -255,7 +255,7 @@ public class Game {
     }
 
 
-    void handleInput(String input) throws IOException, ParseException {
+    private void handleInput(String input) throws IOException, ParseException {
             gameStatus();
             String[] commandArr = input.split(" ");
             parseThroughPlayerInput(commandArr);
