@@ -12,6 +12,7 @@ public class SoundHandler {
         FloatControl fc;
         boolean mute = false;
 
+
         public void RunMusic(String path) {
             try {
                 AudioInputStream inputStream = AudioSystem.getAudioInputStream(new File(path));
@@ -42,8 +43,11 @@ public class SoundHandler {
         }
 
         public void volumeDown() {
+            System.out.println("DOWN BEFORE MINUS: currentVolume = " + currentVolume);
             currentVolume -= 1.0f;
-            if( currentVolume < -80.0f); {
+            System.out.println("DOWN AFTER MINUS: currentVolume = " + currentVolume);
+
+            if( currentVolume < -80.0f) {
                 currentVolume =  -80.0f;
             }
             fc.setValue(currentVolume);
@@ -59,6 +63,7 @@ public class SoundHandler {
             } else if (mute) {
                 currentVolume = previousVolume;
                 fc.setValue(currentVolume);
+                mute = false;
             }
             System.out.println("MUTE: previousVolume = " + previousVolume);
             System.out.println("MUTE: currentVolume = " + currentVolume);
@@ -68,4 +73,23 @@ public class SoundHandler {
             clip.stop();
             clip.close();
         }
+
+
+        public float getCurrentVolume() {
+            return currentVolume;
+        }
+
+        public void setCurrentVolume(float currentVolume) {
+            this.currentVolume = currentVolume;
+        }
+
+        public float getPreviousVolume() {
+            return previousVolume;
+        }
+
+
+        public boolean isMute() {
+            return mute;
+        }
+
 }
