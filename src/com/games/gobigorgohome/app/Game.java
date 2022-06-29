@@ -223,6 +223,12 @@ public class Game {
                 case "new":
                     newGame();
                     break;
+                case "up":
+                    soundHandler.volumeUp();
+                    break;
+                case "down":
+                    soundHandler.volumeDown();
+                    break;
             }
         } catch (Exception exception) {
 //            TODO: add array with possible values for commands

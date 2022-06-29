@@ -54,7 +54,7 @@ public class SoundHandler {
                 currentVolume = -80.0f;
                 fc.setValue(currentVolume);
                 mute = true;
-            } else if (mute == true) {
+            } else if (mute) {
                 currentVolume = previousVolume;
                 fc.setValue(currentVolume);
             }
