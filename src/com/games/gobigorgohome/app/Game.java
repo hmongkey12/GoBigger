@@ -229,6 +229,9 @@ public class Game {
                 case "down":
                     soundHandler.volumeDown();
                     break;
+                case "mute":
+                    soundHandler.muteVolume();
+                    break;
             }
         } catch (Exception exception) {
 //            TODO: add array with possible values for commands
