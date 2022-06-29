@@ -1,0 +1,6 @@
+{
+"rooms": { "machines": {"dimensions":[100, 20, 150, 60]},
+         "managers office":{"dimensions":[300, 20, 150, 60]},
+          "yoga studio":{"dimensions":[300, 20, 150, 60]}
+
+}

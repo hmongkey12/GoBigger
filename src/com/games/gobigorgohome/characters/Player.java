@@ -266,6 +266,20 @@ public class Player {
         return musclesWorked;
     }
 
+    public void resetBody(){
+        setChestWorked(false);
+        setBackWorked(false);
+        setLegsWorked(false);
+        setShoulderWorked(false);
+        setTricepsWorked(false);
+        setCoreWorked(false);
+
+
+
+
+    }
+
+
 //    toString
 
     @Override
@@ -277,42 +291,5 @@ public class Player {
                 "Workout Status: " + getMusclesWorked().toString();
     }
 
-//    @Override
-//    public boolean equals(Object o) {
-//        if (this == o) return true;
-//        if (o == null || getClass() != o.getClass()) return false;
-//
-//        Player player = (Player) o;
-//
-//        if (age != player.age) return false;
-//        if (energy != player.energy) return false;
-//        if (Double.compare(player.weight, weight) != 0) return false;
-//        if (isChestWorked != player.isChestWorked) return false;
-//        if (isTricepsWorked != player.isTricepsWorked) return false;
-//        if (isLegsWorked != player.isLegsWorked) return false;
-//        if (isBackWorked != player.isBackWorked) return false;
-//        if (isCoreWorked != player.isCoreWorked) return false;
-//        if (isShoulderWorked != player.isShoulderWorked) return false;
-//        if (!name.equals(player.name)) return false;
-//        return inventory.equals(player.inventory);
-//    }
-//
-//    @Override
-//    public int hashCode() {
-//        int result;
-//        long temp;
-//        result = age;
-//        result = 31 * result + name.hashCode();
-//        result = 31 * result + energy;
-//        temp = Double.doubleToLongBits(weight);
-//        result = 31 * result + (int) (temp ^ (temp >>> 32));
-//        result = 31 * result + inventory.hashCode();
-//        result = 31 * result + (isChestWorked ? 1 : 0);
-//        result = 31 * result + (isTricepsWorked ? 1 : 0);
-//        result = 31 * result + (isLegsWorked ? 1 : 0);
-//        result = 31 * result + (isBackWorked ? 1 : 0);
-//        result = 31 * result + (isCoreWorked ? 1 : 0);
-//        result = 31 * result + (isShoulderWorked ? 1 : 0);
-//        return result;
-//    }
+
 }
