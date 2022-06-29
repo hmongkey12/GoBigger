@@ -38,6 +38,7 @@ public class SoundHandler {
                 currentVolume = 6.0f;
             }
             fc.setValue(currentVolume);
+            System.out.println("UP: currentVolume = " + currentVolume);
         }
 
         public void volumeDown() {
@@ -46,6 +47,7 @@ public class SoundHandler {
                 currentVolume =  -80.0f;
             }
             fc.setValue(currentVolume);
+            System.out.println("DOWN: currentVolume = " + currentVolume);
         }
 
         public void muteVolume() {
