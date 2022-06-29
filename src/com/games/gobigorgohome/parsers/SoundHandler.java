@@ -6,13 +6,20 @@ import java.io.IOException;
 
 public class SoundHandler {
 
-        public static void RunMusic(String path) {
+        private Clip clip;
+        private float previousVolume = 0;
+        private float currentVolume = 0;
+        FloatControl fc;
+        boolean mute = false;
+
+        public void RunMusic(String path) {
             try {
                 AudioInputStream inputStream = AudioSystem.getAudioInputStream(new File(path));
-                Clip clip = AudioSystem.getClip();
+                clip = AudioSystem.getClip();
                 clip.open(inputStream);
                 clip.start();
-                clip.loop(0);
+                fc = (FloatControl)clip.getControl(FloatControl.Type.MASTER_GAIN);
+                clip.loop(Clip.LOOP_CONTINUOUSLY);
             }
             catch (UnsupportedAudioFileException e) {
                 e.printStackTrace();
@@ -23,5 +30,26 @@ public class SoundHandler {
             catch (LineUnavailableException e) {
                 e.printStackTrace();
             }
+        }
+
+        public void volumeUp() {
+            currentVolume += 1.0f;
+            if( currentVolume > 6.0f) {
+                currentVolume = 6.0f;
+            }
+            fc.setValue(currentVolume);
+        }
+
+        public void volumeDown() {
+            currentVolume -= 1.0f;
+            if( currentVolume < -80.0f); {
+                currentVolume =  -80.0f;
+            }
+            fc.setValue(currentVolume);
+        }
+
+        public void stopMusic() {
+            clip.stop();
+            clip.close();
         }
 }
