@@ -48,6 +48,18 @@ public class SoundHandler {
             fc.setValue(currentVolume);
         }
 
+        public void muteVolume() {
+            if( mute == false) {
+                previousVolume = currentVolume;
+                currentVolume = -80.0f;
+                fc.setValue(currentVolume);
+                mute = true;
+            } else if (mute == true) {
+                currentVolume = previousVolume;
+                fc.setValue(currentVolume);
+            }
+        }
+
         public void stopMusic() {
             clip.stop();
             clip.close();
