@@ -6,21 +6,27 @@ import java.io.IOException;
 
 public class SoundHandler {
 
-        private Clip clip;
-        private float previousVolume = 0.0f;
-        private float currentVolume = 0.0f;
-        FloatControl fc;
-        boolean mute = false;
+        private Clip musicClip;
+        private Clip FxClip;
+        private final float volumeStep = 2.0f;
+        private float previousMusicVolume = 0.0f;
+        private float currentMusicVolume = 0.0f;
+        private float previousFxVolume = 0.0f;
+        private float currentFxVolume = 0.0f;
+        FloatControl musicFc;
+        FloatControl FxFc;
+        boolean musicMuted = false;
+        boolean fxMuted = false;
 
 
         public void RunMusic(String path) {
             try {
                 AudioInputStream inputStream = AudioSystem.getAudioInputStream(new File(path));
-                clip = AudioSystem.getClip();
-                clip.open(inputStream);
-                clip.start();
-                fc = (FloatControl)clip.getControl(FloatControl.Type.MASTER_GAIN);
-                clip.loop(Clip.LOOP_CONTINUOUSLY);
+                musicClip = AudioSystem.getClip();
+                musicClip.open(inputStream);
+                musicClip.start();
+                musicFc = (FloatControl) musicClip.getControl(FloatControl.Type.MASTER_GAIN);
+                musicClip.loop(Clip.LOOP_CONTINUOUSLY);
             }
             catch (UnsupportedAudioFileException e) {
                 e.printStackTrace();
@@ -33,57 +39,77 @@ public class SoundHandler {
             }
         }
 
-        public void volumeUp() {
-            currentVolume += 1.0f;
-            if( currentVolume > 6.0f) {
-                currentVolume = 6.0f;
+        public void playFx(String path) {
+            try {
+                AudioInputStream inputStream = AudioSystem.getAudioInputStream(new File(path));
+                FxClip = AudioSystem.getClip();
+                FxClip.open(inputStream);
+                FxClip.start();
+                FxFc = (FloatControl)FxClip.getControl(FloatControl.Type.MASTER_GAIN);
+                FxClip.loop(0);
             }
-            fc.setValue(currentVolume);
+            catch (UnsupportedAudioFileException e) {
+                e.printStackTrace();
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+            catch (LineUnavailableException e) {
+                e.printStackTrace();
+            }
         }
 
-        public void volumeDown() {
-            currentVolume -= 1.0f;
-
-            if( currentVolume < -80.0f) {
-                currentVolume =  -80.0f;
+        public void musicVolumeUp() {
+            currentMusicVolume += volumeStep;
+            if( currentMusicVolume > 6.0f) {
+                currentMusicVolume = 6.0f;
             }
-            fc.setValue(currentVolume);
+            musicFc.setValue(currentMusicVolume);
         }
 
-        public void muteVolume() {
-            if( mute == false) {
-                previousVolume = currentVolume;
-                currentVolume = -80.0f;
-                fc.setValue(currentVolume);
-                mute = true;
-            } else if (mute) {
-                currentVolume = previousVolume;
-                fc.setValue(currentVolume);
-                mute = false;
+        public void musicVolumeDown() {
+            currentMusicVolume -= volumeStep;
+
+            if( currentMusicVolume < -80.0f) {
+                currentMusicVolume =  -80.0f;
+            }
+            musicFc.setValue(currentMusicVolume);
+        }
+
+        public void muteMusicVolume() {
+            if( musicMuted == false) {
+                previousMusicVolume = currentMusicVolume;
+                currentMusicVolume = -80.0f;
+                musicFc.setValue(currentMusicVolume);
+                musicMuted = true;
+            } else if (musicMuted) {
+                currentMusicVolume = previousMusicVolume;
+                musicFc.setValue(currentMusicVolume);
+                musicMuted = false;
             }
         }
 
         public void stopMusic() {
-            clip.stop();
-            clip.close();
+            musicClip.stop();
+            musicClip.close();
         }
 
 
-        public float getCurrentVolume() {
-            return currentVolume;
+        public float getCurrentMusicVolume() {
+            return currentMusicVolume;
         }
 
-        public void setCurrentVolume(float currentVolume) {
-            this.currentVolume = currentVolume;
+        public void setCurrentMusicVolume(float currentMusicVolume) {
+            this.currentMusicVolume = currentMusicVolume;
         }
 
-        public float getPreviousVolume() {
-            return previousVolume;
+        public float getPreviousMusicVolume() {
+            return previousMusicVolume;
         }
 
 
-        public boolean isMute() {
-            return mute;
+        public boolean isMusicMuted() {
+            return musicMuted;
         }
 
 }

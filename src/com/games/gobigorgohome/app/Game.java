@@ -14,7 +14,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -29,7 +28,16 @@ public class Game {
     private final int currentEnergy = player.getEnergy();
     private final String playerName = player.getName();
     private String currentRoomName = gym.getStarterRoomName();
-    private final String musicPath = "resources/gainz.wav";
+    private final String musicPath = "resources/sounds/gainz.wav";
+    private final String doorFxPath = "resources/sounds/door.wav";
+    private final String steroidFxPath = "resources/sounds/airhorn.wav";
+    private final String energyDrinkFxPath = "resources/sounds/energy-drink.wav";
+    private final String quitFxPath = "resources/sounds/goodbye.wav";
+    private final String inspectFxPath = "resources/sounds/inspect.wav";
+    private final String loseFxPath = "resources/sounds/lose.wav";
+    private final String winFxPath = "resources/sounds/player-wins.wav";
+    private final String workoutFxPath = "resources/sounds/woo.wav";
+    private final String getItemFxPath = "resources/sounds/item-picked-up.wav";
     private Room currentRoom = gym.getStarterRoom();
     private final Object rooms = gym.getRooms();
     private final Prompter prompter;
@@ -162,10 +170,12 @@ public class Game {
         Console.clear();
         String result = "";
         if (player.isSteroidsUsed()) {
+            soundHandler.playFx(loseFxPath);
             result = "YOU ARE A LOSER AND A CHEATER!";
         } else if (player.isExhausted()) {
             result = "You're too tired, go home dude";
         } else if (player.isWorkoutComplete()) {
+            soundHandler.playFx(winFxPath);
             result = "CONGRATULATIONS! YOU WORKED OUT!";
         }
         System.out.println(result);
@@ -202,24 +212,34 @@ public class Game {
         try {
             switch (actionPrefix) {
                 case "get":
+                    soundHandler.playFx(getItemFxPath);
                     grabItem(playerAction);
                     break;
                 case "go":
                     Console.clear();
+                    soundHandler.playFx(doorFxPath);
                     System.out.println("you're going here: " + playerAction);
                     currentRoomName = playerAction;
                     setCurrentRoom(jsonParser.getObjectFromJSONObject(rooms, playerAction));
                     repaintMap();
                     break;
                 case "workout":
+                    soundHandler.playFx(workoutFxPath);
                     playerUseMachine(playerAction);
                     break;
                 case "consume":
+                    if (playerAction.equals("energy drink")) {
+                        soundHandler.playFx(energyDrinkFxPath);
+                    } else if (playerAction.equals("steroids")) {
+                        soundHandler.playFx(steroidFxPath);
+                    }
+
                     if (player.consumeItem(playerAction)) {
                         player.removeItemFromInventory(playerAction);
                     }
                     break;
                 case "inspect":
+                    soundHandler.playFx(inspectFxPath);
                     inspectRoom();
                     break;
                 case "talk":
@@ -229,19 +249,20 @@ public class Game {
                     getRoomMap();
                     break;
                 case "q":
+                    soundHandler.playFx(quitFxPath);
                     quit();
                     break;
                 case "new":
                     newGame();
                     break;
                 case "up":
-                    soundHandler.volumeUp();
+                    soundHandler.musicVolumeUp();
                     break;
                 case "down":
-                    soundHandler.volumeDown();
+                    soundHandler.musicVolumeDown();
                     break;
                 case "mute":
-                    soundHandler.muteVolume();
+                    soundHandler.muteMusicVolume();
                     break;
             }
         } catch (Exception exception) {
@@ -405,7 +426,7 @@ public class Game {
         volumeUpButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                soundHandler.volumeUp();
+                soundHandler.musicVolumeUp();
 //                System.out.println("UP: currentVolume" + soundHandler.getCurrentVolume());
             }
         });
@@ -413,7 +434,7 @@ public class Game {
         volumeDownButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                soundHandler.volumeDown();
+                soundHandler.musicVolumeDown();
 //                System.out.println("DOWN: currentVolume" + soundHandler.getCurrentVolume());
 
             }
@@ -422,7 +443,7 @@ public class Game {
         muteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                soundHandler.muteVolume();
+                soundHandler.muteMusicVolume();
 //                System.out.println("MUTE: isMute" + soundHandler.isMute());
 //                System.out.println("MUTE: currentVolume" + soundHandler.getCurrentVolume());
             }
