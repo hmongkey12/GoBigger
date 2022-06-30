@@ -395,6 +395,45 @@ public class Game {
         mapPanel.setBounds(500,0,200,200);
         mapPanel.add(gamemap);
 
+//        Volume and Mute Buttons:
+        JLabel volumeLabel = new JLabel("Volume Settings:");
+        volumeLabel.setForeground(Color.WHITE);
+        JButton volumeUpButton = new JButton("+");
+        JButton volumeDownButton = new JButton("-");
+        JButton muteButton = new JButton("Mute");
+
+        volumeUpButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                soundHandler.volumeUp();
+//                System.out.println("UP: currentVolume" + soundHandler.getCurrentVolume());
+            }
+        });
+
+        volumeDownButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                soundHandler.volumeDown();
+//                System.out.println("DOWN: currentVolume" + soundHandler.getCurrentVolume());
+
+            }
+        });
+
+        muteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                soundHandler.muteVolume();
+//                System.out.println("MUTE: isMute" + soundHandler.isMute());
+//                System.out.println("MUTE: currentVolume" + soundHandler.getCurrentVolume());
+            }
+        });
+
+        playerBody.add(volumeLabel);
+        playerBody.add(volumeUpButton);
+        playerBody.add(volumeDownButton);
+        playerBody.add(muteButton);
+
+
 
         //set image
         imagePanel.setBackground(Color.YELLOW);
