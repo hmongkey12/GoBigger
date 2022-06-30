@@ -32,7 +32,7 @@ public class Game {
     private final String musicPath = "resources/gainz.wav";
     private Room currentRoom = gym.getStarterRoom();
     private final Object rooms = gym.getRooms();
-    private final Prompter prompter;
+    private final Prompter gamePrompt;
     private final ParseTxt page = new ParseTxt();
     private final ParseJSON jsonParser = new ParseJSON();
     private  JFrame frame;
@@ -43,12 +43,14 @@ public class Game {
     JPanel gameTextArea;
     JPanel mapPanel;
     JPanel imagePanel;
-    JPanel userInput;
+    UserInput userInput;
     JTextField textInput = new JTextField(20);
     JLabel instructionText;
+    GamePrompter gamePrompter2;
+
 
     public Game(Prompter prompter) throws IOException, ParseException {
-        this.prompter = prompter;
+        this.gamePrompt = prompter;
     }
 
     //    collects current input from user to update their avatar
@@ -58,49 +60,55 @@ public class Game {
         String playerName = validName();
         double playerHeight = validDouble("What is your height? ", "height", "inches");
         double playerWeight = validDouble("What is your weight? ", "weight", "lbs");
-        int playerAge = validInt("What is your age ", "age", "years");
+        int playerAge = validInt("What is your age? ", "age", "years");
         createPlayer(playerName, playerAge, playerHeight, playerWeight);
     }
+
     // validates name requesting one and rejecting empty space(s).
 
     private String validName() {
-        String playerName = prompter.prompt("What is your name? ");
+//        String text = textInput1.getText();
+        String playerName = gamePrompter2.prompt("What is your name? ");
+        System.out.println(playerName);
         if (playerName.isBlank() || playerName.isEmpty() || playerName.length() > 16) {
             try {
-                System.out.println("You need to type your name or it exceeds 16 characters: ");
+                gamePrompter2.display("You need to type your name or it exceeds 16 characters: ");
                 validName();
             } catch (NullPointerException e) {
-                System.out.println("You need to type your name: ");
+                gamePrompter2.display("You need to type your name: ");
                 validName();
             }
         } else {
-            System.out.println("Hello " + playerName + " let's get more about you...");
+            gamePrompter2.display("Hello " + playerName + " let's get more about you...");
         }
         return playerName;
     }
+
     // validates height and weight taking integers or doubles only
 
     private double validDouble(String msg, String measureName, String unit) {
-        String measurementString = prompter.prompt(msg);
+        String measurementString = gamePrompter2.prompt(msg);
         double measurement = 0;
         try {
             measurement = Double.parseDouble(measurementString);
             //validDouble(measure, "you need to type your " + measureName + " in " + unit + ": ", measureName, unit);
         } catch (NumberFormatException | NullPointerException e) {
-            return validDouble("You need to type your " + measureName + " using numbers (" + unit + "): ", measureName, unit);
+            gamePrompter2.display("You need to type your " + measureName + " using numbers (" + unit + "): "+ measureName+ unit);
+            return validDouble("", measureName, unit);
         }
         return measurement;
     }
     // validates age taking only an integer
 
     private int validInt(String msg, String measureName, String unit) {
-        String measurement = prompter.prompt(msg);
+        String measurement = gamePrompter2.prompt(msg);
         int measureNum = 0;
         try {
             measureNum = Integer.parseInt(measurement);
             //validInt(measure, "you need to type your "+ measureName+" in " + unit + " or you aren't an adult: ", measureName, unit);
         } catch (NumberFormatException e) {
-            return validInt("You need to type your " + measureName + " using numbers integers (" + unit + "): ", measureName, unit);
+            gamePrompter2.display("You need to type your " + measureName + " using numbers integers (" + unit + "): "+ measureName + unit);
+            return  validInt("", measureName, unit);
         }
         return measureNum;
     }
@@ -112,13 +120,21 @@ public class Game {
     }
 
     //    updates player with current game status e.g. player inventory, current room etc.
+    private String gameStatus() {
+//        System.out.println("------------------------------");
+//        System.out.println("Available commands: GO <room name>, GET <item>, CONSUME <item>, SEE MAP, WORKOUT <workout name>, INSPECT ROOM");
+//        System.out.println("You are in the " + currentRoomName + " room.");
+//        System.out.println(player.toString());
+//        System.out.println("------------------------------");
+        StringBuilder status = new StringBuilder();
+        status.append("------------------------------\n");
+        status.append("Commands: GO <room name>, GET <item>, CONSUME <item>,\n WORKOUT <workout name>, INSPECT ROOM\n (Hit Q to quit)\n");
+        status.append("You are in the " + currentRoomName + " room.\n");
+        status.append(player.toString()+"\n");
+        status.append("------------------------------\n");
+        return status.toString();
 
-    private void gameStatus() {
-        System.out.println("------------------------------");
-        System.out.println("Available commands: GO <room name>, GET <item>, CONSUME <item>, SEE MAP, WORKOUT <workout name>, INSPECT ROOM");
-        System.out.println("You are in the " + currentRoomName + " room.");
-        System.out.println(player.toString());
-        System.out.println("------------------------------");
+
     }
 
     //    main function running the game, here we call all other functions necessary to run the game
@@ -131,9 +147,10 @@ public class Game {
         System.out.println(page.instructions());
 
         getNewPlayerInfo();
-        //System.out.println(page.instructions());
         // runs a while loop
         while (!isGameOver()) {
+            gameStatus();
+            promptForPlayerInput();
             if (checkGameStatus()) {
                 break;
             }
@@ -173,7 +190,8 @@ public class Game {
     }
 
     public void promptForPlayerInput() throws IOException, ParseException {
-        String command = prompter.prompt("(Hit Q to quit) What is your move? ");
+        String command = gamePrompter2.prompt("What is your move?");
+//        gamePrompter2.display(gameStatus());
         String[] commandArr = command.split(" ");
         parseThroughPlayerInput(commandArr);
     }
@@ -203,6 +221,7 @@ public class Game {
             switch (actionPrefix) {
                 case "get":
                     grabItem(playerAction);
+                    gamePrompter2.display(gameStatus());
                     break;
                 case "go":
                     Console.clear();
@@ -210,9 +229,11 @@ public class Game {
                     currentRoomName = playerAction;
                     setCurrentRoom(jsonParser.getObjectFromJSONObject(rooms, playerAction));
                     repaintMap();
+                    gamePrompter2.display(gameStatus());
                     break;
                 case "workout":
                     playerUseMachine(playerAction);
+                    gamePrompter2.display(gameStatus());
                     break;
                 case "consume":
                     if (player.consumeItem(playerAction)) {
@@ -225,9 +246,9 @@ public class Game {
                 case "talk":
                     talkToNPC();
                     break;
-                case "see":
+                /*case "see":
                     getRoomMap();
-                    break;
+                    break;*/
                 case "q":
                     quit();
                     break;
@@ -249,9 +270,10 @@ public class Game {
 //            TODO: add array with possible values for commands
             System.out.println(actionPrefix + " was sadly and invalid answer. \n please ensure you are using a valid and complete command. ");
 //            TODO: fix bug caused by pressing enter where prompt for player does not work and calls inspect
-            //promptForPlayerInput();
+            promptForPlayerInput();
         }
     }
+
 
 
 
@@ -266,6 +288,7 @@ public class Game {
     private void getRoomMap() throws IOException {
         currentRoom.getRoomMap(currentRoomName);
     }
+
 
     private void handleInput(String input) throws IOException, ParseException {
             gameStatus();
@@ -309,7 +332,7 @@ public class Game {
 
     private void fixBrokenMachine(Object targetMuscle, Long energyCost) {
         if (player.getInventory().contains("wrench")) {
-            String playerResponse = prompter.prompt("This machine is broken. Would you like to use your wrench to fix it? (y/n) \n >");
+            String playerResponse = gamePrompter2.prompt("This machine is broken. Would you like to use your wrench to fix it? (y/n) \n >");
             if ("y".equalsIgnoreCase(playerResponse)) {
                 player.getInventory().remove("wrench");
                 player.workout(targetMuscle, energyCost);
@@ -367,9 +390,12 @@ public class Game {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(1000, 750);
         frame.setLayout(new GridLayout(2,2));
+        frame.setTitle("Go Big or Go Home");
         frame.setVisible(true);
         frame.getContentPane().setBackground(Color.BLACK);
         container = frame.getContentPane();
+        ImageIcon image = new ImageIcon("gym.png");
+        frame.setIconImage(image.getImage());
 
         //three panels
         gameTextArea = new JPanel();
@@ -378,18 +404,72 @@ public class Game {
         playerBody = new PlayerBody(getMuscleGroups(player));
         playerBody.setPanelSize(frame.getWidth()/2, frame.getHeight()/2);
 
-        userInput = new JPanel();
-        userInput.add(textInput);
-        //set map
-        JButton submitBtn = new JButton("Submit");
-        submitBtn.addActionListener(e -> {
-            try {
-                handleInput(textInput.getText());
-            } catch (IOException | ParseException ex) {
-                ex.printStackTrace();
-            }
-        });
-        userInput.add(submitBtn);
+        userInput = new UserInput(this);
+        gamePrompter2 = userInput;
+//        JLabel text1 = new JLabel("Enter command.");
+//        userInput.add(text1);
+//        userInput.add(textInput);
+//        //set map
+//        JButton submitBtn = new JButton("Submit");
+//        submitBtn.addActionListener(e -> {
+//            try {
+//                handleInput(textInput.getText());
+//            } catch (IOException | ParseException ex) {
+//                ex.printStackTrace();
+//            }
+//        });
+//        userInput.add(submitBtn);
+//        JLabel tst = new JLabel("     ");
+//        userInput.add(tst);
+//        JLabel text2 = new JLabel("Enter your name: ");
+//        userInput.add(text2);
+//        userInput.add(textInput1);
+//        //set map
+//        JButton submitBtn1 = new JButton("Submit");
+//        submitBtn1.addActionListener(e -> {
+//            try {
+//                handleInput(textInput1.getText());
+//            } catch (IOException | ParseException ex) {
+//                ex.printStackTrace();
+//            }
+//        });
+//        userInput.add(submitBtn1);
+//        JLabel tst1 = new JLabel("    ");
+//        userInput.add(tst1);
+//
+//        JLabel text3 = new JLabel("Enter your height: ");
+//        userInput.add(text3);
+//        userInput.add(textInput2);
+//        //set map
+//        JButton submitBtn2 = new JButton("Submit");
+//        submitBtn2.addActionListener(e -> {
+//            try {
+//                handleInput(textInput2.getText());
+//            } catch (IOException | ParseException ex) {
+//                ex.printStackTrace();
+//            }
+//        });
+//        userInput.add(submitBtn2);
+//
+//
+//        JLabel tst2 = new JLabel("   ");
+//        userInput.add(tst2);
+//
+//        JLabel text4 = new JLabel("Enter your age: ");
+//        userInput.add(text4);
+//        userInput.add(textInput3);
+//        //set map
+//        JButton submitBtn3 = new JButton("Submit");
+//        submitBtn3.addActionListener(e -> {
+//            try {
+//                handleInput(textInput3.getText());
+//            } catch (IOException | ParseException ex) {
+//                ex.printStackTrace();
+//            }
+//        });
+//        userInput.add(submitBtn3);
+
+
 
         mapPanel.setBackground(Color.RED);
         mapPanel.setBounds(500,0,200,200);
@@ -441,8 +521,9 @@ public class Game {
         //setTextArea
         gameTextArea.setBackground(Color.WHITE);
 
+
         //set userInput
-        userInput.setBackground(Color.GREEN);
+        userInput.setBackground(Color.BLACK);
 
         //Set text within text area
         JTextArea wrapperText =new JTextArea(page.instructions(),16,50);
