@@ -45,8 +45,9 @@ public class SoundHandler {
                 FxClip = AudioSystem.getClip();
                 FxClip.open(inputStream);
                 FxClip.start();
-                FxFc = (FloatControl)FxClip.getControl(FloatControl.Type.MASTER_GAIN);
+                FxFc = (FloatControl) FxClip.getControl(FloatControl.Type.MASTER_GAIN);
                 FxClip.loop(0);
+                FxClip.close();
             }
             catch (UnsupportedAudioFileException e) {
                 e.printStackTrace();
@@ -67,6 +68,14 @@ public class SoundHandler {
             musicFc.setValue(currentMusicVolume);
         }
 
+        public void fxVolumeUp() {
+            currentFxVolume += volumeStep;
+            if( currentFxVolume > 6.0f) {
+                currentFxVolume = 6.0f;
+            }
+            FxFc.setValue(currentFxVolume);
+        }
+
         public void musicVolumeDown() {
             currentMusicVolume -= volumeStep;
 
@@ -75,6 +84,14 @@ public class SoundHandler {
             }
             musicFc.setValue(currentMusicVolume);
         }
+
+        public void fxVolumeDown() {
+            currentFxVolume -= volumeStep;
+
+            if( currentFxVolume < -80.0f) {
+                currentFxVolume =  -80.0f;
+            }
+            FxFc.setValue(currentFxVolume);        }
 
         public void muteMusicVolume() {
             if( musicMuted == false) {
@@ -87,6 +104,20 @@ public class SoundHandler {
                 musicFc.setValue(currentMusicVolume);
                 musicMuted = false;
             }
+        }
+
+        public void muteFxVolume() {
+            if( fxMuted == false) {
+                previousFxVolume = currentFxVolume;
+                currentFxVolume = -80.0f;
+                FxFc.setValue(currentFxVolume);
+                fxMuted = true;
+            } else if (fxMuted) {
+                currentFxVolume = previousFxVolume;
+                FxFc.setValue(currentFxVolume);
+                fxMuted = false;
+            }
+
         }
 
         public void stopMusic() {
@@ -111,5 +142,18 @@ public class SoundHandler {
         public boolean isMusicMuted() {
             return musicMuted;
         }
+
+        public float getPreviousFxVolume() {
+            return previousFxVolume;
+        }
+
+        public float getCurrentFxVolume() {
+            return currentFxVolume;
+        }
+
+        public boolean isFxMuted() {
+            return fxMuted;
+        }
+
 
 }
