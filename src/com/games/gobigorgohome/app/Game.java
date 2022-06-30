@@ -399,7 +399,6 @@ public class Game {
 
         //three panels
         gameTextArea = new JPanel();
-        gameTextArea1 = new JPanel();
         mapPanel=new JPanel();
         imagePanel=new JPanel();
         playerBody = new PlayerBody(getMuscleGroups(player));
