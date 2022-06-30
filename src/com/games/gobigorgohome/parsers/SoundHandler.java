@@ -7,8 +7,8 @@ import java.io.IOException;
 public class SoundHandler {
 
         private Clip clip;
-        private float previousVolume = 0;
-        private float currentVolume = 0;
+        private float previousVolume = 0.0f;
+        private float currentVolume = 0.0f;
         FloatControl fc;
         boolean mute = false;
 
@@ -39,19 +39,15 @@ public class SoundHandler {
                 currentVolume = 6.0f;
             }
             fc.setValue(currentVolume);
-            System.out.println("UP: currentVolume = " + currentVolume);
         }
 
         public void volumeDown() {
-            System.out.println("DOWN BEFORE MINUS: currentVolume = " + currentVolume);
             currentVolume -= 1.0f;
-            System.out.println("DOWN AFTER MINUS: currentVolume = " + currentVolume);
 
             if( currentVolume < -80.0f) {
                 currentVolume =  -80.0f;
             }
             fc.setValue(currentVolume);
-            System.out.println("DOWN: currentVolume = " + currentVolume);
         }
 
         public void muteVolume() {
@@ -65,8 +61,6 @@ public class SoundHandler {
                 fc.setValue(currentVolume);
                 mute = false;
             }
-            System.out.println("MUTE: previousVolume = " + previousVolume);
-            System.out.println("MUTE: currentVolume = " + currentVolume);
         }
 
         public void stopMusic() {
