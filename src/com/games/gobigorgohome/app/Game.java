@@ -35,7 +35,7 @@ public class Game {
     private final Prompter gamePrompt;
     private final ParseTxt page = new ParseTxt();
     private final ParseJSON jsonParser = new ParseJSON();
-    private  JFrame frame;
+    private JFrame frame;
     private GameMap gamemap = new GameMap(gym.getStarterRoomName());
     private SoundHandler soundHandler = new SoundHandler();
     PlayerBody playerBody;
@@ -93,7 +93,7 @@ public class Game {
             measurement = Double.parseDouble(measurementString);
             //validDouble(measure, "you need to type your " + measureName + " in " + unit + ": ", measureName, unit);
         } catch (NumberFormatException | NullPointerException e) {
-            gamePrompter2.display("You need to type your " + measureName + " using numbers (" + unit + "): "+ measureName+ unit);
+            gamePrompter2.display("You need to type your " + measureName + " using numbers (" + unit + "): " + measureName + unit);
             return validDouble("", measureName, unit);
         }
         return measurement;
@@ -107,11 +107,12 @@ public class Game {
             measureNum = Integer.parseInt(measurement);
             //validInt(measure, "you need to type your "+ measureName+" in " + unit + " or you aren't an adult: ", measureName, unit);
         } catch (NumberFormatException e) {
-            gamePrompter2.display("You need to type your " + measureName + " using numbers integers (" + unit + "): "+ measureName + unit);
-            return  validInt("", measureName, unit);
+            gamePrompter2.display("You need to type your " + measureName + " using numbers integers (" + unit + "): " + measureName + unit);
+            return validInt("", measureName, unit);
         }
         return measureNum;
     }
+
     private void createPlayer(String playerName, int playerAge, double playerHeight, double playerWeight) {
         player.setName(playerName);
         player.setAge(playerAge);
@@ -130,7 +131,7 @@ public class Game {
         status.append("------------------------------\n");
         status.append("Commands: GO <room name>, GET <item>, CONSUME <item>,\n WORKOUT <workout name>, INSPECT ROOM\n (Hit Q to quit)\n");
         status.append("You are in the " + currentRoomName + " room.\n");
-        status.append(player.toString()+"\n");
+        status.append(player.toString() + "\n");
         status.append("------------------------------\n");
         return status.toString();
 
@@ -158,8 +159,8 @@ public class Game {
         gameResult();
 
 
-
     }
+
     private void newGame() throws IOException, ParseException, InterruptedException {
         //reset the map
         player.resetBody();
@@ -275,8 +276,6 @@ public class Game {
     }
 
 
-
-
     public void setGameOver(boolean gameOver) {
         isGameOver = gameOver;
     }
@@ -291,9 +290,9 @@ public class Game {
 
 
     private void handleInput(String input) throws IOException, ParseException {
-            gameStatus();
-            String[] commandArr = input.split(" ");
-            parseThroughPlayerInput(commandArr);
+        gameStatus();
+        String[] commandArr = input.split(" ");
+        parseThroughPlayerInput(commandArr);
 
     }
 
@@ -349,7 +348,7 @@ public class Game {
         final String[] currentItem = new String[1];
         JSONArray roomItemsObjectArray = (JSONArray) currentRoom.getItems();
         roomItemsObjectArray.forEach(item -> {
-            if ( item.equals(playerAction)) {
+            if (item.equals(playerAction)) {
                 System.out.println("Item equals playerAction");
                 currentItem[0] = (String) item;
             }
@@ -360,13 +359,12 @@ public class Game {
                 System.out.println("\nYou got the :" + playerAction);
                 player.getInventory().add(playerAction);
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.out.println("\nSorry, you cant can't GET " + playerAction.toUpperCase() + ". Try again!");
         }
     }
 
-    private void repaintPlayerBody(){
+    private void repaintPlayerBody() {
         frame.remove(playerBody);
         playerBody = new PlayerBody(getMuscleGroups(player));
         frame.add(playerBody, 2);
@@ -375,7 +373,7 @@ public class Game {
         frame.repaint();
     }
 
-    private void repaintMap(){
+    private void repaintMap() {
         frame.remove(gamemap);
         gamemap = new GameMap(currentRoomName);
         frame.add(gamemap, 1);
@@ -384,12 +382,12 @@ public class Game {
         frame.repaint();
     }
 
-    public void MainFrame(){
+    public void MainFrame() {
         //frame Setting
         frame = new JFrame("Go Big Or Go Home");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(1000, 750);
-        frame.setLayout(new GridLayout(2,2));
+        frame.setLayout(new GridLayout(2, 2));
         frame.setTitle("Go Big or Go Home");
         frame.setVisible(true);
         frame.getContentPane().setBackground(Color.BLACK);
@@ -399,80 +397,16 @@ public class Game {
 
         //three panels
         gameTextArea = new JPanel();
-        mapPanel=new JPanel();
-        imagePanel=new JPanel();
+        mapPanel = new JPanel();
+        imagePanel = new JPanel();
         playerBody = new PlayerBody(getMuscleGroups(player));
-        playerBody.setPanelSize(frame.getWidth()/2, frame.getHeight()/2);
+        playerBody.setPanelSize(frame.getWidth() / 2, frame.getHeight() / 2);
 
         userInput = new UserInput(this);
         gamePrompter2 = userInput;
-//        JLabel text1 = new JLabel("Enter command.");
-//        userInput.add(text1);
-//        userInput.add(textInput);
-//        //set map
-//        JButton submitBtn = new JButton("Submit");
-//        submitBtn.addActionListener(e -> {
-//            try {
-//                handleInput(textInput.getText());
-//            } catch (IOException | ParseException ex) {
-//                ex.printStackTrace();
-//            }
-//        });
-//        userInput.add(submitBtn);
-//        JLabel tst = new JLabel("     ");
-//        userInput.add(tst);
-//        JLabel text2 = new JLabel("Enter your name: ");
-//        userInput.add(text2);
-//        userInput.add(textInput1);
-//        //set map
-//        JButton submitBtn1 = new JButton("Submit");
-//        submitBtn1.addActionListener(e -> {
-//            try {
-//                handleInput(textInput1.getText());
-//            } catch (IOException | ParseException ex) {
-//                ex.printStackTrace();
-//            }
-//        });
-//        userInput.add(submitBtn1);
-//        JLabel tst1 = new JLabel("    ");
-//        userInput.add(tst1);
-//
-//        JLabel text3 = new JLabel("Enter your height: ");
-//        userInput.add(text3);
-//        userInput.add(textInput2);
-//        //set map
-//        JButton submitBtn2 = new JButton("Submit");
-//        submitBtn2.addActionListener(e -> {
-//            try {
-//                handleInput(textInput2.getText());
-//            } catch (IOException | ParseException ex) {
-//                ex.printStackTrace();
-//            }
-//        });
-//        userInput.add(submitBtn2);
-//
-//
-//        JLabel tst2 = new JLabel("   ");
-//        userInput.add(tst2);
-//
-//        JLabel text4 = new JLabel("Enter your age: ");
-//        userInput.add(text4);
-//        userInput.add(textInput3);
-//        //set map
-//        JButton submitBtn3 = new JButton("Submit");
-//        submitBtn3.addActionListener(e -> {
-//            try {
-//                handleInput(textInput3.getText());
-//            } catch (IOException | ParseException ex) {
-//                ex.printStackTrace();
-//            }
-//        });
-//        userInput.add(submitBtn3);
-
-
 
         mapPanel.setBackground(Color.RED);
-        mapPanel.setBounds(500,0,200,200);
+        mapPanel.setBounds(500, 0, 200, 200);
         mapPanel.add(gamemap);
 
 //        Volume and Mute Buttons:
@@ -514,7 +448,6 @@ public class Game {
         playerBody.add(muteButton);
 
 
-
         //set image
         imagePanel.setBackground(Color.YELLOW);
 
@@ -526,7 +459,7 @@ public class Game {
         userInput.setBackground(Color.BLACK);
 
         //Set text within text area
-        JTextArea wrapperText =new JTextArea(page.instructions(),16,50);
+        JTextArea wrapperText = new JTextArea(page.instructions(), 16, 50);
         wrapperText.setWrapStyleWord(true);
         wrapperText.setLineWrap(true);
         wrapperText.setOpaque(false);
@@ -592,25 +525,25 @@ public class Game {
         return playerName;
     }
 
-    public boolean[] getMuscleGroups(Player player){
+    public boolean[] getMuscleGroups(Player player) {
         boolean[] muscleGroup = new boolean[6];
 
-        if(player.isLegsWorked()) {
-            muscleGroup[0]  = true;
+        if (player.isLegsWorked()) {
+            muscleGroup[0] = true;
         }
-        if(player.isBackWorked()){
+        if (player.isBackWorked()) {
             muscleGroup[1] = true;
         }
-        if(player.isChestWorked()){
+        if (player.isChestWorked()) {
             muscleGroup[2] = true;
         }
-        if(player.isCoreWorked()){
+        if (player.isCoreWorked()) {
             muscleGroup[3] = true;
         }
-        if(player.isShoulderWorked()){
+        if (player.isShoulderWorked()) {
             muscleGroup[4] = true;
         }
-        if(player.isTricepsWorked()){
+        if (player.isTricepsWorked()) {
             muscleGroup[5] = true;
         }
         return muscleGroup;
