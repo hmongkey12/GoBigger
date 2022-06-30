@@ -5,6 +5,7 @@ import com.games.gobigorgohome.*;
 import com.games.gobigorgohome.characters.Player;
 import com.games.gobigorgohome.parsers.ParseJSON;
 import com.games.gobigorgohome.parsers.ParseTxt;
+import com.games.gobigorgohome.parsers.SoundHandler;
 import org.json.simple.JSONArray;
 import com.apps.util.Console;
 import org.json.simple.parser.ParseException;
@@ -21,12 +22,14 @@ import java.util.List;
 public class Game {
 
     boolean isGameOver = false;
+
     private final Gym gym = Gym.getInstance();
     private Player player = new Player();
     private final int energy = player.getEnergy();
     private final int currentEnergy = player.getEnergy();
     private final String playerName = player.getName();
     private String currentRoomName = gym.getStarterRoomName();
+    private final String musicPath = "resources/gainz.wav";
     private Room currentRoom = gym.getStarterRoom();
     private final Object rooms = gym.getRooms();
     private final Prompter gamePrompt;
@@ -34,17 +37,14 @@ public class Game {
     private final ParseJSON jsonParser = new ParseJSON();
     private  JFrame frame;
     private GameMap gamemap = new GameMap(gym.getStarterRoomName());
+    private SoundHandler soundHandler = new SoundHandler();
     PlayerBody playerBody;
     Container container;
     JPanel gameTextArea;
-    JPanel gameTextArea1;
     JPanel mapPanel;
     JPanel imagePanel;
     UserInput userInput;
     JTextField textInput = new JTextField(20);
-    JTextField textInput1 = new JTextField(20);
-    JTextField textInput2 = new JTextField(20);
-    JTextField textInput3 = new JTextField(20);
     JLabel instructionText;
     GamePrompter gamePrompter2;
 
@@ -54,6 +54,7 @@ public class Game {
     }
 
     //    collects current input from user to update their avatar
+
     private void getNewPlayerInfo() {
 //        TODO: validate user input
         String playerName = validName();
@@ -64,6 +65,7 @@ public class Game {
     }
 
     // validates name requesting one and rejecting empty space(s).
+
     private String validName() {
 //        String text = textInput1.getText();
         String playerName = gamePrompter2.prompt("What is your name? ");
@@ -83,6 +85,7 @@ public class Game {
     }
 
     // validates height and weight taking integers or doubles only
+
     private double validDouble(String msg, String measureName, String unit) {
         String measurementString = gamePrompter2.prompt(msg);
         double measurement = 0;
@@ -95,8 +98,8 @@ public class Game {
         }
         return measurement;
     }
-
     // validates age taking only an integer
+
     private int validInt(String msg, String measureName, String unit) {
         String measurement = gamePrompter2.prompt(msg);
         int measureNum = 0;
@@ -109,13 +112,11 @@ public class Game {
         }
         return measureNum;
     }
-
     private void createPlayer(String playerName, int playerAge, double playerHeight, double playerWeight) {
         player.setName(playerName);
         player.setAge(playerAge);
         player.setHeight(playerHeight);
         player.setWeight(playerWeight);
-        gamePrompter2.display(gameStatus());
     }
 
     //    updates player with current game status e.g. player inventory, current room etc.
@@ -138,11 +139,13 @@ public class Game {
 
     //    main function running the game, here we call all other functions necessary to run the game
     public void playGame() throws IOException, ParseException {
-        isGameOver=false;
-
         MainFrame();
 
+//        TODO: UNCOMMENT LINE BELOW BEFORE RELEASE!
+        soundHandler.RunMusic(musicPath);
+
         System.out.println(page.instructions());
+
         getNewPlayerInfo();
         // runs a while loop
         while (!isGameOver()) {
@@ -153,7 +156,18 @@ public class Game {
             }
         }
         gameResult();
-        frame.dispose();
+
+
+
+    }
+    private void newGame() throws IOException, ParseException, InterruptedException {
+        //reset the map
+        player.resetBody();
+        currentRoomName = "front desk";
+        repaintPlayerBody();
+        repaintMap();
+        getNewPlayerInfo();
+
     }
 
 
@@ -241,8 +255,18 @@ public class Game {
                 case "new":
                     newGame();
                     break;
+                case "up":
+                    soundHandler.volumeUp();
+                    break;
+                case "down":
+                    soundHandler.volumeDown();
+                    break;
+                case "mute":
+                    soundHandler.muteVolume();
+                    break;
             }
         } catch (Exception exception) {
+            exception.printStackTrace();
 //            TODO: add array with possible values for commands
             System.out.println(actionPrefix + " was sadly and invalid answer. \n please ensure you are using a valid and complete command. ");
 //            TODO: fix bug caused by pressing enter where prompt for player does not work and calls inspect
@@ -250,17 +274,11 @@ public class Game {
         }
     }
 
-    private void newGame() throws IOException, ParseException {
-        frame.setVisible(false);
-        //reset the map
-        currentRoomName = "front desk";
-        //used to reset the body
-        player=null;
-        repaintPlayerBody();
-        repaintMap();
-        isGameOver=true;
-        playGame();
 
+
+
+    public void setGameOver(boolean gameOver) {
+        isGameOver = gameOver;
     }
 
     public static boolean isItemRequired(List items) {
@@ -458,13 +476,52 @@ public class Game {
         mapPanel.setBounds(500,0,200,200);
         mapPanel.add(gamemap);
 
+//        Volume and Mute Buttons:
+        JLabel volumeLabel = new JLabel("Volume Settings:");
+        volumeLabel.setForeground(Color.WHITE);
+        JButton volumeUpButton = new JButton("+");
+        JButton volumeDownButton = new JButton("-");
+        JButton muteButton = new JButton("Mute");
+
+        volumeUpButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                soundHandler.volumeUp();
+//                System.out.println("UP: currentVolume" + soundHandler.getCurrentVolume());
+            }
+        });
+
+        volumeDownButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                soundHandler.volumeDown();
+//                System.out.println("DOWN: currentVolume" + soundHandler.getCurrentVolume());
+
+            }
+        });
+
+        muteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                soundHandler.muteVolume();
+//                System.out.println("MUTE: isMute" + soundHandler.isMute());
+//                System.out.println("MUTE: currentVolume" + soundHandler.getCurrentVolume());
+            }
+        });
+
+        playerBody.add(volumeLabel);
+        playerBody.add(volumeUpButton);
+        playerBody.add(volumeDownButton);
+        playerBody.add(muteButton);
+
+
 
         //set image
         imagePanel.setBackground(Color.YELLOW);
 
         //setTextArea
         gameTextArea.setBackground(Color.WHITE);
-        gameTextArea1.setBackground(Color.WHITE);
+
 
         //set userInput
         userInput.setBackground(Color.BLACK);
@@ -482,31 +539,16 @@ public class Game {
         wrapperText.setFont(new Font("Monospaced", Font.PLAIN, 16));
         JScrollPane scroll = new JScrollPane(wrapperText);
 
-        JTextArea wrapperText1 =new JTextArea(page.instructions(),16,50);
-        wrapperText1.setWrapStyleWord(true);
-        wrapperText1.setLineWrap(true);
-        wrapperText1.setOpaque(false);
-        wrapperText1.setEditable(true);
-        wrapperText1.setFocusable(false);
-        wrapperText1.setBackground(UIManager.getColor("Label.background"));
-        wrapperText1.setFont(UIManager.getFont("Label.font"));
-        wrapperText1.setBorder(UIManager.getBorder("Label.border"));
-        wrapperText1.setFont(new Font("Monospaced", Font.PLAIN, 16));
-        JScrollPane scroll1 = new JScrollPane(wrapperText1);
 
         //add text to
         gameTextArea.add(scroll);
-        gameTextArea1.add(scroll1);
 
         //add components to container
         container.add(gameTextArea);
-//        container.add(gameTextArea1);
         container.add(gamemap);
 
         container.add(playerBody);
         container.add(userInput);
-//        container.add(imagePanel);
-        //container.add(gameTextArea1);
 
         frame.setResizable(false);
         frame.invalidate();
@@ -515,23 +557,12 @@ public class Game {
 
     }
 
-//    public JPanel generateInputPanel() {
-//        JPanel input = new JPanel();
-//        JTextArea textArea = new JTextArea(10, 20);
-//        textArea.addKeyListener();
-//    }
-
-//    private void jTextField1KeyPressed(java.awt.event.KeyEvent evt) {
-//        if(evt.getKeyCode() == KeyEvent.VK_ENTER) {
-//            // Enter was pressed. Your code goes here.
-//        }
-//    }
-
     //    gives player ability to quit
     private void quit() {
         System.out.println("--------------------------------------\n"
                 + " YOU ARE A QUITTER!! GAME OVER" + "" +
                 "------------------------------------");
+        soundHandler.stopMusic();
         System.exit(0);
     }
 
@@ -564,9 +595,7 @@ public class Game {
 
     public boolean[] getMuscleGroups(Player player){
         boolean[] muscleGroup = new boolean[6];
-        if(player == null){
-            return muscleGroup;
-        }
+
         if(player.isLegsWorked()) {
             muscleGroup[0]  = true;
         }
