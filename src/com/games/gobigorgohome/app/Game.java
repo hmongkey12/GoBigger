@@ -67,6 +67,7 @@ public class Game {
     private String validName() {
 //        String text = textInput1.getText();
         String playerName = gamePrompter2.prompt("What is your name? ");
+        System.out.println(playerName);
         if (playerName.isBlank() || playerName.isEmpty() || playerName.length() > 16) {
             try {
                 System.out.println("You need to type your name or it exceeds 16 characters: ");
@@ -115,12 +116,22 @@ public class Game {
     }
 
     //    updates player with current game status e.g. player inventory, current room etc.
-    private void gameStatus() {
-        System.out.println("------------------------------");
-        System.out.println("Available commands: GO <room name>, GET <item>, CONSUME <item>, SEE MAP, WORKOUT <workout name>, INSPECT ROOM");
-        System.out.println("You are in the " + currentRoomName + " room.");
-        System.out.println(player.toString());
-        System.out.println("------------------------------");
+    private String gameStatus() {
+//        System.out.println("------------------------------");
+//        System.out.println("Available commands: GO <room name>, GET <item>, CONSUME <item>, SEE MAP, WORKOUT <workout name>, INSPECT ROOM");
+//        System.out.println("You are in the " + currentRoomName + " room.");
+//        System.out.println(player.toString());
+//        System.out.println("------------------------------");
+        StringBuilder status = new StringBuilder();
+        status.append("------------------------------\n");
+        status.append("Available commands: GO <room name>, GET <item>, CONSUME <item>, WORKOUT <workout name>, INSPECT ROOM\n");
+        status.append("You are in the " + currentRoomName + " room.\n");
+        status.append(player.toString());
+        status.append("------------------------------\n");
+//        gamePrompter2.(status.toString());
+        return status.toString();
+
+
     }
 
     //    main function running the game, here we call all other functions necessary to run the game
@@ -164,6 +175,7 @@ public class Game {
 
     public void promptForPlayerInput() throws IOException, ParseException {
         String command = gamePrompter2.prompt("(Hit Q to quit) What is your move? ");
+//        gamePrompter2.display(gameStatus());
         String[] commandArr = command.split(" ");
         parseThroughPlayerInput(commandArr);
     }
@@ -203,6 +215,8 @@ public class Game {
                     break;
                 case "workout":
                     playerUseMachine(playerAction);
+                            gamePrompter2.display(gameStatus());
+
                     break;
                 case "consume":
                     if (player.consumeItem(playerAction)) {
@@ -479,10 +493,11 @@ public class Game {
 
         //add text to
         gameTextArea.add(scroll);
+        gameTextArea1.add(scroll1);
 
         //add components to container
         container.add(gameTextArea);
-        //container.add(gameTextArea1);
+//        container.add(gameTextArea1);
         container.add(gamemap);
 
         container.add(playerBody);
