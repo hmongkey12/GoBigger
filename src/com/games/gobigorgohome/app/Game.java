@@ -70,14 +70,14 @@ public class Game {
         System.out.println(playerName);
         if (playerName.isBlank() || playerName.isEmpty() || playerName.length() > 16) {
             try {
-                System.out.println("You need to type your name or it exceeds 16 characters: ");
+                gamePrompter2.display("You need to type your name or it exceeds 16 characters: ");
                 validName();
             } catch (NullPointerException e) {
-                System.out.println("You need to type your name: ");
+                gamePrompter2.display("You need to type your name: ");
                 validName();
             }
         } else {
-            System.out.println("Hello " + playerName + " let's get more about you...");
+            gamePrompter2.display("Hello " + playerName + " let's get more about you...");
         }
         return playerName;
     }
@@ -90,7 +90,8 @@ public class Game {
             measurement = Double.parseDouble(measurementString);
             //validDouble(measure, "you need to type your " + measureName + " in " + unit + ": ", measureName, unit);
         } catch (NumberFormatException | NullPointerException e) {
-            return validDouble("You need to type your " + measureName + " using numbers (" + unit + "): ", measureName, unit);
+            gamePrompter2.display("You need to type your " + measureName + " using numbers (" + unit + "): "+ measureName+ unit);
+            return validDouble("", measureName, unit);
         }
         return measurement;
     }
@@ -103,7 +104,8 @@ public class Game {
             measureNum = Integer.parseInt(measurement);
             //validInt(measure, "you need to type your "+ measureName+" in " + unit + " or you aren't an adult: ", measureName, unit);
         } catch (NumberFormatException e) {
-            return validInt("You need to type your " + measureName + " using numbers integers (" + unit + "): ", measureName, unit);
+            gamePrompter2.display("You need to type your " + measureName + " using numbers integers (" + unit + "): "+ measureName + unit);
+            return  validInt("", measureName, unit);
         }
         return measureNum;
     }
@@ -113,6 +115,7 @@ public class Game {
         player.setAge(playerAge);
         player.setHeight(playerHeight);
         player.setWeight(playerWeight);
+        gamePrompter2.display(gameStatus());
     }
 
     //    updates player with current game status e.g. player inventory, current room etc.
@@ -124,11 +127,10 @@ public class Game {
 //        System.out.println("------------------------------");
         StringBuilder status = new StringBuilder();
         status.append("------------------------------\n");
-        status.append("Available commands: GO <room name>, GET <item>, CONSUME <item>, WORKOUT <workout name>, INSPECT ROOM\n");
+        status.append("Commands: GO <room name>, GET <item>, CONSUME <item>,\n WORKOUT <workout name>, INSPECT ROOM\n (Hit Q to quit)\n");
         status.append("You are in the " + currentRoomName + " room.\n");
-        status.append(player.toString());
+        status.append(player.toString()+"\n");
         status.append("------------------------------\n");
-//        gamePrompter2.(status.toString());
         return status.toString();
 
 
@@ -174,7 +176,7 @@ public class Game {
     }
 
     public void promptForPlayerInput() throws IOException, ParseException {
-        String command = gamePrompter2.prompt("(Hit Q to quit) What is your move? ");
+        String command = gamePrompter2.prompt("What is your move?");
 //        gamePrompter2.display(gameStatus());
         String[] commandArr = command.split(" ");
         parseThroughPlayerInput(commandArr);
@@ -205,6 +207,7 @@ public class Game {
             switch (actionPrefix) {
                 case "get":
                     grabItem(playerAction);
+                    gamePrompter2.display(gameStatus());
                     break;
                 case "go":
                     Console.clear();
@@ -212,11 +215,11 @@ public class Game {
                     currentRoomName = playerAction;
                     setCurrentRoom(jsonParser.getObjectFromJSONObject(rooms, playerAction));
                     repaintMap();
+                    gamePrompter2.display(gameStatus());
                     break;
                 case "workout":
                     playerUseMachine(playerAction);
-                            gamePrompter2.display(gameStatus());
-
+                    gamePrompter2.display(gameStatus());
                     break;
                 case "consume":
                     if (player.consumeItem(playerAction)) {
@@ -229,9 +232,9 @@ public class Game {
                 case "talk":
                     talkToNPC();
                     break;
-                case "see":
+                /*case "see":
                     getRoomMap();
-                    break;
+                    break;*/
                 case "q":
                     quit();
                     break;
@@ -464,7 +467,7 @@ public class Game {
         gameTextArea1.setBackground(Color.WHITE);
 
         //set userInput
-        userInput.setBackground(Color.GREEN);
+        userInput.setBackground(Color.BLACK);
 
         //Set text within text area
         JTextArea wrapperText =new JTextArea(page.instructions(),16,50);
