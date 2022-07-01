@@ -62,6 +62,7 @@ public class Game {
         double playerWeight = validDouble("What is your weight? ", "weight", "lbs");
         int playerAge = validInt("What is your age? ", "age", "years");
         createPlayer(playerName, playerAge, playerHeight, playerWeight);
+        gamePrompter2.display(gameStatus());
     }
 
     // validates name requesting one and rejecting empty space(s).
@@ -69,7 +70,7 @@ public class Game {
     private String validName() {
 //        String text = textInput1.getText();
         String playerName = gamePrompter2.prompt("What is your name? ");
-        System.out.println(playerName);
+        gamePrompter2.display(playerName);
         if (playerName.isBlank() || playerName.isEmpty() || playerName.length() > 16) {
             try {
                 gamePrompter2.display("You need to type your name or it exceeds 16 characters: ");
@@ -129,8 +130,9 @@ public class Game {
 //        System.out.println("------------------------------");
         StringBuilder status = new StringBuilder();
         status.append("------------------------------\n");
-        status.append("Commands: GO <room name>, GET <item>, CONSUME <item>,\n WORKOUT <workout name>, INSPECT ROOM\n (Hit Q to quit)\n");
+        status.append("Commands: GO <room name>, GET <item>, CONSUME <item>,\n WORKOUT <workout name>, (Hit Q to quit)\n");
         status.append("You are in the " + currentRoomName + " room.\n");
+        status.append(inspectRoom());
         status.append(player.toString() + "\n");
         status.append("------------------------------\n");
         return status.toString();
@@ -145,7 +147,7 @@ public class Game {
 //        TODO: UNCOMMENT LINE BELOW BEFORE RELEASE!
         soundHandler.RunMusic(musicPath);
 
-        System.out.println(page.instructions());
+//        System.out.println(page.instructions());
 
         getNewPlayerInfo();
         // runs a while loop
@@ -186,7 +188,7 @@ public class Game {
         } else if (player.isWorkoutComplete()) {
             result = "CONGRATULATIONS! YOU WORKED OUT!";
         }
-        System.out.println(result);
+        gamePrompter2.display(result);
 
     }
 
@@ -225,25 +227,20 @@ public class Game {
                     gamePrompter2.display(gameStatus());
                     break;
                 case "go":
-                    Console.clear();
-                    System.out.println("you're going here: " + playerAction);
-                    currentRoomName = playerAction;
-                    setCurrentRoom(jsonParser.getObjectFromJSONObject(rooms, playerAction));
-                    repaintMap();
-                    gamePrompter2.display(gameStatus());
+                    //Console.clear();
+                    goSomewhere(playerAction);
                     break;
                 case "workout":
                     playerUseMachine(playerAction);
-                    gamePrompter2.display(gameStatus());
                     break;
                 case "consume":
                     if (player.consumeItem(playerAction)) {
                         player.removeItemFromInventory(playerAction);
                     }
                     break;
-                case "inspect":
+                /*case "inspect":
                     inspectRoom();
-                    break;
+                    break;*/
                 case "talk":
                     talkToNPC();
                     break;
@@ -267,9 +264,9 @@ public class Game {
                     break;
             }
         } catch (Exception exception) {
-            exception.printStackTrace();
+          exception.printStackTrace();
 //            TODO: add array with possible values for commands
-            System.out.println(actionPrefix + " was sadly and invalid answer. \n please ensure you are using a valid and complete command. ");
+            gamePrompter2.display(actionPrefix + " was sadly and invalid answer. \n please ensure you are using a valid and complete command. ");
 //            TODO: fix bug caused by pressing enter where prompt for player does not work and calls inspect
             promptForPlayerInput();
         }
@@ -298,37 +295,54 @@ public class Game {
 
     private void talkToNPC() {
         String dialog = currentRoom.getNpc().generateDialog();
-        System.out.println(dialog);
+        gamePrompter2.display(dialog);
 
         String npcItem = (String) currentRoom.npc.getInventory().get(0);
 
         player.getInventory().add(npcItem);
-        System.out.println("You added " + npcItem + " to your gym bag.");
+        gamePrompter2.display("You added " + npcItem + " to your gym bag.");
     }
 
-    private void inspectRoom() {
-        System.out.println(currentRoom.toString());
+    private String inspectRoom() {
+        return currentRoom.toString();
     }
 
     private void playerUseMachine(String playerExcerciseInput) {
-        System.out.println("you're using the: " + playerExcerciseInput);
+        gamePrompter2.display("you're using the: " + playerExcerciseInput);
         Object exercises = getCurrentRoom().getExercises();
-
+    try {
         Exercise exercise = new Exercise(exercises, playerExcerciseInput);
         Object targetMuscle = exercise.getTargetMuscles();
         String exerciseStatus = exercise.getExerciseStatus();
         Long energyCost = exercise.getEnergyCost();
-
         if ("fixed".equals(exerciseStatus)) {
             player.workout(targetMuscle, energyCost);
             player.subtractFromPlayerEnergy(Math.toIntExact(energyCost));
             repaintPlayerBody();
         } else {
             fixBrokenMachine(targetMuscle, energyCost);
-
+            gamePrompter2.display(gameStatus());
         }
+
+    }catch (Exception e){
+        gamePrompter2.display("Sorry we we didn't understand workout " + playerExcerciseInput);
+
     }
 
+
+
+    }
+    private void goSomewhere(String playerAction){
+        if (jsonParser.getObjectFromJSONObject(rooms, playerAction) != null) {
+            gamePrompter2.display("you're going here: " + playerAction);
+            currentRoomName = playerAction;
+            setCurrentRoom(jsonParser.getObjectFromJSONObject(rooms, playerAction));
+            gamePrompter2.display(gameStatus());
+        } else {
+            gamePrompter2.display("sorry we didn't recognize GO " + playerAction);
+        }
+        repaintMap();
+    }
     private void fixBrokenMachine(Object targetMuscle, Long energyCost) {
         if (player.getInventory().contains("wrench")) {
             String playerResponse = gamePrompter2.prompt("This machine is broken. Would you like to use your wrench to fix it? (y/n) \n >");
@@ -337,10 +351,10 @@ public class Game {
                 player.workout(targetMuscle, energyCost);
                 player.subtractFromPlayerEnergy(Math.toIntExact(energyCost));
             } else {
-                System.out.println("When you are ready to workout, come back with the wrench and get to it.");
+                gamePrompter2.display("When you are ready to workout, come back with the wrench and get to it.");
             }
         } else {
-            System.out.println("This machine is broken, please come back with a wrench to fix it.");
+            gamePrompter2.display("This machine is broken, please come back with a wrench to fix it.");
         }
     }
 
@@ -349,18 +363,18 @@ public class Game {
         JSONArray roomItemsObjectArray = (JSONArray) currentRoom.getItems();
         roomItemsObjectArray.forEach(item -> {
             if (item.equals(playerAction)) {
-                System.out.println("Item equals playerAction");
+              //  System.out.println("Item equals playerAction");
                 currentItem[0] = (String) item;
             }
         });
 
         try {
             if (currentItem[0].equals(playerAction)) {
-                System.out.println("\nYou got the :" + playerAction);
+                gamePrompter2.display("\nYou got the :" + playerAction);
                 player.getInventory().add(playerAction);
             }
         } catch (Exception e) {
-            System.out.println("\nSorry, you cant can't GET " + playerAction.toUpperCase() + ". Try again!");
+            gamePrompter2.display("\nSorry, you cant can't GET " + playerAction.toUpperCase() + ". Try again!");
         }
     }
 
@@ -491,7 +505,7 @@ public class Game {
 
     //    gives player ability to quit
     private void quit() {
-        System.out.println("--------------------------------------\n"
+        gamePrompter2.display("--------------------------------------\n"
                 + " YOU ARE A QUITTER!! GAME OVER" + "" +
                 "------------------------------------");
         soundHandler.stopMusic();
