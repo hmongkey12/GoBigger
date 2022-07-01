@@ -1,8 +1,8 @@
 WELCOME TO GO BIG OR GO HOME A game by GAINZZZ Productions Refactored by Pizza Pals"
 INSTRUCTIONS:
 1. Welcome to the Gainz Gym, you are at the front desk, please enter some basic optional information.
-2. You have three Rooms to preform workouts in Weight Room, Yoga Studio, and Machine Room.
-Additionally, you may enter the Mangers office or the front desk area.
+2. You have three Rooms to perform workouts in Weight Room, Yoga Studio, and Machine Room.
+Additionally, you may enter the Managers office or the front desk area.
 Be Sure to inspect rooms for people to talk to or things to find!
 3. You have 100 energy points to spend wisely in the gym.
 4.The Goal is to work out these body segments (LEGS, BICEPS, TRICEPS, SHOULDERS, BACK AND CHEST)
