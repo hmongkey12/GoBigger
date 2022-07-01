@@ -43,8 +43,6 @@ import javax.swing.event.CaretListener;
             }
             catch(Exception ex) { }
 
-            // Once we know the position of the line and the column, pass it to a helper function for updating the status bar.
-         // caretDemo.updateStatus(lineText);
         }
 
     }
