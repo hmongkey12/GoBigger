@@ -23,7 +23,7 @@ class Map {
         String line = null;
         while((line=streamReader.readLine())!=null) {
             lines.add(line);
-            System.out.println(line);
+            //System.out.println(line);
         }
     }
 
