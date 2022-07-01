@@ -1,11 +1,13 @@
 package com.games.gobigorgohome.app;
 
+import com.apps.util.Prompter;
 import com.games.gobigorgohome.characters.Player;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import static org.junit.Assert.*;
 
@@ -31,6 +33,12 @@ public class GameTest {
     @Test
     public void isItemRequiredShouldReturnTrueIfItemsAreRequired() {
         assertTrue(Game.isItemRequired(requiredItems));
+    }
+
+    @Test
+    public void energyIsReset_whenThePlayerIssuesAHealCommand(){
+        Scanner scanner = new Scanner("");
+        Game game = new Game(new Prompter());
     }
 
 }

@@ -129,7 +129,7 @@ public class Game {
 //        System.out.println("------------------------------");
         StringBuilder status = new StringBuilder();
         status.append("------------------------------\n");
-        status.append("Commands: GO <room name>, GET <item>, CONSUME <item>,\n WORKOUT <workout name>, INSPECT ROOM\n (Hit Q to quit)\n");
+        status.append("Commands: GO <room name>, GET <item>, CONSUME <item>,\n WORKOUT <workout name>, INSPECT ROOM\n HEAL <player name>\n (Hit Q to quit)\n");
         status.append("You are in the " + currentRoomName + " room.\n");
         status.append(player.toString() + "\n");
         status.append("------------------------------\n");
@@ -264,6 +264,12 @@ public class Game {
                     break;
                 case "mute":
                     soundHandler.muteVolume();
+                    break;
+                case "heal":
+                    if(player.getName().equals(playerAction)){
+                        player.setEnergy(100);
+                        gamePrompter2.display(gameStatus());
+                    }
                     break;
             }
         } catch (Exception exception) {
