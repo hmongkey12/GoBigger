@@ -28,6 +28,7 @@ public class UserInput extends JPanel implements GamePrompter {
         editor.setEditable(false);
         editor.setBackground(Color.LIGHT_GRAY);
         Font f = new Font("MonoSpaced Bold", Font.BOLD, 20);
+        editor.setLineWrap(true);
 
         status = new JTextArea();
         status.setFont(f);
