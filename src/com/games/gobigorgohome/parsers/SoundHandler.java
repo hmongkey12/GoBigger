@@ -3,8 +3,6 @@ package com.games.gobigorgohome.parsers;
 import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 
 public class SoundHandler {
 
@@ -17,16 +15,20 @@ public class SoundHandler {
 
         public void RunMusic(String path) {
             try {
-                ClassLoader classLoader = SoundHandler.class.getClassLoader();
-                URL sound= classLoader.getResource(path);
-                AudioInputStream inputStream = AudioSystem.getAudioInputStream(sound);
+                AudioInputStream inputStream = AudioSystem.getAudioInputStream(new File(path));
                 clip = AudioSystem.getClip();
                 clip.open(inputStream);
                 clip.start();
                 fc = (FloatControl)clip.getControl(FloatControl.Type.MASTER_GAIN);
                 clip.loop(Clip.LOOP_CONTINUOUSLY);
             }
-            catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+            catch (UnsupportedAudioFileException e) {
+                e.printStackTrace();
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+            catch (LineUnavailableException e) {
                 e.printStackTrace();
             }
         }
