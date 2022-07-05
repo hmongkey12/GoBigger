@@ -75,7 +75,6 @@ public class SoundHandler {
 
 
 //        SOUND FX VOLUME CONTROLS
-
         public void playFx(String path) {
             try {
                 ClassLoader classLoader = SoundHandler.class.getClassLoader();
