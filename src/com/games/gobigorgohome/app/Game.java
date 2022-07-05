@@ -28,16 +28,16 @@ public class Game {
     private final int currentEnergy = player.getEnergy();
     private final String playerName = player.getName();
     private String currentRoomName = gym.getStarterRoomName();
-    private final String musicPath = "resources/sounds/gainz.wav";
-    private final String doorFxPath = "resources/sounds/door.wav";
-    private final String steroidFxPath = "resources/sounds/airhorn.wav";
-    private final String energyDrinkFxPath = "resources/sounds/energy-drink.wav";
-    private final String quitFxPath = "resources/sounds/goodbye.wav";
-    private final String inspectFxPath = "resources/sounds/inspect.wav";
-    private final String loseFxPath = "resources/sounds/lose.wav";
-    private final String winFxPath = "resources/sounds/player-wins.wav";
-    private final String workoutFxPath = "resources/sounds/woo.wav";
-    private final String getItemFxPath = "resources/sounds/item-picked-up.wav";
+    private final String musicPath = "sounds/gainz.wav";
+    private final String doorFxPath = "sounds/door.wav";
+    private final String steroidFxPath = "sounds/airhorn.wav";
+    private final String energyDrinkFxPath = "sounds/energy-drink.wav";
+    private final String quitFxPath = "sounds/goodbye.wav";
+    private final String inspectFxPath = "sounds/inspect.wav";
+    private final String loseFxPath = "sounds/lose.wav";
+    private final String winFxPath = "sounds/player-wins.wav";
+    private final String workoutFxPath = "sounds/woo.wav";
+    private final String getItemFxPath = "sounds/item-picked-up.wav";
     private Room currentRoom = gym.getStarterRoom();
     private final Object rooms = gym.getRooms();
     private final Prompter prompter;
@@ -45,7 +45,8 @@ public class Game {
     private final ParseJSON jsonParser = new ParseJSON();
     private  JFrame frame;
     private GameMap gamemap = new GameMap(gym.getStarterRoomName());
-    private SoundHandler soundHandler = new SoundHandler();
+    private SoundHandler musicHandler = new SoundHandler();
+    private SoundHandler fxHandler = new SoundHandler();
     PlayerBody playerBody;
     Container container;
     JPanel gameTextArea;
@@ -133,8 +134,7 @@ public class Game {
     public void playGame() throws IOException, ParseException {
         MainFrame();
 
-//        TODO: UNCOMMENT LINE BELOW BEFORE RELEASE!
-        soundHandler.RunMusic(musicPath);
+        musicHandler.RunMusic(musicPath);
 
         System.out.println(page.instructions());
 
@@ -170,12 +170,12 @@ public class Game {
         Console.clear();
         String result = "";
         if (player.isSteroidsUsed()) {
-            soundHandler.playFx(loseFxPath);
+            musicHandler.playFx(loseFxPath);
             result = "YOU ARE A LOSER AND A CHEATER!";
         } else if (player.isExhausted()) {
             result = "You're too tired, go home dude";
         } else if (player.isWorkoutComplete()) {
-            soundHandler.playFx(winFxPath);
+            musicHandler.playFx(winFxPath);
             result = "CONGRATULATIONS! YOU WORKED OUT!";
         }
         System.out.println(result);
@@ -212,26 +212,26 @@ public class Game {
         try {
             switch (actionPrefix) {
                 case "get":
-                    soundHandler.playFx(getItemFxPath);
+                    musicHandler.playFx(getItemFxPath);
                     grabItem(playerAction);
                     break;
                 case "go":
                     Console.clear();
-                    soundHandler.playFx(doorFxPath);
+                    fxHandler.playFx(doorFxPath);
                     System.out.println("you're going here: " + playerAction);
                     currentRoomName = playerAction;
                     setCurrentRoom(jsonParser.getObjectFromJSONObject(rooms, playerAction));
                     repaintMap();
                     break;
                 case "workout":
-                    soundHandler.playFx(workoutFxPath);
+                    musicHandler.playFx(workoutFxPath);
                     playerUseMachine(playerAction);
                     break;
                 case "consume":
                     if (playerAction.equals("energy drink")) {
-                        soundHandler.playFx(energyDrinkFxPath);
+                        musicHandler.playFx(energyDrinkFxPath);
                     } else if (playerAction.equals("steroids")) {
-                        soundHandler.playFx(steroidFxPath);
+                        musicHandler.playFx(steroidFxPath);
                     }
 
                     if (player.consumeItem(playerAction)) {
@@ -239,7 +239,7 @@ public class Game {
                     }
                     break;
                 case "inspect":
-                    soundHandler.playFx(inspectFxPath);
+                    musicHandler.playFx(inspectFxPath);
                     inspectRoom();
                     break;
                 case "talk":
@@ -249,20 +249,20 @@ public class Game {
                     getRoomMap();
                     break;
                 case "q":
-                    soundHandler.playFx(quitFxPath);
+                    musicHandler.playFx(quitFxPath);
                     quit();
                     break;
                 case "new":
                     newGame();
                     break;
                 case "up":
-                    soundHandler.musicVolumeUp();
+                    musicHandler.musicVolumeUp();
                     break;
                 case "down":
-                    soundHandler.musicVolumeDown();
+                    musicHandler.musicVolumeDown();
                     break;
                 case "mute":
-                    soundHandler.muteMusicVolume();
+                    musicHandler.muteMusicVolume();
                     break;
             }
         } catch (Exception exception) {
@@ -426,14 +426,14 @@ public class Game {
         musicVolumeUpButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                soundHandler.musicVolumeUp();
+                musicHandler.musicVolumeUp();
             }
         });
 
         musicVolumeDownButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                soundHandler.musicVolumeDown();
+                musicHandler.musicVolumeDown();
 
             }
         });
@@ -441,7 +441,7 @@ public class Game {
         musicMuteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                soundHandler.muteMusicVolume();
+                musicHandler.muteMusicVolume();
             }
         });
 
@@ -461,25 +461,26 @@ public class Game {
         fxVolumeUpButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("FX UP: " + soundHandler.getCurrentFxVolume());
-                soundHandler.fxVolumeUp();
+                System.out.println("FX UP BUTTON: " + fxHandler.getCurrentFxVolume());
+                fxHandler.fxVolumeUp();
             }
         });
 
         fxVolumeDownButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("FX DOWN: " + soundHandler.getCurrentFxVolume() );
-                soundHandler.fxVolumeDown();
+                System.out.println("FX DOWN BUTTON: " + fxHandler.getCurrentFxVolume() );
+                fxHandler.fxVolumeDown();
             }
         });
 
         fxMuteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("MUTE, FX Current: " + soundHandler.getCurrentFxVolume());
-                System.out.println("MUTE Fx Boolean: " + soundHandler.isFxMuted());
-                soundHandler.muteFxVolume();
+                fxHandler.muteFxVolume();
+                System.out.println("MUTE, FX Current: " + fxHandler.getCurrentFxVolume());
+                System.out.println("MUTE Fx Boolean: " + fxHandler.isFxMuted());
+
             }
         });
 
@@ -498,7 +499,7 @@ public class Game {
         userInput.setBackground(Color.GREEN);
 
         //Set text within text area
-        JTextArea wrapperText =new JTextArea(page.instructions(),16,50);
+        JTextArea wrapperText = new JTextArea(page.instructions(),16,46);
         wrapperText.setWrapStyleWord(true);
         wrapperText.setLineWrap(true);
         wrapperText.setOpaque(false);
@@ -533,7 +534,7 @@ public class Game {
         System.out.println("--------------------------------------\n"
                 + " YOU ARE A QUITTER!! GAME OVER" + "" +
                 "------------------------------------");
-        soundHandler.stopMusic();
+        musicHandler.stopMusic();
         System.exit(0);
     }
 
