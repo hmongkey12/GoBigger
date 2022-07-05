@@ -131,6 +131,16 @@ public class UserInput extends JPanel implements GamePrompter {
 
     }
 
+    public JTextArea getEditor() {
+        return editor;
+    }
 
+    public JLabel getLabel() {
+        return label;
+    }
+
+    public void setEntered(boolean entered) {
+        this.entered = entered;
+    }
 }
 
