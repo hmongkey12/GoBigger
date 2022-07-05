@@ -150,7 +150,7 @@ public class Player {
     }
 
     public boolean isExhausted() {
-        return getEnergy() == 0;
+        return getEnergy() <= 0;
     }
 
 
@@ -274,9 +274,6 @@ public class Player {
         setTricepsWorked(false);
         setCoreWorked(false);
         musclesWorked.clear();
-
-
-
 
     }
 
