@@ -29,7 +29,7 @@ public class Game {
     private final int currentEnergy = player.getEnergy();
     private final String playerName = player.getName();
     private String currentRoomName = gym.getStarterRoomName();
-    private final String musicPath = "resources/gainz.wav";
+    private final String musicPath = "gainz.wav";
     private Room currentRoom = gym.getStarterRoom();
     private final Object rooms = gym.getRooms();
     private final Prompter gamePrompt;
