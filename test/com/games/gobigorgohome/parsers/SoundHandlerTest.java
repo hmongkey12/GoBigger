@@ -28,7 +28,7 @@ public class SoundHandlerTest extends TestCase {
         starterTest.RunMusic(musicPath);
         System.out.println();
 
-        assertEquals(startVolume, starterTest.getCurrentVolume());
+        assertEquals(startVolume, starterTest.getCurrentMusicVolume());
 
         starterTest.stopMusic();
     }
@@ -37,44 +37,44 @@ public class SoundHandlerTest extends TestCase {
     public void testMaxVolumeBoundary() {
         float invalidUpperVolumeValue = 7.0f;
 
-        soundHandler.setCurrentVolume(invalidUpperVolumeValue);
-        soundHandler.volumeUp();
-        assertEquals(maxVolume, soundHandler.getCurrentVolume());
-        assertNotEquals(invalidUpperVolumeValue, soundHandler.getCurrentVolume());
+        soundHandler.setCurrentMusicVolume(invalidUpperVolumeValue);
+        soundHandler.musicVolumeUp();
+        assertEquals(maxVolume, soundHandler.getCurrentMusicVolume());
+        assertNotEquals(invalidUpperVolumeValue, soundHandler.getCurrentMusicVolume());
     }
 
     @Test
     public void testMinVolumeBoundary() {
         float invalidLowerVolumeValue = -81.0f;
 
-        soundHandler.setCurrentVolume(invalidLowerVolumeValue);
-        soundHandler.volumeDown();
-        assertEquals(minVolume, soundHandler.getCurrentVolume());
-        assertNotEquals(invalidLowerVolumeValue, soundHandler.getCurrentVolume());
+        soundHandler.setCurrentMusicVolume(invalidLowerVolumeValue);
+        soundHandler.musicVolumeDown();
+        assertEquals(minVolume, soundHandler.getCurrentMusicVolume());
+        assertNotEquals(invalidLowerVolumeValue, soundHandler.getCurrentMusicVolume());
     }
 
     @Test
     public void testVolumeMute(){
         float testVolume = -20.0f;
 
-        soundHandler.setCurrentVolume(testVolume);
+        soundHandler.setCurrentMusicVolume(testVolume);
 
-        assertFalse(soundHandler.isMute());
-        assertNotEquals(minVolume, soundHandler.getCurrentVolume());
+        assertFalse(soundHandler.isMusicMuted());
+        assertNotEquals(minVolume, soundHandler.getCurrentMusicVolume());
 
 //        Testing mute
-        soundHandler.muteVolume();
-        assertTrue(soundHandler.isMute());
-        assertEquals(minVolume, soundHandler.getCurrentVolume());
-        assertNotEquals(testVolume, soundHandler.getCurrentVolume());
-        assertEquals(testVolume, soundHandler.getPreviousVolume());
+        soundHandler.muteMusicVolume();
+        assertTrue(soundHandler.isMusicMuted());
+        assertEquals(minVolume, soundHandler.getCurrentMusicVolume());
+        assertNotEquals(testVolume, soundHandler.getCurrentMusicVolume());
+        assertEquals(testVolume, soundHandler.getPreviousMusicVolume());
 
 //        Testing unmute
-        soundHandler.muteVolume();
-        assertFalse(soundHandler.isMute());
-        assertEquals(testVolume, soundHandler.getCurrentVolume());
-        assertEquals(soundHandler.getCurrentVolume(), soundHandler.getPreviousVolume());
-        assertNotEquals(minVolume, soundHandler.getCurrentVolume());
+        soundHandler.muteMusicVolume();
+        assertFalse(soundHandler.isMusicMuted());
+        assertEquals(testVolume, soundHandler.getCurrentMusicVolume());
+        assertEquals(soundHandler.getCurrentMusicVolume(), soundHandler.getPreviousMusicVolume());
+        assertNotEquals(minVolume, soundHandler.getCurrentMusicVolume());
 
     }
 

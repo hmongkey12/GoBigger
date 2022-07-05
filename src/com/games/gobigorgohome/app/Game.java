@@ -29,7 +29,16 @@ public class Game {
     private final int currentEnergy = player.getEnergy();
     private final String playerName = player.getName();
     private String currentRoomName = gym.getStarterRoomName();
-    private final String musicPath = "resources/gainz.wav";
+    private final String musicPath = "sounds/gainz.wav";
+    private final String doorFxPath = "sounds/door.wav";
+    private final String steroidFxPath = "sounds/airhorn.wav";
+    private final String energyDrinkFxPath = "sounds/energy-drink.wav";
+    private final String quitFxPath = "sounds/goodbye.wav";
+    private final String inspectFxPath = "sounds/inspect.wav";
+    private final String loseFxPath = "sounds/lose.wav";
+    private final String winFxPath = "sounds/player-wins.wav";
+    private final String workoutFxPath = "sounds/woo.wav";
+    private final String getItemFxPath = "sounds/item-picked-up.wav";
     private Room currentRoom = gym.getStarterRoom();
     private final Object rooms = gym.getRooms();
     private final Prompter gamePrompt;
@@ -37,7 +46,8 @@ public class Game {
     private final ParseJSON jsonParser = new ParseJSON();
     private JFrame frame;
     private GameMap gamemap = new GameMap(gym.getStarterRoomName());
-    private final SoundHandler soundHandler = new SoundHandler();
+    private SoundHandler musicHandler = new SoundHandler();
+    private SoundHandler fxHandler = new SoundHandler();
     PlayerBody playerBody;
     Container container;
     JPanel gameTextArea;
@@ -144,8 +154,7 @@ public class Game {
     public void playGame() throws IOException, ParseException {
         MainFrame();
 
-//        TODO: UNCOMMENT LINE BELOW BEFORE RELEASE!
-        soundHandler.RunMusic(musicPath);
+        musicHandler.RunMusic(musicPath);
 
 //        System.out.println(page.instructions());
 
@@ -182,10 +191,12 @@ public class Game {
         Console.clear();
         String result = "";
         if (player.isSteroidsUsed()) {
+            musicHandler.playFx(loseFxPath);
             result = "YOU ARE A LOSER AND A CHEATER!";
         } else if (player.isExhausted()) {
             result = "You're too tired, go home dude";
         } else if (player.isWorkoutComplete()) {
+            musicHandler.playFx(winFxPath);
             result = "CONGRATULATIONS! YOU WORKED OUT!";
         }
         gamePrompter2.display(result);
@@ -223,24 +234,37 @@ public class Game {
         try {
             switch (actionPrefix) {
                 case "get":
+                    musicHandler.playFx(getItemFxPath);
                     grabItem(playerAction);
                     gamePrompter2.display(gameStatus());
                     break;
                 case "go":
-                    //Console.clear();
-                    goSomewhere(playerAction);
+                    // Console.clear();
+                    fxHandler.playFx(doorFxPath);
+                    System.out.println("you're going here: " + playerAction);
+                    currentRoomName = playerAction;
+                    setCurrentRoom(jsonParser.getObjectFromJSONObject(rooms, playerAction));
+                    repaintMap();
                     break;
                 case "workout":
+                    musicHandler.playFx(workoutFxPath);
                     playerUseMachine(playerAction);
                     break;
                 case "consume":
+                    if (playerAction.equals("energy drink")) {
+                        musicHandler.playFx(energyDrinkFxPath);
+                    } else if (playerAction.equals("steroids")) {
+                        musicHandler.playFx(steroidFxPath);
+                    }
+
                     if (player.consumeItem(playerAction)) {
                         player.removeItemFromInventory(playerAction);
                     }
                     break;
-                /*case "inspect":
-                    inspectRoom();
-                    break;*/
+                case "inspect":
+                    musicHandler.playFx(inspectFxPath);
+                    //inspectRoom();
+                    break;
                 case "talk":
                     talkToNPC();
                     break;
@@ -248,19 +272,20 @@ public class Game {
                     getRoomMap();
                     break;*/
                 case "q":
+                    musicHandler.playFx(quitFxPath);
                     quit();
                     break;
                 case "new":
                     newGame();
                     break;
                 case "up":
-                    soundHandler.volumeUp();
+                    musicHandler.musicVolumeUp();
                     break;
                 case "down":
-                    soundHandler.volumeDown();
+                    musicHandler.musicVolumeDown();
                     break;
                 case "mute":
-                    soundHandler.muteVolume();
+                    musicHandler.muteMusicVolume();
                     break;
                 case "heal":
                     if(player.getName().equals(playerAction)){
@@ -429,44 +454,78 @@ public class Game {
         mapPanel.setBounds(500, 0, 200, 200);
         mapPanel.add(gamemap);
 
-//        Volume and Mute Buttons:
-        JLabel volumeLabel = new JLabel("Volume Settings:");
-        volumeLabel.setForeground(Color.WHITE);
-        JButton volumeUpButton = new JButton("+");
-        JButton volumeDownButton = new JButton("-");
-        JButton muteButton = new JButton("Mute");
+//      Music  Volume and Mute Buttons:
+        JLabel musicVolumeLabel = new JLabel("Music Volume:");
+        musicVolumeLabel.setForeground(Color.WHITE);
+        JButton musicVolumeUpButton = new JButton("+");
+        JButton musicVolumeDownButton = new JButton("-");
+        JButton musicMuteButton = new JButton("Mute Music");
 
-        volumeUpButton.addActionListener(new ActionListener() {
+        musicVolumeUpButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                soundHandler.volumeUp();
-//                System.out.println("UP: currentVolume" + soundHandler.getCurrentVolume());
+                musicHandler.musicVolumeUp();
             }
         });
 
-        volumeDownButton.addActionListener(new ActionListener() {
+        musicVolumeDownButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                soundHandler.volumeDown();
-//                System.out.println("DOWN: currentVolume" + soundHandler.getCurrentVolume());
+                musicHandler.musicVolumeDown();
 
             }
         });
 
-        muteButton.addActionListener(new ActionListener() {
+        musicMuteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                soundHandler.muteVolume();
-//                System.out.println("MUTE: isMute" + soundHandler.isMute());
-//                System.out.println("MUTE: currentVolume" + soundHandler.getCurrentVolume());
+                musicHandler.muteMusicVolume();
             }
         });
 
-        playerBody.add(volumeLabel);
-        playerBody.add(volumeUpButton);
-        playerBody.add(volumeDownButton);
-        playerBody.add(muteButton);
+        playerBody.add(musicVolumeLabel);
+        playerBody.add(musicVolumeUpButton);
+        playerBody.add(musicVolumeDownButton);
+        playerBody.add(musicMuteButton);
 
+
+//        FX Volume and Mute Buttons
+        JLabel fxVolumeLabel = new JLabel("Fx Volume");
+        fxVolumeLabel.setForeground(Color.WHITE);
+        JButton fxVolumeUpButton = new JButton("+");
+        JButton fxVolumeDownButton = new JButton("-");
+        JButton fxMuteButton = new JButton("Mute Fx");
+
+        fxVolumeUpButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("FX UP BUTTON: " + fxHandler.getCurrentFxVolume());
+                fxHandler.fxVolumeUp();
+            }
+        });
+
+        fxVolumeDownButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("FX DOWN BUTTON: " + fxHandler.getCurrentFxVolume() );
+                fxHandler.fxVolumeDown();
+            }
+        });
+
+        fxMuteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                fxHandler.muteFxVolume();
+                System.out.println("MUTE, FX Current: " + fxHandler.getCurrentFxVolume());
+                System.out.println("MUTE Fx Boolean: " + fxHandler.isFxMuted());
+
+            }
+        });
+
+        playerBody.add(fxVolumeLabel);
+        playerBody.add(fxVolumeUpButton);
+        playerBody.add(fxVolumeDownButton);
+        playerBody.add(fxMuteButton);
 
         //set image
         imagePanel.setBackground(Color.YELLOW);
@@ -514,7 +573,7 @@ public class Game {
         gamePrompter2.display("--------------------------------------\n"
                 + " YOU ARE A QUITTER!! GAME OVER" + "" +
                 "------------------------------------");
-        soundHandler.stopMusic();
+        musicHandler.stopMusic();
         System.exit(0);
     }
 
