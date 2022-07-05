@@ -24,7 +24,7 @@ public class Game {
     boolean isGameOver = false;
 
     private final Gym gym = Gym.getInstance();
-    private Player player = new Player();
+    private final Player player = new Player();
     private final int energy = player.getEnergy();
     private final int currentEnergy = player.getEnergy();
     private final String playerName = player.getName();
@@ -37,7 +37,7 @@ public class Game {
     private final ParseJSON jsonParser = new ParseJSON();
     private JFrame frame;
     private GameMap gamemap = new GameMap(gym.getStarterRoomName());
-    private SoundHandler soundHandler = new SoundHandler();
+    private final SoundHandler soundHandler = new SoundHandler();
     PlayerBody playerBody;
     Container container;
     JPanel gameTextArea;
@@ -314,7 +314,7 @@ public class Game {
     }
 
     private void playerUseMachine(String playerExcerciseInput) {
-        gamePrompter2.display("you're using the: " + playerExcerciseInput);
+        //gamePrompter2.display("you're using the: " + playerExcerciseInput);
         Object exercises = getCurrentRoom().getExercises();
     try {
         Exercise exercise = new Exercise(exercises, playerExcerciseInput);
@@ -327,11 +327,11 @@ public class Game {
             repaintPlayerBody();
         } else {
             fixBrokenMachine(targetMuscle, energyCost);
-            gamePrompter2.display(gameStatus());
         }
+        gamePrompter2.display(gameStatus());
 
     }catch (Exception e){
-        gamePrompter2.display("Sorry we we didn't understand workout " + playerExcerciseInput);
+        gamePrompter2.display("Sorry we we didn't understand Workout + " + playerExcerciseInput);
 
     }
 
@@ -345,7 +345,7 @@ public class Game {
             setCurrentRoom(jsonParser.getObjectFromJSONObject(rooms, playerAction));
             gamePrompter2.display(gameStatus());
         } else {
-            gamePrompter2.display("sorry we didn't recognize GO " + playerAction);
+            gamePrompter2.display("Sorry we didn't recognize GO " + playerAction);
         }
         repaintMap();
     }
@@ -479,7 +479,7 @@ public class Game {
         userInput.setBackground(Color.BLACK);
 
         //Set text within text area
-        JTextArea wrapperText = new JTextArea(page.instructions(), 16, 50);
+        JTextArea wrapperText = new JTextArea(page.instructions(), 16, 46);
         wrapperText.setWrapStyleWord(true);
         wrapperText.setLineWrap(true);
         wrapperText.setOpaque(false);
