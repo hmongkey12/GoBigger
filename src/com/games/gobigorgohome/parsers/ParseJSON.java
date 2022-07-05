@@ -40,6 +40,9 @@ public class ParseJSON {
 
     public Object getObjectFromJSONObject(Object object, String objectName) {
         JSONObject jsonObject = (JSONObject) object;
+        if (jsonObject == null){
+            return null;
+        }
         return jsonObject.get(objectName);
     }
 

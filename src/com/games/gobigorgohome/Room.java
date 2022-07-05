@@ -33,7 +33,7 @@ public class Room {
 
         Object requiredItemsObject = jsonParser.getObjectFromJSONObject(room, "required items");
         this.requiredItems = jsonParser.getKeySetFromJSONArray(requiredItemsObject);
-        System.out.println(this.requiredItems);
+       // System.out.println(this.requiredItems);
 
         if (!"none".equals(npc_type)) {
             this.npc = new NPC(npc_type);
@@ -79,8 +79,7 @@ public class Room {
 
     @Override
     public String toString() {
-        return "You are in " + getRoomName() + "\n" +
-                "Exercises available are: " + getExerciseList() + "\n" +
+        return "Exercises available are: " + getExerciseList() + "\n" +
                 "You see: " + getItems() + "\n" +
                 getValidNpc() + " is standing there with you.\n";
 //        TODO: if adding direction limitations, call getDirections
