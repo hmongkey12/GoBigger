@@ -5,9 +5,11 @@ import java.awt.*;
 
 public class PlayerBody extends JPanel {
    private boolean[] muscleGroups;
+   private int energyLevel;
 
-   public PlayerBody(boolean[] muscleGroups){
+   public PlayerBody(boolean[] muscleGroups, int energyLevel){
       this.muscleGroups = muscleGroups;
+      this.energyLevel = energyLevel;
    }
 
    public void setPanelSize(int width, int height){
@@ -67,6 +69,7 @@ public class PlayerBody extends JPanel {
       else{
          drawShoulders(graphics, 50, 113, 50, 10, Color.GREEN);
       }
+      drawEnergyBar(graphics, 25, 300, 100, 20, energyLevel);
    }
 
    public void drawChest(Graphics graphics, int x, int y, int width, int height, Color color){
@@ -95,5 +98,28 @@ public class PlayerBody extends JPanel {
       graphics.drawLine(x + width, y, x + width, y + height);
    }
 
+   public void drawEnergyBar(Graphics graphics, int x, int y, int width, int height, int energy){
+      graphics.setColor(Color.GREEN);
+      graphics.drawLine(x, y, x, y + height);
+      graphics.drawLine(x, y, x + width, y);
+      graphics.drawLine(x, y + height, x + width, y + height);
+      graphics.drawLine(x + width, y, x + width, y + height);
+      graphics.setColor(Color.BLACK);
+      graphics.drawString("Energy", x + width/4, y + height/2);
 
+
+      if(energy >= 80){
+         graphics.setColor(Color.GREEN);
+      }
+      else if(energy >= 60){
+         graphics.setColor(Color.YELLOW);
+      }
+      else if(energy >= 40){
+         graphics.setColor(Color.ORANGE);
+      }
+      else{
+         graphics.setColor(Color.RED);
+      }
+      graphics.fillRect(x, y, energy, height);
+   }
 }

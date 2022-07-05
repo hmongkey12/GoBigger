@@ -386,7 +386,7 @@ public class Game {
 
     private void repaintPlayerBody() {
         frame.remove(playerBody);
-        playerBody = new PlayerBody(getMuscleGroups(player));
+        playerBody = new PlayerBody(getMuscleGroups(player), player.getEnergy());
         frame.add(playerBody, 2);
         frame.invalidate();
         frame.validate();
@@ -419,7 +419,7 @@ public class Game {
         gameTextArea = new JPanel();
         mapPanel = new JPanel();
         imagePanel = new JPanel();
-        playerBody = new PlayerBody(getMuscleGroups(player));
+        playerBody = new PlayerBody(getMuscleGroups(player), player.getEnergy());
         playerBody.setPanelSize(frame.getWidth() / 2, frame.getHeight() / 2);
 
         userInput = new UserInput(this);

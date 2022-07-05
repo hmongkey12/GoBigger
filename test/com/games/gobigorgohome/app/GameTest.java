@@ -34,11 +34,4 @@ public class GameTest {
     public void isItemRequiredShouldReturnTrueIfItemsAreRequired() {
         assertTrue(Game.isItemRequired(requiredItems));
     }
-
-    @Test
-    public void energyIsReset_whenThePlayerIssuesAHealCommand(){
-        Scanner scanner = new Scanner("");
-        Game game = new Game(new Prompter());
-    }
-
 }
