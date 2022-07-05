@@ -240,11 +240,7 @@ public class Game {
                     break;
                 case "go":
                     // Console.clear();
-                    fxHandler.playFx(doorFxPath);
-                    System.out.println("you're going here: " + playerAction);
-                    currentRoomName = playerAction;
-                    setCurrentRoom(jsonParser.getObjectFromJSONObject(rooms, playerAction));
-                    repaintMap();
+                   goSomewhere(playerAction);
                     break;
                 case "workout":
                     musicHandler.playFx(workoutFxPath);
@@ -364,6 +360,7 @@ public class Game {
 
     }
     private void goSomewhere(String playerAction){
+        fxHandler.playFx(doorFxPath);
         if (jsonParser.getObjectFromJSONObject(rooms, playerAction) != null) {
             gamePrompter2.display("you're going here: " + playerAction);
             currentRoomName = playerAction;
@@ -409,10 +406,12 @@ public class Game {
         }
     }
 
+
     private void repaintPlayerBody() {
         frame.remove(playerBody);
         playerBody = new PlayerBody(getMuscleGroups(player), player.getEnergy());
         frame.add(playerBody, 2);
+        addSound();
         frame.invalidate();
         frame.validate();
         frame.repaint();
@@ -426,35 +425,8 @@ public class Game {
         frame.validate();
         frame.repaint();
     }
-
-    public void MainFrame() {
-        //frame Setting
-        frame = new JFrame("Go Big Or Go Home");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(1000, 750);
-        frame.setLayout(new GridLayout(2, 2));
-        frame.setTitle("Go Big or Go Home");
-        frame.setVisible(true);
-        frame.getContentPane().setBackground(Color.BLACK);
-        container = frame.getContentPane();
-        ImageIcon image = new ImageIcon("gym.png");
-        frame.setIconImage(image.getImage());
-
-        //three panels
-        gameTextArea = new JPanel();
-        mapPanel = new JPanel();
-        imagePanel = new JPanel();
-        playerBody = new PlayerBody(getMuscleGroups(player), player.getEnergy());
-        playerBody.setPanelSize(frame.getWidth() / 2, frame.getHeight() / 2);
-
-        userInput = new UserInput(this);
-        gamePrompter2 = userInput;
-
-        mapPanel.setBackground(Color.RED);
-        mapPanel.setBounds(500, 0, 200, 200);
-        mapPanel.add(gamemap);
-
-//      Music  Volume and Mute Buttons:
+    public void addSound(){
+        //      Music  Volume and Mute Buttons:
         JLabel musicVolumeLabel = new JLabel("Music Volume:");
         musicVolumeLabel.setForeground(Color.WHITE);
         JButton musicVolumeUpButton = new JButton("+");
@@ -526,6 +498,36 @@ public class Game {
         playerBody.add(fxVolumeUpButton);
         playerBody.add(fxVolumeDownButton);
         playerBody.add(fxMuteButton);
+
+    }
+
+    public void MainFrame() {
+        //frame Setting
+        frame = new JFrame("Go Big Or Go Home");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(1000, 750);
+        frame.setLayout(new GridLayout(2, 2));
+        frame.setTitle("Go Big or Go Home");
+        frame.setVisible(true);
+        frame.getContentPane().setBackground(Color.BLACK);
+        container = frame.getContentPane();
+        ImageIcon image = new ImageIcon("gym.png");
+        frame.setIconImage(image.getImage());
+
+        //three panels
+        gameTextArea = new JPanel();
+        mapPanel = new JPanel();
+        imagePanel = new JPanel();
+        playerBody = new PlayerBody(getMuscleGroups(player), player.getEnergy());
+        playerBody.setPanelSize(frame.getWidth() / 2, frame.getHeight() / 2);
+
+        userInput = new UserInput(this);
+        gamePrompter2 = userInput;
+
+        mapPanel.setBackground(Color.RED);
+        mapPanel.setBounds(500, 0, 200, 200);
+        mapPanel.add(gamemap);
+ addSound();
 
         //set image
         imagePanel.setBackground(Color.YELLOW);
