@@ -34,4 +34,5 @@ public class GameTest {
     public void isItemRequiredShouldReturnTrueIfItemsAreRequired() {
         assertTrue(Game.isItemRequired(requiredItems));
     }
+
 }

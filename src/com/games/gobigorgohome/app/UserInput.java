@@ -9,18 +9,15 @@ import javax.swing.text.BadLocationException;
 
 public class UserInput extends JPanel implements GamePrompter {
 
-    private JTextArea editor;
-    private JTextArea status;
-    private JLabel label;
+    private final JTextArea editor;
+    private final JTextArea status;
+    private final JLabel label;
     private String currentLineText;
-    private Game game;
-    private String prompt = "";
     private String answer;
     private boolean entered = false;
 
     // Start of caretDemo class
     public UserInput(Game game) {
-        this.game = game;
         // Create a border layout to make positioning of items easy and quick.
         setLayout(new BorderLayout());
 
@@ -106,7 +103,6 @@ public class UserInput extends JPanel implements GamePrompter {
         // Call the editor to print message
         // Start a while loop that wait until entered is true
         // Pickup the user's command and return it
-        prompt = message;
         entered = false;
         status.append(" ");
         label.setText(message);
