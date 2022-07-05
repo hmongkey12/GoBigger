@@ -9,7 +9,7 @@ public class SoundHandler {
 
         private Clip musicClip;
         private Clip fxClip;
-        private final float volumeStep = 2.0f;
+        private final float volumeStep = 5.0f;
         private float previousMusicVolume = 0.0f;
         private float currentMusicVolume = 0.0f;
         private float previousFxVolume = 0.0f;

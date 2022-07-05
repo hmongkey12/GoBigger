@@ -50,6 +50,7 @@ public class Game {
     private SoundHandler fxHandler = new SoundHandler();
     PlayerBody playerBody;
     Container container;
+    JMenuBar menuBar = new JMenuBar();
     JPanel gameTextArea;
     JPanel mapPanel;
     JPanel imagePanel;
@@ -241,10 +242,7 @@ public class Game {
                 case "go":
                     // Console.clear();
                     fxHandler.playFx(doorFxPath);
-                    System.out.println("you're going here: " + playerAction);
-                    currentRoomName = playerAction;
-                    setCurrentRoom(jsonParser.getObjectFromJSONObject(rooms, playerAction));
-                    repaintMap();
+                    goSomewhere(playerAction);
                     break;
                 case "workout":
                     musicHandler.playFx(workoutFxPath);
@@ -454,21 +452,33 @@ public class Game {
         mapPanel.setBounds(500, 0, 200, 200);
         mapPanel.add(gamemap);
 
-//      Music  Volume and Mute Buttons:
-        JLabel musicVolumeLabel = new JLabel("Music Volume:");
-        musicVolumeLabel.setForeground(Color.WHITE);
-        JButton musicVolumeUpButton = new JButton("+");
-        JButton musicVolumeDownButton = new JButton("-");
-        JButton musicMuteButton = new JButton("Mute Music");
+        frame.setJMenuBar(menuBar);
+        JMenu settings = new JMenu("Sound Settings");
+        JMenuItem musicUp = new JMenuItem("+ Music");
+        JMenuItem musicDown = new JMenuItem("- Music");
+        JMenuItem musicMute = new JMenuItem("Mute Music");
+        JMenuItem fxUp = new JMenuItem("+ Fx");
+        JMenuItem fxDown = new JMenuItem("- Fx");
+        JMenuItem fxMute = new JMenuItem("Mute Fx");
 
-        musicVolumeUpButton.addActionListener(new ActionListener() {
+        menuBar.add(settings);
+        settings.add(musicUp);
+        settings.add(musicDown);
+        settings.add(musicMute);
+        settings.addSeparator();
+        settings.add(fxUp);
+        settings.add(fxDown);
+        settings.add(fxMute);
+        settings.addSeparator();
+
+        musicUp.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 musicHandler.musicVolumeUp();
             }
         });
 
-        musicVolumeDownButton.addActionListener(new ActionListener() {
+        musicDown.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 musicHandler.musicVolumeDown();
@@ -476,56 +486,35 @@ public class Game {
             }
         });
 
-        musicMuteButton.addActionListener(new ActionListener() {
+        musicMute.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 musicHandler.muteMusicVolume();
             }
         });
 
-        playerBody.add(musicVolumeLabel);
-        playerBody.add(musicVolumeUpButton);
-        playerBody.add(musicVolumeDownButton);
-        playerBody.add(musicMuteButton);
-
-
-//        FX Volume and Mute Buttons
-        JLabel fxVolumeLabel = new JLabel("Fx Volume");
-        fxVolumeLabel.setForeground(Color.WHITE);
-        JButton fxVolumeUpButton = new JButton("+");
-        JButton fxVolumeDownButton = new JButton("-");
-        JButton fxMuteButton = new JButton("Mute Fx");
-
-        fxVolumeUpButton.addActionListener(new ActionListener() {
+        fxUp.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("FX UP BUTTON: " + fxHandler.getCurrentFxVolume());
                 fxHandler.fxVolumeUp();
             }
         });
 
-        fxVolumeDownButton.addActionListener(new ActionListener() {
+        fxDown.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("FX DOWN BUTTON: " + fxHandler.getCurrentFxVolume() );
                 fxHandler.fxVolumeDown();
             }
         });
 
-        fxMuteButton.addActionListener(new ActionListener() {
+        fxMute.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 fxHandler.muteFxVolume();
-                System.out.println("MUTE, FX Current: " + fxHandler.getCurrentFxVolume());
-                System.out.println("MUTE Fx Boolean: " + fxHandler.isFxMuted());
 
             }
         });
 
-        playerBody.add(fxVolumeLabel);
-        playerBody.add(fxVolumeUpButton);
-        playerBody.add(fxVolumeDownButton);
-        playerBody.add(fxMuteButton);
 
         //set image
         imagePanel.setBackground(Color.YELLOW);
