@@ -135,7 +135,6 @@ public class Player {
         } else {
            // System.out.println("oi mate! that's not in your inventory");
         }
-
         return couldYouConsume;
 
     }
@@ -286,7 +285,7 @@ public class Player {
     @Override
     public String toString() {
         return "Player: " + name + "\n" +
-                "Age: " + age + ", Weight: " + weight + ", Height: " + height + "\n" +
+                "Age: " + age + ", Weight: " + weight + ", Height: " + height + "\n\n" +
                 "Current Energy: " + energy + " out of " + BASE_ENERGY + "\n" +
                 "Gym Bag Contents: " + inventory + "\n" +
                 "Workout Status: " + getMusclesWorked().toString();

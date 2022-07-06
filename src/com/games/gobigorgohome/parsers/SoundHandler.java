@@ -15,16 +15,17 @@ public class SoundHandler {
         private float previousFxVolume = 0.0f;
         private float currentFxVolume = 0.0f;
         private FloatControl musicFc;
-        private FloatControl fxFc;
         boolean musicMuted = false;
         boolean fxMuted = false;
 
 
 //        BACKGROUND MUSIC AUDIO CONTROLS
+
         public void RunMusic(String path) {
             try {
                 ClassLoader classLoader = SoundHandler.class.getClassLoader();
                 URL sound= classLoader.getResource(path);
+                assert sound != null;
                 AudioInputStream inputStream = AudioSystem.getAudioInputStream(sound);
                 musicClip = AudioSystem.getClip();
                 musicClip.open(inputStream);
@@ -32,13 +33,7 @@ public class SoundHandler {
                 musicFc = (FloatControl) musicClip.getControl(FloatControl.Type.MASTER_GAIN);
                 musicClip.loop(Clip.LOOP_CONTINUOUSLY);
             }
-            catch (UnsupportedAudioFileException e) {
-                e.printStackTrace();
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
-            catch (LineUnavailableException e) {
+            catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
                 e.printStackTrace();
             }
         }
@@ -75,25 +70,21 @@ public class SoundHandler {
 
 
 //        SOUND FX VOLUME CONTROLS
+
         public void playFx(String path) {
             try {
                 ClassLoader classLoader = SoundHandler.class.getClassLoader();
                 URL sound= classLoader.getResource(path);
+                assert sound != null;
                 AudioInputStream inputStream = AudioSystem.getAudioInputStream(sound);
                 fxClip = AudioSystem.getClip();
                 fxClip.open(inputStream);
-                fxFc = (FloatControl) fxClip.getControl(FloatControl.Type.MASTER_GAIN);
+                FloatControl fxFc = (FloatControl) fxClip.getControl(FloatControl.Type.MASTER_GAIN);
                 fxFc.setValue(currentFxVolume);
                 fxClip.start();
                 fxClip.loop(0);
             }
-            catch (UnsupportedAudioFileException e) {
-                e.printStackTrace();
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
-            catch (LineUnavailableException e) {
+            catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
                 e.printStackTrace();
             }
         }
@@ -115,11 +106,11 @@ public class SoundHandler {
         }
 
         public void muteFxVolume() {
-            if( fxMuted == false) {
+            if(!fxMuted) {
                 previousFxVolume = currentFxVolume;
                 currentFxVolume = -80.0f;
                 fxMuted = true;
-            } else if (fxMuted) {
+            } else {
                 currentFxVolume = previousFxVolume;
                 fxMuted = false;
             }

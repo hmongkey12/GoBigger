@@ -67,7 +67,6 @@ public class Game {
     //    collects current input from user to update their avatar
 
     private void getNewPlayerInfo() {
-//        TODO: validate user input
         String playerName = validName();
         double playerHeight = validDouble("What is your height? ", "height", "inches");
         double playerWeight = validDouble("What is your weight? ", "weight", "lbs");
@@ -134,14 +133,9 @@ public class Game {
 
     //    updates player with current game status e.g. player inventory, current room etc.
     private String gameStatus() {
-//        System.out.println("------------------------------");
-//        System.out.println("Available commands: GO <room name>, GET <item>, CONSUME <item>, SEE MAP, WORKOUT <workout name>, INSPECT ROOM");
-//        System.out.println("You are in the " + currentRoomName + " room.");
-//        System.out.println(player.toString());
-//        System.out.println("------------------------------");
         StringBuilder status = new StringBuilder();
         status.append("------------------------------\n");
-        status.append("Commands: GO <room name>, GET <item>, CONSUME <item>,\n WORKOUT <workout name>, INSPECT ROOM\n HEAL <player name>\n (Hit Q to quit)\n");
+        status.append("Commands: GO <room name>, GET <item>, CONSUME <item>, WORKOUT <workout name>, HEAL <player name>\n (Hit Q to quit)\n\n");
         status.append("You are in the " + currentRoomName + " room.\n");
         status.append(inspectRoom());
         status.append(player.toString() + "\n");
@@ -176,9 +170,11 @@ public class Game {
     private void newGame() throws IOException, ParseException, InterruptedException {
         //reset the map
         player.resetBody();
+        player.setEnergy(100);
         currentRoomName = "front desk";
         repaintPlayerBody();
         repaintMap();
+        gamePrompter2.display(gameStatus());
         getNewPlayerInfo();
 
     }
@@ -258,17 +254,16 @@ public class Game {
                     if (player.consumeItem(playerAction)) {
                         player.removeItemFromInventory(playerAction);
                     }
+                    repaintPlayerBody();
+                    gamePrompter2.display(gameStatus());
                     break;
-                case "inspect":
-                    musicHandler.playFx(inspectFxPath);
-                    //inspectRoom();
-                    break;
+//                case "inspect":
+//                    musicHandler.playFx(inspectFxPath);
+//                    //inspectRoom();
+//                    break;
                 case "talk":
                     talkToNPC();
                     break;
-                /*case "see":
-                    getRoomMap();
-                    break;*/
                 case "q":
                     musicHandler.playFx(quitFxPath);
                     quit();
@@ -289,14 +284,13 @@ public class Game {
                     if(player.getName().equals(playerAction)){
                         player.setEnergy(100);
                         gamePrompter2.display(gameStatus());
+                        repaintPlayerBody();
                     }
                     break;
             }
         } catch (Exception exception) {
           exception.printStackTrace();
-//            TODO: add array with possible values for commands
             gamePrompter2.display(actionPrefix + " was sadly and invalid answer. \n please ensure you are using a valid and complete command. ");
-//            TODO: fix bug caused by pressing enter where prompt for player does not work and calls inspect
             promptForPlayerInput();
         }
     }
@@ -392,18 +386,17 @@ public class Game {
         JSONArray roomItemsObjectArray = (JSONArray) currentRoom.getItems();
         roomItemsObjectArray.forEach(item -> {
             if (item.equals(playerAction)) {
-              //  System.out.println("Item equals playerAction");
                 currentItem[0] = (String) item;
             }
         });
 
         try {
             if (currentItem[0].equals(playerAction)) {
-                gamePrompter2.display("\nYou got the :" + playerAction);
+                gamePrompter2.display("\nYou got the : " + playerAction);
                 player.getInventory().add(playerAction);
             }
         } catch (Exception e) {
-            gamePrompter2.display("\nSorry, you cant can't GET " + playerAction.toUpperCase() + ". Try again!");
+            gamePrompter2.display("\nSorry, you can't GET " + playerAction.toUpperCase() + ". Try again!");
         }
     }
 
@@ -471,49 +464,17 @@ public class Game {
         settings.add(fxMute);
         settings.addSeparator();
 
-        musicUp.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                musicHandler.musicVolumeUp();
-            }
-        });
+        musicUp.addActionListener(e -> musicHandler.musicVolumeUp());
 
-        musicDown.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                musicHandler.musicVolumeDown();
+        musicDown.addActionListener(e -> musicHandler.musicVolumeDown());
 
-            }
-        });
+        musicMute.addActionListener(e -> musicHandler.muteMusicVolume());
 
-        musicMute.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                musicHandler.muteMusicVolume();
-            }
-        });
+        fxUp.addActionListener(e -> fxHandler.fxVolumeUp());
 
-        fxUp.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                fxHandler.fxVolumeUp();
-            }
-        });
+        fxDown.addActionListener(e -> fxHandler.fxVolumeDown());
 
-        fxDown.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                fxHandler.fxVolumeDown();
-            }
-        });
-
-        fxMute.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                fxHandler.muteFxVolume();
-
-            }
-        });
+        fxMute.addActionListener(e -> fxHandler.muteFxVolume());
 
 
         //set image
