@@ -2,6 +2,7 @@ package com.games.gobigorgohome.characters;
 
 import junit.framework.TestCase;
 import org.json.simple.parser.ParseException;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -64,7 +65,7 @@ public class PlayerTest {
 
     @Test
     public void getHeight_shouldFailWhen_ageIsWrong() {
-       // assertNotEquals(roni.getAge(), 32 );
+       assertNotEquals(roni.getAge(), 32 );
     }
     @Test
     public void getAge_shouldReturnAgeValue_whenCalled() {
@@ -73,7 +74,7 @@ public class PlayerTest {
 
     @Test
     public void getAge_shouldFailWhen_ageIsWrong() {
-        //assertNotEquals(roni.getAge(), 32 );
+        assertNotEquals(roni.getAge(), 32 );
     }
     @Test
     public void getEnergy_shouldReturnEnergyValue_whenCalled() {
@@ -82,7 +83,26 @@ public class PlayerTest {
 
     @Test
     public void getEnergy_shouldFail_ifTheEnergyIsNotCorrect() {
-       // assertNotEquals(roni.getEnergy(), 40 );
+        assertNotEquals(roni.getEnergy(), 40 );
     }
+
+    @Test
+    public void if_player_has_zero_energy_then_player_should_be_Exhausted() {
+        roni.setEnergy(0);
+        assertTrue(roni.isExhausted());
+    }
+    @Test
+    public void if_player_has_less_than_zero_energy_then_player_should_be_Exhausted() {
+        roni.setEnergy(-10);
+        assertTrue(roni.isExhausted());
+    }
+
+    @Test
+    public void reset_body_should_clear_all_workouts() {
+        roni.setLegsWorked(true);
+        roni.resetBody();
+        Assert.assertEquals((roni.getMusclesWorked()).iterator().next(), "none");
+    }
+
 
 }

@@ -1,19 +1,24 @@
 package com.games.gobigorgohome.app;
 
 import com.apps.util.Prompter;
-import com.games.gobigorgohome.characters.Player;
+import org.json.simple.parser.ParseException;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
+
 
 import static org.junit.Assert.*;
 
 public class GameTest {
     List requiredItems = new ArrayList();
     List noRequiredItems = new ArrayList();
+
+    public GameTest() throws IOException, ParseException {
+
+    }
 
     @Before
     public void createRequiredItemList() {
@@ -34,5 +39,6 @@ public class GameTest {
     public void isItemRequiredShouldReturnTrueIfItemsAreRequired() {
         assertTrue(Game.isItemRequired(requiredItems));
     }
+
 
 }
